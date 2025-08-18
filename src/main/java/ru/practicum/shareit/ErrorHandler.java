@@ -24,7 +24,7 @@ public class ErrorHandler {
 		log.error("Error: ", e);
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		e.printStackTrace(new PrintStream(out));
-		return new ErrorResponse(out.toString(StandardCharsets.UTF_8));
+		return new ErrorResponse(out.toString());
 	}
 
 	@ExceptionHandler(NotFoundException.class)
