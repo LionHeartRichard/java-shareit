@@ -3,6 +3,8 @@ package ru.practicum.shareit.item;
 import java.util.List;
 import java.util.Optional;
 
+import ru.practicum.shareit.user.User;
+
 public interface ItemRepository {
 
 	public boolean hasItemById(final Long id);
@@ -16,4 +18,5 @@ public interface ItemRepository {
 	public List<Item> findItemsByOwner(final Long userId);
 
 	public List<Item> searchAvailableItemsByName(final String nameItem);
+
 }

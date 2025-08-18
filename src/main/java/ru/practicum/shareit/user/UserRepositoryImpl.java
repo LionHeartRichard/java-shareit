@@ -55,4 +55,14 @@ public class UserRepositoryImpl implements UserRepository {
 		return users.containsValue(user);
 	}
 
+	@Override
+	public boolean isUsedEmail(User user) {
+		boolean[] ans = {false};
+		users.forEach((k, v) -> {
+			if (!k.equals(user.getId()) && v.equals(user))
+				ans[0] = true;
+		});
+		return ans[0];
+	}
+
 }

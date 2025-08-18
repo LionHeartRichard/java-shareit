@@ -10,8 +10,10 @@ public interface UserRepository {
 	Optional<User> findUserById(Long id);
 
 	boolean deleteUserById(Long id);
-	
+
 	boolean hasUserById(Long id);
-	
+
 	boolean hasUserByEmail(User user);
+
+	public boolean isUsedEmail(User user);
 }

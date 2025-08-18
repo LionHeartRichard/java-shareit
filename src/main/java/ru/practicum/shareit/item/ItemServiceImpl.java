@@ -53,6 +53,9 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<Item> searchAvailableItemsByName(final String nameItem) {
+		if (nameItem == null || nameItem.isBlank()) {
+			return List.of();
+		}
 		return itemRepository.searchAvailableItemsByName(nameItem);
 	}
 

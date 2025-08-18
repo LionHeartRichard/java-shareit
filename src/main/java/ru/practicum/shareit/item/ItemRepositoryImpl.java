@@ -45,6 +45,10 @@ public class ItemRepositoryImpl implements ItemRepository {
 
 	@Override
 	public List<Item> searchAvailableItemsByName(String nameItem) {
-		return items.values().stream().filter(v -> v.isAvailable(nameItem)).toList();
+		final String nameSearch = nameItem.toLowerCase().trim();
+		return items.values().stream().filter(Item::getAvailable)
+				.filter(item -> (item.getName().toLowerCase().contains(nameSearch))
+						|| (item.getDescription().toLowerCase().contains(nameSearch)))
+				.toList();
 	}
 }

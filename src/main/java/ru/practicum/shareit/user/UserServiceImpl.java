@@ -24,7 +24,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User updateUser(User user) {
-		return userRepository.updateUser(user);
+		if (!userRepository.isUsedEmail(user))
+			return userRepository.updateUser(user);
+		throw new EmailException(User.EMAIL_IN_USE);
 	}
 
 	@Override
