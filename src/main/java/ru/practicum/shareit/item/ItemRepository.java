@@ -3,8 +3,6 @@ package ru.practicum.shareit.item;
 import java.util.List;
 import java.util.Optional;
 
-import ru.practicum.shareit.user.User;
-
 public interface ItemRepository {
 
 	public boolean hasItemById(final Long id);

@@ -3,7 +3,6 @@ package ru.practicum.shareit.item;
 import java.util.Objects;
 
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 /**
