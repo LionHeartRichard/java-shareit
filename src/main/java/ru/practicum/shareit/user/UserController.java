@@ -33,6 +33,7 @@ import ru.practicum.shareit.user.dto.UserUpdateDto;
 public class UserController {
 
 	UserService userService;
+	private static final String PATH_USER = "/{userId}";
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -45,7 +46,7 @@ public class UserController {
 		return ans;
 	}
 
-	@PatchMapping("/{userId}")
+	@PatchMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.OK)
 	public UserFullDto updateUser(@PathVariable @Positive final Long userId, @RequestBody @Valid UserUpdateDto dto) {
 		log.trace("updateUser: ", dto.toString());
@@ -56,7 +57,7 @@ public class UserController {
 		return UserMapper.toDto(ans);
 	}
 
-	@GetMapping("/{userId}")
+	@GetMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.OK)
 	public UserFullDto findUserById(@PathVariable @Positive final Long userId) {
 		log.trace("findUserById: userId = ", userId);
@@ -65,7 +66,7 @@ public class UserController {
 		return UserMapper.toDto(ans);
 	}
 
-	@DeleteMapping("/{userId}")
+	@DeleteMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteUserById(@PathVariable @Positive final Long userId) {
 		log.trace("deleteUserById: userId = ", userId);

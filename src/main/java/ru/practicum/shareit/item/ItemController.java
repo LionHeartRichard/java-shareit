@@ -37,6 +37,7 @@ public class ItemController {
 
 	ItemService itemService;
 	private static final String HEADER = "X-Sharer-User-Id";
+	private static final String PATH_ITEM = "/{itemId}";
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -48,7 +49,7 @@ public class ItemController {
 		return ItemMapper.toDto(ans);
 	}
 
-	@PatchMapping("/{itemId}")
+	@PatchMapping(PATH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
 	public ItemFullDto updateItem(@RequestHeader(HEADER) @Positive final Long userId,
 			@PathVariable @Positive final Long itemId, @RequestBody @Valid ItemUpdateDto dto) {
@@ -60,7 +61,7 @@ public class ItemController {
 		return ItemMapper.toDto(ans);
 	}
 
-	@GetMapping("/{itemId}")
+	@GetMapping(PATH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
 	public ItemFullDto findItemById(@PathVariable @Positive final Long itemId) {
 		log.trace("findItemById: itemId = ", itemId);
