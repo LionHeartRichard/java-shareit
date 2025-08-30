@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.exception.EmailException;
+import ru.practicum.shareit.exception.MyBadRequestException;
+import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.NotValidParamException;
 
@@ -40,10 +41,15 @@ public class ErrorHandler {
 		return new ErrorResponse(e.getMessage());
 	}
 
-	@ExceptionHandler(EmailException.class)
+	@ExceptionHandler(ConflictException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)
-	public ErrorResponse emailInUse(final Exception e) {
+	public ErrorResponse conflictExceprion(final Exception e) {
 		return new ErrorResponse(e.getMessage());
 	}
 
+	@ExceptionHandler(MyBadRequestException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorResponse badRequestException(final Exception e) {
+		return new ErrorResponse(e.getMessage());
+	}
 }

@@ -18,6 +18,7 @@ public class User {
 
 	public static final String NOT_FOUND = "User not found!";
 	public static final String EMAIL_IN_USE = "The specified email is already in use!";
+	public static final String NO_ACCESS = "User does not have access!";
 
 	@Override
 	public boolean equals(Object obj) {

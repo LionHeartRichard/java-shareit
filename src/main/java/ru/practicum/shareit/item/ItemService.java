@@ -13,4 +13,6 @@ public interface ItemService {
 	List<Item> findItemsByOwner(final Long ownerId);
 
 	List<Item> searchAvailableItemsByName(final String nameItem);
+
+	Item addComment(final Long userId, final Long itemId, Item item);
 }

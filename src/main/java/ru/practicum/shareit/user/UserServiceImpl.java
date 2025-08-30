@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.exception.EmailException;
+import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -19,14 +19,14 @@ public class UserServiceImpl implements UserService {
 	public User createUser(User user) {
 		if (!userRepository.hasUserByEmail(user))
 			return userRepository.createUser(user);
-		throw new EmailException(User.EMAIL_IN_USE);
+		throw new ConflictException(User.EMAIL_IN_USE);
 	}
 
 	@Override
 	public User updateUser(User user) {
 		if (!userRepository.isUsedEmail(user))
 			return userRepository.updateUser(user);
-		throw new EmailException(User.EMAIL_IN_USE);
+		throw new ConflictException(User.EMAIL_IN_USE);
 	}
 
 	@Override

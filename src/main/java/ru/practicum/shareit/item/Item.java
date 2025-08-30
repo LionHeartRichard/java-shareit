@@ -19,7 +19,8 @@ public class Item {
 	Long userId;
 
 	public static final String NOT_FOUND = "Item not found!";
-	public static final String NOT_OWNER = "User is not the owner of item";
+	public static final String NOT_OWNER = "User is not the owner of item!";
+	public static final String NOT_AVAILABLE = "Item is not available!";
 
 	public boolean isOwner(final Long userId) {
 		return this.userId.equals(userId);

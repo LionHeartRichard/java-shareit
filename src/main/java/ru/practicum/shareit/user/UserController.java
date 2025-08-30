@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,8 @@ public class UserController {
 
 	@PatchMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.OK)
-	public UserFullDto updateUser(@PathVariable @Positive final Long userId, @RequestBody @Valid UserUpdateDto dto) {
+	public UserFullDto updateUser(@PathVariable @NotNull @Positive final Long userId,
+			@RequestBody @Valid UserUpdateDto dto) {
 		log.trace("updateUser: ", dto.toString());
 		User user = userService.findUserById(userId);
 		log.trace(user.toString());
@@ -59,7 +61,7 @@ public class UserController {
 
 	@GetMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.OK)
-	public UserFullDto findUserById(@PathVariable @Positive final Long userId) {
+	public UserFullDto findUserById(@PathVariable @NotNull @Positive final Long userId) {
 		log.trace("findUserById: userId = ", userId);
 		User ans = userService.findUserById(userId);
 		log.trace(ans.toString());
@@ -68,7 +70,7 @@ public class UserController {
 
 	@DeleteMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteUserById(@PathVariable @Positive final Long userId) {
+	public void deleteUserById(@PathVariable @NotNull @Positive final Long userId) {
 		log.trace("deleteUserById: userId = ", userId);
 		userService.deleteUserById(userId);
 	}

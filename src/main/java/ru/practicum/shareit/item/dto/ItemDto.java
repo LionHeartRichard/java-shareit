@@ -5,6 +5,9 @@ import lombok.Value;
 
 @Value
 @Builder(toBuilder = true)
-public class ItemFullDto {
-
+public class ItemDto {
+	Long id;
+	String name;
+	Boolean available;
+	String description;
 }
