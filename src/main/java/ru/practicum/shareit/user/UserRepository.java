@@ -2,10 +2,11 @@ package ru.practicum.shareit.user;
 
 import java.util.Optional;
 
-public interface UserRepository {
-	User createUser(User user);
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-	User updateUser(User user);
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
 
 	Optional<User> findUserById(Long id);
 

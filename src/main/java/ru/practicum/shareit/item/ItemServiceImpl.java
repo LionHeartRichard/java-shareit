@@ -31,7 +31,7 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public Item createItem(final Long userId, Item item) {
 		if (userRepository.hasUserById(userId)) {
-			Item ans = itemRepository.saveItem(item.toBuilder().userId(userId).build());
+			Item ans = itemRepository.save(item.toBuilder().userId(userId).build());
 			return ans;
 		}
 		throw new NotFoundException(User.NOT_FOUND);
@@ -46,7 +46,7 @@ public class ItemServiceImpl implements ItemService {
 	public Item updateItem(final Long userId, Item item) {
 		if (userRepository.hasUserById(userId)) {
 			if (item.isOwner(userId)) {
-				return itemRepository.update(item);
+				return itemRepository.save(item);
 			}
 			throw new AccessException(Item.NOT_OWNER);
 		}
@@ -68,10 +68,10 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public CommentItem addComment(CommentItem commentItem) {
-		final Long userId = commentItem.getUserId();
+		final Long userId = commentItem.getUser().getId();
 		if (userRepository.hasUserById(userId)) {
 			if (bookingRepository.youBooked(userId, commentItem.getItemId())) {
-				return commentItemRepository.saveComment(commentItem);
+				return commentItemRepository.save(commentItem);
 			}
 			throw new MyBadRequestException(Booking.ERROR_STATUS);
 		}

@@ -1,20 +1,36 @@
 package ru.practicum.shareit.booking;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Value;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
 
-/**
- * TODO Sprint add-bookings.
- */
-
+@Entity
+@Table(name = "booking")
 @Value
 @Builder(toBuilder = true)
 public class Booking {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
+
+	@JoinColumn(name = "item_id")
+	@ManyToOne(fetch = FetchType.LAZY)
 	Item item;
+
+	@JoinColumn(name = "user_id")
+	@ManyToOne(fetch = FetchType.LAZY)
 	User user;
+
 	Long start;
 	Long end;
 	BookingStatus status;

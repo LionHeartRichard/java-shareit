@@ -15,8 +15,8 @@ public class CommentItemMapper {
 	}
 
 	public static CommentItem toModel(final User user, final Long itemId, final String text) {
-		CommentItem ans = CommentItem.builder().id(null).text(text).itemId(itemId).userId(user.getId())
-				.userName(user.getName()).created(UtilMapper.getCurrentTime()).build();
+		CommentItem ans = CommentItem.builder().id(null).text(text).itemId(itemId).user(user)
+				.created(UtilMapper.getCurrentTime()).build();
 		return ans;
 	}
 
@@ -30,7 +30,7 @@ public class CommentItemMapper {
 	}
 
 	public static CommentAnsDto toCommentUserDto(CommentItem comment) {
-		CommentAnsDto ans = CommentAnsDto.builder().id(comment.getId()).authorName(comment.getUserName())
+		CommentAnsDto ans = CommentAnsDto.builder().id(comment.getId()).authorName(comment.getUser().getName())
 				.text(comment.getText()).created(UtilMapper.toLocalDateTime(comment.getCreated())).build();
 		return ans;
 	}
