@@ -82,6 +82,6 @@ public class BookingController {
 		log.trace("approvedByUserIdAndBookingId: ", userId, bookingId, approved);
 		Booking ans = service.approvedByUserIdAndBookingId(userId, bookingId, approved);
 		log.trace(ans.toString());
-		return BookingMapper.toDtoNoChangeStatus(ans);
+		return BookingMapper.toDtoSaveStatus(ans);
 	}
 }

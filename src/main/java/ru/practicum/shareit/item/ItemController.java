@@ -22,10 +22,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.item.dto.ItemFullDto;
-import ru.practicum.shareit.item.dto.CommentItemDto;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.commentitem.CommentItem;
+import ru.practicum.shareit.commentitem.CommentItemMapper;
+import ru.practicum.shareit.commentitem.dto.CommentDto;
+import ru.practicum.shareit.commentitem.dto.CommentAnsDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.user.User;
 
 /**
  * TODO Sprint add-controllers.
@@ -66,13 +71,15 @@ public class ItemController {
 
 	@GetMapping(PATH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
-	public ItemDto findItemById(@PathVariable @NotNull @Positive final Long itemId) {
+	public ItemFullDto findItemById(@PathVariable @NotNull @Positive final Long itemId) {
 		log.trace("findItemById: itemId = ", itemId);
 		Item item = itemService.findItemById(itemId);
 		log.trace(item.toString());
 		ItemDto ans = ItemMapper.toDto(item);
 		log.trace(ans.toString());
-		return ans;
+		Booking[] bookings = itemService.findLastBooking(item);
+		List<CommentItem> comments = itemService.findCommentsByItem(item);
+		return CommentItemMapper.toFullDto(item, comments, bookings);
 	}
 
 	@GetMapping
@@ -94,12 +101,15 @@ public class ItemController {
 	}
 
 	@PostMapping("/{itemId}/comment")
-	public ItemFullDto addComment(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid CommentItemDto dto) {
-		log.trace("addComment: userId = {}, itemId = {}", userId, itemId);
-		Item ans = itemService.addComment(userId, itemId, ItemMapper.toModel(dto));
-		log.trace(ans.toString());
-		return ItemMapper.toFullDto(ans);
+	public CommentAnsDto addComment(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
+			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid CommentDto dto) {
+		log.trace("addComment: userId = {}, itemId = {}", userId, itemId, dto.toString());
+		User user = itemService.findUserById(userId);
+		log.trace(user.toString());
+		Item item = itemService.findItemById(itemId);
+		log.trace(item.toString());
+		CommentItem comment = itemService.addComment(CommentItemMapper.toModel(user, itemId, dto.getText()));
+		return CommentItemMapper.toCommentUserDto(comment);
 	}
 
 }

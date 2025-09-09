@@ -13,22 +13,31 @@ public class BookingMapper {
 	}
 
 	public static Booking toModel(User user, Item item, BookingCreateDto dto) {
-		Booking ans = Booking.builder().id(null).item(item).user(user).start(UtilMapper.toLong(dto.getStart()))
-				.end(UtilMapper.toLong(dto.getEnd())).status(BookingStatus.WAITING).build();
-		return ans;
+		if (dto != null) {
+			Booking ans = Booking.builder().id(null).item(item).user(user).start(UtilMapper.toLong(dto.getStart()))
+					.end(UtilMapper.toLong(dto.getEnd())).status(BookingStatus.WAITING).build();
+			return ans;
+		}
+		return null;
 	}
 
 	public static BookingFullDto toDto(Booking booking) {
-		BookingFullDto ans = BookingFullDto.builder().id(booking.getId()).item(ItemMapper.toDto(booking.getItem()))
-				.booker(UserMapper.toDto(booking.getUser())).start(UtilMapper.toLocalDateTime(booking.getStart()))
-				.end(UtilMapper.toLocalDateTime(booking.getEnd())).status(BookingStatus.WAITING).build();
-		return ans;
+		if (booking != null) {
+			BookingFullDto ans = BookingFullDto.builder().id(booking.getId()).item(ItemMapper.toDto(booking.getItem()))
+					.booker(UserMapper.toDto(booking.getUser())).start(UtilMapper.toLocalDateTime(booking.getStart()))
+					.end(UtilMapper.toLocalDateTime(booking.getEnd())).status(BookingStatus.WAITING).build();
+			return ans;
+		}
+		return null;
 	}
 
-	public static BookingFullDto toDtoNoChangeStatus(Booking booking) {
-		BookingFullDto ans = BookingFullDto.builder().id(booking.getId()).item(ItemMapper.toDto(booking.getItem()))
-				.booker(UserMapper.toDto(booking.getUser())).start(UtilMapper.toLocalDateTime(booking.getStart()))
-				.end(UtilMapper.toLocalDateTime(booking.getEnd())).status(booking.getStatus()).build();
-		return ans;
+	public static BookingFullDto toDtoSaveStatus(Booking booking) {
+		if (booking != null) {
+			BookingFullDto ans = BookingFullDto.builder().id(booking.getId()).item(ItemMapper.toDto(booking.getItem()))
+					.booker(UserMapper.toDto(booking.getUser())).start(UtilMapper.toLocalDateTime(booking.getStart()))
+					.end(UtilMapper.toLocalDateTime(booking.getEnd())).status(booking.getStatus()).build();
+			return ans;
+		}
+		return null;
 	}
 }

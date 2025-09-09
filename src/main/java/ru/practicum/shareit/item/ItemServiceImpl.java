@@ -7,7 +7,13 @@ import org.springframework.stereotype.Service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.UtilMapper;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.commentitem.CommentItem;
+import ru.practicum.shareit.commentitem.CommentItemRepository;
 import ru.practicum.shareit.exception.AccessException;
+import ru.practicum.shareit.exception.MyBadRequestException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
@@ -19,12 +25,13 @@ public class ItemServiceImpl implements ItemService {
 
 	ItemRepository itemRepository;
 	UserRepository userRepository;
+	CommentItemRepository commentItemRepository;
+	BookingRepository bookingRepository;
 
 	@Override
 	public Item createItem(final Long userId, Item item) {
 		if (userRepository.hasUserById(userId)) {
-			Item swap = item.toBuilder().userId(userId).build();
-			Item ans = itemRepository.saveItem(swap);
+			Item ans = itemRepository.saveItem(item.toBuilder().userId(userId).build());
 			return ans;
 		}
 		throw new NotFoundException(User.NOT_FOUND);
@@ -57,6 +64,34 @@ public class ItemServiceImpl implements ItemService {
 			return List.of();
 		}
 		return itemRepository.searchAvailableItemsByName(nameItem);
+	}
+
+	@Override
+	public CommentItem addComment(CommentItem commentItem) {
+		final Long userId = commentItem.getUserId();
+		if (userRepository.hasUserById(userId)) {
+			if (bookingRepository.youBooked(userId, commentItem.getItemId())) {
+				return commentItemRepository.saveComment(commentItem);
+			}
+			throw new MyBadRequestException(Booking.ERROR_STATUS);
+		}
+		throw new NotFoundException(User.NOT_FOUND);
+	}
+
+	@Override
+	public User findUserById(Long userId) {
+		return userRepository.findUserById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+	}
+
+	@Override
+	public List<CommentItem> findCommentsByItem(Item item) {
+		return commentItemRepository.findCommentsByItemId(item.getId());
+	}
+
+	@Override
+	public Booking[] findLastBooking(Item item) {
+		Long time = UtilMapper.getCurrentTime();
+		return bookingRepository.findLastBooking(item.getId(), time);
 	}
 
 }

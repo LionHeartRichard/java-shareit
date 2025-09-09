@@ -1,7 +1,5 @@
 package ru.practicum.shareit.item;
 
-import ru.practicum.shareit.item.dto.ItemFullDto;
-import ru.practicum.shareit.item.dto.CommentItemDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
@@ -30,15 +28,4 @@ public class ItemMapper {
 				.description(item.getDescription()).build();
 		return dto;
 	}
-
-	public static ItemFullDto toFullDto(Item ans) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public static Item toModel(CommentItemDto dto) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

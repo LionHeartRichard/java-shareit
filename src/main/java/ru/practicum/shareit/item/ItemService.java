@@ -2,6 +2,10 @@ package ru.practicum.shareit.item;
 
 import java.util.List;
 
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.commentitem.CommentItem;
+import ru.practicum.shareit.user.User;
+
 public interface ItemService {
 
 	Item createItem(final Long userId, Item item);
@@ -14,5 +18,12 @@ public interface ItemService {
 
 	List<Item> searchAvailableItemsByName(final String nameItem);
 
-	Item addComment(final Long userId, final Long itemId, Item item);
+	CommentItem addComment(CommentItem commentItem);
+
+	User findUserById(Long userId);
+
+	List<CommentItem> findCommentsByItem(Item itemId);
+
+	Booking[] findLastBooking(Item item);
+
 }

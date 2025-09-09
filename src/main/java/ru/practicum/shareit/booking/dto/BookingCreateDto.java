@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Value;
-import ru.practicum.shareit.booking.BookingStatus;
 
 @Value
 @Builder(toBuilder = true)
