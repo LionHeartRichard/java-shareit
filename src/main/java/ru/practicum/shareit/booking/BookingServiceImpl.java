@@ -28,12 +28,12 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public User findUserById(Long bookerId) {
-		return userRepository.findUserById(bookerId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		return userRepository.findById(bookerId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
 	}
 
 	@Override
 	public Item findItemById(Long itemId) {
-		Item ans = itemRepository.findItemById(itemId).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
+		Item ans = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
 		if (ans.getAvailable()) {
 			return ans;
 		}
@@ -50,28 +50,22 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public Booking findByUserIdAndBookingId(Long userId, Long bookingId) {
-		if (userRepository.hasUserById(userId)) {
-			return bookingRepository.findByUserIdAndBookingId(bookingId)
-					.orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
-		}
-		throw new NotFoundException(User.NOT_FOUND);
+		userRepository.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		return bookingRepository.findByUserIdAndBookingId(bookingId)
+				.orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
 	}
 
 	@Override
 	public List<Booking> findByUserIdAndState(Long userId, TmpState state) {
-		if (userRepository.hasUserById(userId)) {
-			return bookingRepository.findAllByUserIdAndStateOrderByStartDesc(userId, state);
-		}
-		throw new NotFoundException(User.NOT_FOUND);
+		userRepository.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		return bookingRepository.findAllByUserIdAndStateOrderByStartDesc(userId, state);
 	}
 
 	@Override
 	public Booking approvedByUserIdAndBookingId(Long userId, Long bookingId, Boolean approved) {
 		final Booking booking = bookingRepository.findById(bookingId)
 				.orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
-		if (!userRepository.hasUserById(userId)) {
-			throw new AccessException(User.NO_ACCESS);
-		}
+		userRepository.findById(userId).orElseThrow(() -> new AccessException(User.NO_ACCESS));
 		if (booking.getStatus() != BookingStatus.WAITING) {
 			throw new MyBadRequestException(Booking.ERROR_STATUS);
 		}

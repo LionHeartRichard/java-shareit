@@ -11,7 +11,7 @@ public class ItemMapper {
 
 	public static Item toModel(ItemCreateDto dto) {
 		Item ans = Item.builder().id(null).name(dto.getName()).available(dto.getAvailable())
-				.description(dto.getDescription()).userId(null).build();
+				.description(dto.getDescription()).user(null).build();
 		return ans;
 	}
 

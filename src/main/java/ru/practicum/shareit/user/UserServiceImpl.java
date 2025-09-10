@@ -31,12 +31,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User findUserById(Long id) {
-		return userRepository.findUserById(id).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		return userRepository.findById(id).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
 	}
 
 	@Override
 	public void deleteUserById(Long id) {
-		userRepository.deleteUserById(id);
+		userRepository.deleteById(id);
 	}
 
 }

@@ -2,16 +2,17 @@ package ru.practicum.shareit.item;
 
 import java.util.Objects;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Value;
+import ru.practicum.shareit.user.User;
 
 @Entity
 @Table(name = "item")
@@ -26,16 +27,16 @@ public class Item {
 	Boolean available;
 	String description;
 
-	@Column(name = "user_id")
+	@JoinColumn(name = "user_id")
 	@ManyToOne(fetch = FetchType.LAZY)
-	Long userId;
+	User user;
 
 	public static final String NOT_FOUND = "Item not found!";
 	public static final String NOT_OWNER = "User is not the owner of item!";
 	public static final String NOT_AVAILABLE = "Item is not available!";
 
 	public boolean isOwner(final Long userId) {
-		return this.userId.equals(userId);
+		return this.user.getId().equals(userId);
 	}
 
 	public boolean isAvailable(String nameItem) {
@@ -51,12 +52,12 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		return Objects.equals(id, other.id) && Objects.equals(userId, other.userId);
+		return Objects.equals(id, other.id) && Objects.equals(user.getId(), other.user.getId());
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, userId);
+		return Objects.hash(id, user.getId());
 	}
 
 }

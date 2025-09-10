@@ -14,8 +14,8 @@ public class CommentItemMapper {
 	private CommentItemMapper() {
 	}
 
-	public static CommentItem toModel(final User user, final Long itemId, final String text) {
-		CommentItem ans = CommentItem.builder().id(null).text(text).itemId(itemId).user(user)
+	public static CommentItem toModel(final User user, Item item, final String text) {
+		CommentItem ans = CommentItem.builder().id(null).text(text).item(item).user(user)
 				.created(UtilMapper.getCurrentTime()).build();
 		return ans;
 	}

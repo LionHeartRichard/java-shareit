@@ -30,27 +30,24 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public Item createItem(final Long userId, Item item) {
-		if (userRepository.hasUserById(userId)) {
-			Item ans = itemRepository.save(item.toBuilder().userId(userId).build());
-			return ans;
-		}
-		throw new NotFoundException(User.NOT_FOUND);
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		Item ans = itemRepository.save(item.toBuilder().user(user).build());
+		return ans;
 	}
 
 	@Override
 	public Item findItemById(final Long id) {
-		return itemRepository.findItemById(id).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
+		return itemRepository.findById(id).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
 	}
 
 	@Override
 	public Item updateItem(final Long userId, Item item) {
-		if (userRepository.hasUserById(userId)) {
-			if (item.isOwner(userId)) {
-				return itemRepository.save(item);
-			}
-			throw new AccessException(Item.NOT_OWNER);
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		if (item.isOwner(user.getId())) {
+			return itemRepository.save(item);
 		}
-		throw new NotFoundException(User.NOT_FOUND);
+		throw new AccessException(Item.NOT_OWNER);
+
 	}
 
 	@Override
@@ -69,23 +66,21 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public CommentItem addComment(CommentItem commentItem) {
 		final Long userId = commentItem.getUser().getId();
-		if (userRepository.hasUserById(userId)) {
-			if (bookingRepository.youBooked(userId, commentItem.getItemId())) {
-				return commentItemRepository.save(commentItem);
-			}
-			throw new MyBadRequestException(Booking.ERROR_STATUS);
+		if (bookingRepository.youBooked(userId, commentItem.getItem().getId())) {
+			return commentItemRepository.save(commentItem);
 		}
-		throw new NotFoundException(User.NOT_FOUND);
+		throw new MyBadRequestException(Booking.ERROR_STATUS);
+
 	}
 
 	@Override
 	public User findUserById(Long userId) {
-		return userRepository.findUserById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
 	}
 
 	@Override
 	public List<CommentItem> findCommentsByItem(Item item) {
-		return commentItemRepository.findCommentsByItemId(item.getId());
+		return commentItemRepository.findCommentItemByItemId(item.getId());
 	}
 
 	@Override

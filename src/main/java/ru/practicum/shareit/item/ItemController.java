@@ -32,10 +32,6 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.user.User;
 
-/**
- * TODO Sprint add-controllers.
- */
-
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 @RestController
@@ -108,7 +104,7 @@ public class ItemController {
 		log.trace(user.toString());
 		Item item = itemService.findItemById(itemId);
 		log.trace(item.toString());
-		CommentItem comment = itemService.addComment(CommentItemMapper.toModel(user, itemId, dto.getText()));
+		CommentItem comment = itemService.addComment(CommentItemMapper.toModel(user, item, dto.getText()));
 		return CommentItemMapper.toCommentUserDto(comment);
 	}
 

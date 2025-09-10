@@ -15,8 +15,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
 	List<Booking> findAllByUserIdAndStateOrderByStartDesc(final Long userId, TmpState state);
 
-	Optional<Booking> findById(final Long bookingId);
-
 	boolean youBooked(final Long userId, final Long itemId);
 
 	Booking[] findLastBooking(final Long id, final Long time);
