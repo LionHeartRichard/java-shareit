@@ -51,14 +51,14 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public Booking findByUserIdAndBookingId(Long userId, Long bookingId) {
 		userRepository.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
-		return bookingRepository.findByUserIdAndBookingId(bookingId)
+		return bookingRepository.findByUserIdAndId(userId, bookingId)
 				.orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
 	}
 
 	@Override
 	public List<Booking> findByUserIdAndState(Long userId, TmpState state) {
 		userRepository.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
-		return bookingRepository.findAllByUserIdAndStateOrderByStartDesc(userId, state);
+		return bookingRepository.findAllByUserIdAndStatus(userId, state);
 	}
 
 	@Override

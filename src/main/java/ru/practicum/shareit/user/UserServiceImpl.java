@@ -17,15 +17,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User createUser(User user) {
-		if (!userRepository.hasUserByEmail(user))
+		if (!userRepository.hasUserByEmail(user.getEmail())) {
 			return userRepository.save(user);
+		}
 		throw new ConflictException(User.EMAIL_IN_USE);
 	}
 
 	@Override
 	public User updateUser(User user) {
-		if (!userRepository.isUsedEmail(user))
+		if (!userRepository.isUsedEmail(user.getId(), user.getEmail())) {
 			return userRepository.save(user);
+		}
 		throw new ConflictException(User.EMAIL_IN_USE);
 	}
 

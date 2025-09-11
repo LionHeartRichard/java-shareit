@@ -89,9 +89,9 @@ public class ItemController {
 
 	@GetMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
-	public List<ItemDto> searchAvailableItemsByName(@RequestParam final String text) {
+	public List<ItemDto> searchAvailableItemsByText(@RequestParam final String text) {
 		log.trace("searchAvailableItems: ", text);
-		List<Item> items = itemService.searchAvailableItemsByName(text);
+		List<Item> items = itemService.searchAvailableItemsByText(text);
 		log.trace("items: {}", items);
 		return items.stream().map(v -> ItemMapper.toDto(v)).toList();
 	}

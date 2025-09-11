@@ -16,11 +16,11 @@ public interface ItemService {
 
 	List<Item> findItemsByOwner(final Long ownerId);
 
-	List<Item> searchAvailableItemsByName(final String nameItem);
+	List<Item> searchAvailableItemsByText(String nameItem);
 
 	CommentItem addComment(CommentItem commentItem);
 
-	User findUserById(Long userId);
+	User findUserById(final Long userId);
 
 	List<CommentItem> findCommentsByItem(Item itemId);
 

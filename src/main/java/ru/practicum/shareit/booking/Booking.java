@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +32,9 @@ public class Booking {
 	@ManyToOne(fetch = FetchType.LAZY)
 	User user;
 
+	@Column(name = "start_")
 	Long start;
+	@Column(name = "end_")
 	Long end;
 	BookingStatus status;
 

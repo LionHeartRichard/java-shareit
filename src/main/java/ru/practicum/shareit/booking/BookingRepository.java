@@ -11,12 +11,14 @@ import ru.practicum.shareit.TmpState;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-	Optional<Booking> findByUserIdAndBookingId(final Long bookingId);
+	Optional<Booking> findByUserIdAndId(final Long userId, final Long bookingId);
 
-	List<Booking> findAllByUserIdAndStateOrderByStartDesc(final Long userId, TmpState state);
+	List<Booking> findAllByUserIdAndStatus(final Long userId, TmpState state);
 
-	boolean youBooked(final Long userId, final Long itemId);
+	Optional<Booking> findByUserIdAndItemId(final Long userId, final Long itemId);
 
-	Booking[] findLastBooking(final Long id, final Long time);
+	List<Booking> findByItemId(final Long itemId);
+
+	// Booking[] findLastBooking(final Long id, final Long time);
 
 }

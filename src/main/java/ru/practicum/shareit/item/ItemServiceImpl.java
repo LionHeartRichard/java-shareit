@@ -52,25 +52,23 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<Item> findItemsByOwner(final Long userId) {
-		return itemRepository.findItemsByOwner(userId);
+		return itemRepository.findItemsByUserId(userId);
 	}
 
 	@Override
-	public List<Item> searchAvailableItemsByName(final String nameItem) {
-		if (nameItem == null || nameItem.isBlank()) {
+	public List<Item> searchAvailableItemsByText(String text) {
+		if (text == null || text.isBlank()) {
 			return List.of();
 		}
-		return itemRepository.searchAvailableItemsByName(nameItem);
+		return itemRepository.searchAvailableItemsByText("%" + text + "%");
 	}
 
 	@Override
 	public CommentItem addComment(CommentItem commentItem) {
 		final Long userId = commentItem.getUser().getId();
-		if (bookingRepository.youBooked(userId, commentItem.getItem().getId())) {
-			return commentItemRepository.save(commentItem);
-		}
-		throw new MyBadRequestException(Booking.ERROR_STATUS);
-
+		bookingRepository.findByUserIdAndItemId(userId, commentItem.getItem().getId())
+				.orElseThrow(() -> new MyBadRequestException(Booking.ERROR_STATUS));
+		return commentItemRepository.save(commentItem);
 	}
 
 	@Override
@@ -86,7 +84,11 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public Booking[] findLastBooking(Item item) {
 		Long time = UtilMapper.getCurrentTime();
-		return bookingRepository.findLastBooking(item.getId(), time);
+		// return bookingRepository.findLastBooking(item.getId(), time);
+		// TODO
+		List<Booking> mokeListBooking = bookingRepository.findByItemId(item.getId());
+		Booking[] mokeAns = new Booking[] {mokeListBooking.get(0), mokeListBooking.get(1)};
+		return mokeAns;
 	}
 
 }

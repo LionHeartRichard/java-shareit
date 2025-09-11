@@ -23,7 +23,7 @@ public class CommentItemMapper {
 	public static ItemFullDto toFullDto(Item item, List<CommentItem> comments, Booking[] bookings) {
 		List<CommentAnsDto> commentsUsers = comments.stream().map(v -> toCommentUserDto(v)).toList();
 		ItemFullDto ans = ItemFullDto.builder().id(item.getId()).name(item.getName()).available(item.getAvailable())
-				.description(item.getDescription()).userId(item.getUserId())
+				.description(item.getDescription()).userId(item.getUser().getId())
 				.lastBooking(BookingMapper.toDtoSaveStatus(bookings[0]))
 				.nextBooking(BookingMapper.toDtoSaveStatus(bookings[1])).comments(commentsUsers).build();
 		return ans;
