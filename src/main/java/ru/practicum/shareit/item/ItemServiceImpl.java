@@ -42,11 +42,13 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public Item updateItem(final Long userId, Item item) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
-		if (item.isOwner(user.getId())) {
-			return itemRepository.save(item);
+		if (userRepository.hasUserById(userId)) {
+			if (item.isOwner(userId)) {
+				return itemRepository.save(item);
+			}
+			throw new AccessException(Item.NOT_OWNER);
 		}
-		throw new AccessException(Item.NOT_OWNER);
+		throw new NotFoundException(User.NOT_FOUND);
 
 	}
 
