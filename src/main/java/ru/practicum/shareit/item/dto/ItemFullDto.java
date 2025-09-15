@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.dto;
 
 import java.util.List;
-
 import lombok.Builder;
 import lombok.Value;
 import ru.practicum.shareit.booking.dto.BookingFullDto;

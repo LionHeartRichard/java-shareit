@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Value;
 
-@Builder(toBuilder = true)
 @Value
+@Builder(toBuilder = true)
 public class UserUpdateDto {
 
 	@Size(max = 50)

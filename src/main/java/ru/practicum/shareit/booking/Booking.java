@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -46,4 +48,22 @@ public class Booking {
 	public boolean isOwner(Long userId) {
 		return Long.compare(user.getId(), userId) == 0;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Booking other = (Booking) obj;
+		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
 }

@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public User createUser(User user) {
-		if (!userRepository.hasUserByEmail(user.getEmail())) {
+		if (!userRepository.hasEmail(user.getEmail())) {
 			return userRepository.save(user);
 		}
 		throw new ConflictException(User.EMAIL_IN_USE);
@@ -28,14 +28,11 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public User updateUser(User user) {
-		final Long userId = user.getId();
-		if (userRepository.hasUserById(userId)) {
-			if (!userRepository.isUsedEmail(userId, user.getEmail())) {
-				return userRepository.save(user);
-			}
-			throw new ConflictException(User.EMAIL_IN_USE);
+		if (!userRepository.emailIsUsed(user.getId(), user.getEmail())) {
+			return userRepository.save(user);
 		}
-		throw new NotFoundException(User.NOT_FOUND);
+		throw new ConflictException(User.EMAIL_IN_USE);
+
 	}
 
 	@Override

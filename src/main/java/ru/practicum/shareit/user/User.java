@@ -1,19 +1,29 @@
 package ru.practicum.shareit.user;
 
+import java.util.Objects;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "user_")
-@Value
+@Getter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder(toBuilder = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
 
 	@Id
@@ -27,6 +37,11 @@ public class User {
 	public static final String NO_ACCESS = "User does not have access!";
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -35,11 +50,7 @@ public class User {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		return Objects.equals(email, other.email);
+		return Objects.equals(id, other.id);
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(email);
-	}
 }

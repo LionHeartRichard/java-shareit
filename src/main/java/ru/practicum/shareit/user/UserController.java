@@ -22,10 +22,6 @@ import ru.practicum.shareit.user.dto.UserCreateDto;
 import ru.practicum.shareit.user.dto.UserFullDto;
 import ru.practicum.shareit.user.dto.UserUpdateDto;
 
-/**
- * TODO Sprint add-controllers.
- */
-
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 @RestController
@@ -39,11 +35,11 @@ public class UserController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public UserFullDto createUser(@RequestBody @Valid UserCreateDto dto) {
-		log.trace("createUser: ", dto.toString());
+		log.trace("createUser: {}", dto.toString());
 		User user = userService.createUser(UserMapper.toModel(dto));
-		log.trace(user.toString());
+		log.trace("user in DB: {}", user.toString());
 		UserFullDto ans = UserMapper.toDto(user);
-		log.trace(ans.toString());
+		log.trace("ans full dto: {}", ans.toString());
 		return ans;
 	}
 
@@ -51,27 +47,27 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public UserFullDto updateUser(@PathVariable @NotNull @Positive final Long userId,
 			@RequestBody @Valid UserUpdateDto dto) {
-		log.trace("updateUser: ", dto.toString());
+		log.trace("UserId: {}, updateUser: {}", userId, dto.toString());
 		User user = userService.findUserById(userId);
-		log.trace(user.toString());
+		log.trace("Old user in DB: {}", user.toString());
 		User ans = userService.updateUser(UserMapper.toModel(user, dto));
-		log.trace(ans.toString());
+		log.trace("Update user, ans: {}", ans.toString());
 		return UserMapper.toDto(ans);
 	}
 
 	@GetMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.OK)
 	public UserFullDto findUserById(@PathVariable @NotNull @Positive final Long userId) {
-		log.trace("findUserById: userId = ", userId);
+		log.trace("findUserById: userId = {}", userId);
 		User ans = userService.findUserById(userId);
-		log.trace(ans.toString());
+		log.trace("find user in DB: {}", ans.toString());
 		return UserMapper.toDto(ans);
 	}
 
 	@DeleteMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteUserById(@PathVariable @NotNull @Positive final Long userId) {
-		log.trace("deleteUserById: userId = ", userId);
+		log.trace("deleteUserById: userId: {}", userId);
 		userService.deleteUserById(userId);
 	}
 

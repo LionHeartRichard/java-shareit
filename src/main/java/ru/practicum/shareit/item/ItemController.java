@@ -47,9 +47,9 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ItemDto createItem(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@RequestBody @Valid ItemCreateDto dto) {
-		log.trace("createItem: ", dto.toString());
+		log.trace("createItem: {}", dto.toString());
 		Item ans = itemService.createItem(userId, ItemMapper.toModel(dto));
-		log.trace(ans.toString());
+		log.trace("ans item in DB: {}", ans.toString());
 		return ItemMapper.toDto(ans);
 	}
 
@@ -57,31 +57,32 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.OK)
 	public ItemDto updateItem(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @Positive final Long itemId, @RequestBody @Valid ItemUpdateDto dto) {
-		log.trace("updateItem: ", dto.toString());
+		log.trace("updateItem, userId:{}, ItemUpdateDto: {}", userId, dto.toString());
 		Item item = itemService.findItemById(itemId);
-		log.trace(item.toString());
+		log.trace("old item in DB: {}", item.toString());
 		Item ans = itemService.updateItem(userId, ItemMapper.toModel(item, dto));
-		log.trace(ans.toString());
+		log.trace("ans item update: {}", ans.toString());
 		return ItemMapper.toDto(ans);
 	}
 
 	@GetMapping(PATH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
 	public ItemFullDto findItemById(@PathVariable @NotNull @Positive final Long itemId) {
-		log.trace("findItemById: itemId = ", itemId);
+		log.trace("findItemById itemId: {}", itemId);
 		Item item = itemService.findItemById(itemId);
-		log.trace(item.toString());
+		log.trace("find item in DB: {}", item.toString());
 		ItemDto ans = ItemMapper.toDto(item);
-		log.trace(ans.toString());
+		log.trace("ans item dto: {}", ans.toString());
 		Booking[] bookings = itemService.findLastBooking(item);
 		List<CommentItem> comments = itemService.findCommentsByItem(item);
+		log.trace("ans List<Comments>: {}", comments.toString());
 		return CommentItemMapper.toFullDto(item, comments, bookings);
 	}
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public List<ItemDto> findItemsByOwner(@RequestHeader(HEADER) @NotNull @Positive final Long userId) {
-		log.trace("findItemsByOwner: userId = ", userId);
+		log.trace("findItemsByOwner: userId = {}", userId);
 		List<Item> items = itemService.findItemsByOwner(userId);
 		log.trace("items: {}", items);
 		return items.stream().map(v -> ItemMapper.toDto(v)).toList();
@@ -90,7 +91,7 @@ public class ItemController {
 	@GetMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
 	public List<ItemDto> searchAvailableItemsByText(@RequestParam final String text) {
-		log.trace("searchAvailableItems: ", text);
+		log.trace("searchAvailableItems: {}", text);
 		List<Item> items = itemService.searchAvailableItemsByText(text);
 		log.trace("items: {}", items);
 		return items.stream().map(v -> ItemMapper.toDto(v)).toList();
@@ -99,12 +100,13 @@ public class ItemController {
 	@PostMapping("/{itemId}/comment")
 	public CommentAnsDto addComment(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid CommentDto dto) {
-		log.trace("addComment: userId = {}, itemId = {}", userId, itemId, dto.toString());
+		log.trace("addComment: userId: {}, itemId: {}, dto: {}", userId, itemId, dto.toString());
 		User user = itemService.findUserById(userId);
-		log.trace(user.toString());
+		log.trace("find user in DB: {}", user.toString());
 		Item item = itemService.findItemById(itemId);
-		log.trace(item.toString());
+		log.trace("find item in DB: {}", item.toString());
 		CommentItem comment = itemService.addComment(CommentItemMapper.toModel(user, item, dto.getText()));
+		log.trace("comment: {}", comment.toString());
 		return CommentItemMapper.toCommentUserDto(comment);
 	}
 

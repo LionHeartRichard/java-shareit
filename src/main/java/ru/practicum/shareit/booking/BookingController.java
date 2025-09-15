@@ -39,13 +39,13 @@ public class BookingController {
 	@PostMapping
 	public BookingFullDto createBooking(@RequestHeader(HEADER) @NotNull @Positive final Long bookerId,
 			@RequestBody @Valid BookingCreateDto dto) {
-		log.trace("createBooking: ", dto.toString());
+		log.trace("createBooking: {}", dto.toString());
 		User user = service.findUserById(bookerId);
-		log.trace(user.toString());
+		log.trace("find user in DB for createBooking: {}", user.toString());
 		Item item = service.findItemById(dto.getItemId());
-		log.trace(item.toString());
+		log.trace("find item in DB for createBooking: {}", item.toString());
 		Booking ans = service.createBooking(BookingMapper.toModel(user, item, dto));
-		log.trace(ans.toString());
+		log.trace("ans booking in DB: {}", ans.toString());
 		return BookingMapper.toDto(ans);
 	}
 
@@ -54,7 +54,7 @@ public class BookingController {
 			@PathVariable @Positive Long bookingId) {
 		log.trace("BookingFullDto: userId = {}, bookingId = {}", userId, bookingId);
 		Booking ans = service.findByUserIdAndBookingId(userId, bookingId);
-		log.trace(ans.toString());
+		log.trace("ans booking in DB: {}", ans.toString());
 		return BookingMapper.toDto(ans);
 	}
 
@@ -63,7 +63,7 @@ public class BookingController {
 			@RequestParam(required = false, defaultValue = "ALL") String state) {
 		log.trace("findByBookerIdAndState: bookerId = {}, state = {}", userId, state);
 		List<Booking> ans = service.findByUserIdAndState(userId, TmpState.valueOf(state));
-		log.trace("List<Booking> ans: ", ans.toString());
+		log.trace("List<Booking> ans: {}", ans.toString());
 		return ans.stream().map(v -> BookingMapper.toDto(v)).toList();
 	}
 
@@ -72,16 +72,16 @@ public class BookingController {
 			@RequestParam(required = false, defaultValue = "ALL") String state) {
 		log.trace("findByUserIdAndState: userId = {}, state = {}", userId, state);
 		List<Booking> ans = service.findByUserIdAndState(userId, TmpState.valueOf(state));
-		log.trace("List<Booking> ans: ", ans.toString());
+		log.trace("List<Booking> ans: {}", ans.toString());
 		return ans.stream().map(v -> BookingMapper.toDto(v)).toList();
 	}
 
 	@PatchMapping(PATH_BOOKING)
 	public BookingFullDto approvedByUserIdAndBookingId(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @Positive Long bookingId, @RequestParam Boolean approved) {
-		log.trace("approvedByUserIdAndBookingId: ", userId, bookingId, approved);
+		log.trace("approvedByUserIdAndBookingId: userId: {}, bookingId: {}, approved: {}", userId, bookingId, approved);
 		Booking ans = service.approvedByUserIdAndBookingId(userId, bookingId, approved);
-		log.trace(ans.toString());
+		log.trace("ans booking in DB: {}", ans.toString());
 		return BookingMapper.toDtoSaveStatus(ans);
 	}
 }

@@ -17,4 +17,5 @@ public class BookingFullDto {
 	LocalDateTime start;
 	LocalDateTime end;
 	BookingStatus status;
+
 }

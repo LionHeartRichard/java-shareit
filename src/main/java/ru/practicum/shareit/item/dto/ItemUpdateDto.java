@@ -1,11 +1,20 @@
 package ru.practicum.shareit.item.dto;
 
+import java.time.LocalDateTime;
+
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.Value;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.booking.dto.BookingCreateDto;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class ItemUpdateDto {
 	@Size(max = 50)
 	String name;

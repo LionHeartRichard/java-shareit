@@ -52,12 +52,12 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		return Objects.equals(id, other.id) && Objects.equals(user.getId(), other.user.getId());
+		return Objects.equals(id, other.id);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, user.getId());
+		return Objects.hash(id);
 	}
 
 }

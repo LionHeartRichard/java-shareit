@@ -42,7 +42,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public Item updateItem(final Long userId, Item item) {
-		if (userRepository.hasUserById(userId)) {
+		if (userRepository.hasId(userId)) {
 			if (item.isOwner(userId)) {
 				return itemRepository.save(item);
 			}

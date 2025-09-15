@@ -11,6 +11,7 @@ import ru.practicum.shareit.item.dto.ItemFullDto;
 import ru.practicum.shareit.user.User;
 
 public class CommentItemMapper {
+
 	private CommentItemMapper() {
 	}
 
