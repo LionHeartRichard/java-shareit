@@ -2,6 +2,8 @@ package ru.practicum.shareit.item;
 
 import java.util.List;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.commentitem.CommentItem;
 import ru.practicum.shareit.user.User;
@@ -25,5 +27,9 @@ public interface ItemService {
 	List<CommentItem> findCommentsByItem(Item itemId);
 
 	Booking[] findLastBooking(Item item);
+
+	Booking findBookingByUserIdByItemId(final Long userId, final Long itemId);
+
+	boolean hasApprovedBooking(final Long userId, final Long itemId);
 
 }

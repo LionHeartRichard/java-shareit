@@ -15,13 +15,14 @@ public class CommentItemMapper {
 	private CommentItemMapper() {
 	}
 
-	public static CommentItem toModel(final User user, Item item, final String text) {
+	public static CommentItem toModel(final User user, final Item item, final String text) {
 		CommentItem ans = CommentItem.builder().id(null).text(text).item(item).user(user)
 				.created(UtilMapper.getCurrentTime()).build();
 		return ans;
+
 	}
 
-	public static ItemFullDto toFullDto(Item item, List<CommentItem> comments, Booking[] bookings) {
+	public static ItemFullDto toFullDto(final Item item, final List<CommentItem> comments, final Booking[] bookings) {
 		List<CommentAnsDto> commentsUsers = comments.stream().map(v -> toCommentUserDto(v)).toList();
 		ItemFullDto ans = ItemFullDto.builder().id(item.getId()).name(item.getName()).available(item.getAvailable())
 				.description(item.getDescription()).userId(item.getUser().getId())
@@ -30,7 +31,7 @@ public class CommentItemMapper {
 		return ans;
 	}
 
-	public static CommentAnsDto toCommentUserDto(CommentItem comment) {
+	public static CommentAnsDto toCommentUserDto(final CommentItem comment) {
 		CommentAnsDto ans = CommentAnsDto.builder().id(comment.getId()).authorName(comment.getUser().getName())
 				.text(comment.getText()).created(UtilMapper.toLocalDateTime(comment.getCreated())).build();
 		return ans;

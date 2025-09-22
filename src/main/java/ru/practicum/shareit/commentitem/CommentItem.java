@@ -62,4 +62,5 @@ public class CommentItem {
 		return Objects.hash(id);
 	}
 
+	public static final String NO_COMMIT = "The user cannot leave a comment because he is not the owner";
 }

@@ -6,14 +6,12 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import ru.practicum.shareit.TmpState;
-
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
 	Optional<Booking> findByUserIdAndId(final Long userId, final Long bookingId);
 
-	List<Booking> findAllByUserIdAndStatus(final Long userId, TmpState state);
+	List<Booking> findByUserId(final Long userId);
 
 	Optional<Booking> findByUserIdAndItemId(final Long userId, final Long itemId);
 

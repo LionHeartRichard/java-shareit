@@ -104,6 +104,7 @@ public class ItemController {
 		User user = itemService.findUserById(userId);
 		log.trace("find user in DB: {}", user.toString());
 		Item item = itemService.findItemById(itemId);
+		itemService.hasApprovedBooking(userId, itemId);
 		log.trace("find item in DB: {}", item.toString());
 		CommentItem comment = itemService.addComment(CommentItemMapper.toModel(user, item, dto.getText()));
 		log.trace("comment: {}", comment.toString());
