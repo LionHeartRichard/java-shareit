@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,6 +40,8 @@ public class Booking {
 	Long start;
 	@Column(name = "end_")
 	Long end;
+
+	@Enumerated(EnumType.STRING)
 	BookingStatus status;
 
 	public static final String NOT_FOUND = "Booking not found!";

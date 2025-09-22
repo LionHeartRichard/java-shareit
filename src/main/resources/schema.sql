@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS item (
 	description varchar(1000) NOT NULL,
 	available bool NOT NULL,
 	user_id BIGINT NOT NULL,
-	CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES user_ (id) ON DELETE CASCADE
+	CONSTRAINT i_user_id_fk FOREIGN KEY (user_id) REFERENCES user_ (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS booking (
@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS booking (
 	start_ BIGINT NOT NULL,
 	end_ BIGINT NOT NULL,
 	status varchar(20) NOT NULL,
-	CONSTRAINT item_id_fk FOREIGN KEY (item_id) REFERENCES item (id) ON DELETE CASCADE,
-	CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES user_ (id) ON DELETE CASCADE
+	CONSTRAINT b_item_id_fk FOREIGN KEY (item_id) REFERENCES item (id) ON DELETE CASCADE,
+	CONSTRAINT b_user_id_fk FOREIGN KEY (user_id) REFERENCES user_ (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS comment_item (
@@ -36,6 +36,6 @@ CREATE TABLE IF NOT EXISTS comment_item (
 	item_id BIGINT NOT NULL,
 	user_id BIGINT NOT NULL,
 	created BIGINT NOT NULL,
-	CONSTRAINT item_id_fk FOREIGN KEY (item_id) REFERENCES item (id) ON DELETE CASCADE,
-	CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES user_ (id) ON DELETE CASCADE
+	CONSTRAINT c_item_id_fk FOREIGN KEY (item_id) REFERENCES item (id) ON DELETE CASCADE,
+	CONSTRAINT c_user_id_fk FOREIGN KEY (user_id) REFERENCES user_ (id) ON DELETE CASCADE
 );
