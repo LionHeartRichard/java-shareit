@@ -6,6 +6,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
@@ -17,6 +20,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
 	List<Booking> findByItemId(final Long itemId);
 
-	// Booking[] findLastBooking(final Long id, final Long time);
+	@Query(value = "SELECT * FROM booking WHERE item_id = :item_id AND user_id = :user_id AND status = :status AND end_ < :end_", nativeQuery = true)
+	List<Booking> findByItemIdAndUserIdAndStatusIsAndEndTime(@Param("item_id") final Long itemId,
+			@Param("user_id") final Long userId, @Param("status") final String status, @Param("end_") final Long end);
+
+	@Query(value = "SELECT * FROM booking WHERE item_id = :item_id AND end_ < :end_ ORDER BY start_ DESC LIMIT 1", nativeQuery = true)
+	Optional<Booking> findLastBooking(@Param("item_id") final Long itemId, @Param("end_") final Long currentTime);
+
+	@Query(value = "SELECT * FROM booking WHERE item_id = :item_id AND start_ > :start_ ORDER BY start_ ASC LIMIT 1", nativeQuery = true)
+	Optional<Booking> findNextBooking(@Param("item_id") final Long itemId, @Param("start_") final Long currentTime);
 
 }

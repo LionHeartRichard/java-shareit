@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -69,9 +68,13 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public CommentItem addComment(final CommentItem commentItem) {
+		final Long itemId = commentItem.getItem().getId();
 		final Long userId = commentItem.getUser().getId();
-		bookingRepository.findByUserIdAndItemId(userId, commentItem.getItem().getId())
-				.orElseThrow(() -> new MyBadRequestException(Booking.ERROR_STATUS));
+		final Long currentTime = UtilMapper.getCurrentTime();
+		List<Booking> bookings = bookingRepository.findByItemIdAndUserIdAndStatusIsAndEndTime(itemId, userId,
+				BookingStatus.APPROVED.toString(), currentTime);
+		if (bookings.isEmpty())
+			throw new MyBadRequestException(Booking.NOT_COMPLETED);
 		return commentItemRepository.save(commentItem);
 	}
 
@@ -81,21 +84,16 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<CommentItem> findCommentsByItem(final Item item) {
-		return commentItemRepository.findCommentItemByItemId(item.getId());
+	public List<CommentItem> findCommentsByItemId(final Long itemId) {
+		return commentItemRepository.findByItemId(itemId);
 	}
 
 	@Override
-	public Booking[] findLastBooking(final Item item) {
-		Long time = UtilMapper.getCurrentTime();
-		// return bookingRepository.findLastBooking(item.getId(), time);
-		// TODO
-		List<Booking> mokeListBooking = bookingRepository.findByItemId(item.getId());
-
-		Booking[] mokeAns = new Booking[2];
-		mokeAns = (mokeListBooking.size() == 2) ? new Booking[] {mokeListBooking.get(0), mokeListBooking.get(1)}
-				: new Booking[] {null, null};
-		return mokeAns;
+	public Booking[] findLastBooking(final Long itemId) {
+		final Long currentTime = UtilMapper.getCurrentTime();
+		Booking lastBooking = bookingRepository.findLastBooking(itemId, currentTime).orElse(null);
+		Booking nextBooking = bookingRepository.findNextBooking(itemId, currentTime).orElse(null);
+		return new Booking[] {lastBooking, nextBooking};
 	}
 
 	@Override

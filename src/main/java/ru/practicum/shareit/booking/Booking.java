@@ -57,6 +57,7 @@ public class Booking {
 	public static final String NOT_OWNER = "User is not the owner of the item, access denied!";
 	public static final String ERROR_STATUS = "The booking status cannot be changed!";
 	public static final String ERROR_TIME = "The booking start time cannot be later than the end time!";
+	public static final String NOT_COMPLETED = "Booking not completed";
 
 	public boolean isOwner(Long userId) {
 		return Long.compare(user.getId(), userId) == 0;

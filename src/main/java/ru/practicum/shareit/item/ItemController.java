@@ -68,13 +68,11 @@ public class ItemController {
 	@GetMapping(PATH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
 	public ItemFullDto findItemById(@PathVariable @NotNull @Positive final Long itemId) {
-		log.trace("findItemById itemId: {}", itemId);
+		log.trace("__findItemById itemId: {}", itemId);
 		Item item = itemService.findItemById(itemId);
 		log.trace("find item in DB: {}", item.toString());
-		ItemDto ans = ItemMapper.toDto(item);
-		log.trace("ans item dto: {}", ans.toString());
-		Booking[] bookings = itemService.findLastBooking(item);
-		List<CommentItem> comments = itemService.findCommentsByItem(item);
+		Booking[] bookings = itemService.findLastBooking(itemId);
+		List<CommentItem> comments = itemService.findCommentsByItemId(itemId);
 		log.trace("ans List<Comments>: {}", comments.toString());
 		return CommentItemMapper.toFullDto(item, comments, bookings);
 	}
@@ -100,7 +98,7 @@ public class ItemController {
 	@PostMapping("/{itemId}/comment")
 	public CommentAnsDto addComment(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid CommentDto dto) {
-		log.trace("addComment: userId: {}, itemId: {}, dto: {}", userId, itemId, dto.toString());
+		log.trace("___addComment: userId: {}, itemId: {}, dto: {}", userId, itemId, dto.toString());
 		User user = itemService.findUserById(userId);
 		log.trace("find user in DB: {}", user.toString());
 		Item item = itemService.findItemById(itemId);
