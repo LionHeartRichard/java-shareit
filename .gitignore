@@ -30,6 +30,7 @@ hs_err_pid*
 /bin/
 /target/
 
+*.db
 /db/
 
 application.yaml
