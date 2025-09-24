@@ -93,6 +93,7 @@ public class ItemServiceImpl implements ItemService {
 		final Long currentTime = UtilMapper.getCurrentTime();
 		Booking lastBooking = bookingRepository.findLastBooking(itemId, currentTime).orElse(null);
 		Booking nextBooking = bookingRepository.findNextBooking(itemId, currentTime).orElse(null);
+		lastBooking = nextBooking == null ? null : lastBooking;
 		return new Booking[] {lastBooking, nextBooking};
 	}
 
