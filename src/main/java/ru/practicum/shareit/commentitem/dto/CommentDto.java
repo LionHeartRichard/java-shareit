@@ -1,10 +1,9 @@
 package ru.practicum.shareit.commentitem.dto;
 
-import java.time.LocalDateTime;
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Value;
+import java.time.LocalDateTime;
 
 @Value
 @Builder(toBuilder = true)
@@ -14,5 +13,4 @@ public class CommentDto {
 	String text;
 	String authorName;
 	LocalDateTime created;
-
 }

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,6 +31,7 @@ public class ItemServiceImpl implements ItemService {
 	CommentItemRepository commentItemRepository;
 	BookingRepository bookingRepository;
 
+	@Transactional
 	@Override
 	public Item createItem(final Long userId, final Item item) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
@@ -41,6 +44,7 @@ public class ItemServiceImpl implements ItemService {
 		return itemRepository.findById(id).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
 	}
 
+	@Transactional
 	@Override
 	public Item updateItem(final Long userId, final Item item) {
 		if (userRepository.hasId(userId)) {
@@ -85,7 +89,9 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<CommentItem> findCommentsByItemId(final Long itemId) {
-		return commentItemRepository.findByItemId(itemId);
+//		log.error("***** itemId: {}", itemId);
+//		return commentItemRepository.findByItemId(itemId);
+		return commentItemRepository.findAll();
 	}
 
 	@Override

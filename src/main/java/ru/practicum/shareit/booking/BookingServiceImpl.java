@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+//import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class BookingServiceImpl implements BookingService {
 		throw new MyBadRequestException(Item.NOT_AVAILABLE);
 	}
 
+	// @Transactional
 	@Override
 	public Booking createBooking(Booking booking) {
 		if (Long.compare(booking.getStart(), booking.getEnd()) < 0) {

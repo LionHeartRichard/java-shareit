@@ -12,9 +12,9 @@
         </encoder>
     </appender>
 
-    <logger name="ru.practicum.shareit" level="TRACE"/>
+    <logger name="ru.practicum.shareit" level="ERROR"/>
 
-    <root level="WARN">
+    <root level="ERROR">
         <appender-ref ref="FILE" />
     </root>
 </configuration>
