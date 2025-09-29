@@ -223,7 +223,32 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
 	<profiles>
+		<!-- Профиль по умолчанию -->
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<profile.name>default</profile.name>
+			</properties>
+		</profile>
+
+		<!-- Тестовый профиль -->
+		<profile>
+			<id>test</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>test</value>
+				</property>
+			</activation>
+			<properties>
+				<profile.name>test</profile.name>
+			</properties>
+		</profile>
 		<profile>
 			<id>check</id>
 			<build>

@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.UtilMapper;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.commentitem.CommentItem;
 import ru.practicum.shareit.commentitem.CommentItemRepository;
 import ru.practicum.shareit.exception.AccessException;
@@ -72,13 +70,6 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public CommentItem addComment(final CommentItem commentItem) {
-		final Long itemId = commentItem.getItem().getId();
-		final Long userId = commentItem.getUser().getId();
-		final Long currentTime = UtilMapper.getCurrentTime();
-		List<Booking> bookings = bookingRepository.findByItemIdAndUserIdAndStatusIsAndEndTime(itemId, userId,
-				BookingStatus.APPROVED.toString(), currentTime);
-		if (bookings.isEmpty())
-			throw new MyBadRequestException(Booking.NOT_COMPLETED);
 		return commentItemRepository.save(commentItem);
 	}
 
@@ -89,18 +80,18 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<CommentItem> findCommentsByItemId(final Long itemId) {
-//		log.error("***** itemId: {}", itemId);
-//		return commentItemRepository.findByItemId(itemId);
-		return commentItemRepository.findAll();
+		return commentItemRepository.findAllByItemId(itemId);
 	}
 
 	@Override
-	public Booking[] findLastBooking(final Long itemId) {
-		final Long currentTime = UtilMapper.getCurrentTime();
-		Booking lastBooking = bookingRepository.findLastBooking(itemId, currentTime).orElse(null);
-		Booking nextBooking = bookingRepository.findNextBooking(itemId, currentTime).orElse(null);
-		lastBooking = nextBooking == null ? null : lastBooking;
-		return new Booking[] {lastBooking, nextBooking};
+	public Booking[] findLastBooking(final Long itemId, final Long userId) {
+		if (itemRepository.isOwner(itemId, userId)) {
+			final Long currentTime = UtilMapper.getCurrentTime();
+			Booking lastBooking = bookingRepository.findLastBooking(itemId, currentTime).orElse(null);
+			Booking nextBooking = bookingRepository.findNextBooking(itemId, currentTime).orElse(null);
+			return new Booking[] {lastBooking, nextBooking};
+		}
+		return new Booking[] {null, null};
 	}
 
 	@Override
@@ -110,9 +101,9 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public boolean hasApprovedBooking(Long userId, Long itemId) {
-		Optional<Booking> ans = bookingRepository.findByUserIdAndItemId(userId, itemId);
-		if (ans.isPresent() && ans.get().getStatus() == BookingStatus.APPROVED) {
+	public boolean hasApprovedBooking(final Long userId, final Long itemId) {
+		final Long time = UtilMapper.getCurrentTime();
+		if (bookingRepository.hasApprovedBooking(userId, itemId, time)) {
 			return true;
 		}
 		throw new MyBadRequestException(CommentItem.NO_COMMIT);

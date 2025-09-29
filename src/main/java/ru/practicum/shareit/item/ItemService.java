@@ -23,7 +23,7 @@ public interface ItemService {
 
 	List<CommentItem> findCommentsByItemId(final Long itemId);
 
-	Booking[] findLastBooking(final Long itemId);
+	Booking[] findLastBooking(final Long itemId, final Long userId);
 
 	Booking findBookingByUserIdByItemId(final Long userId, final Long itemId);
 

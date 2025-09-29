@@ -67,16 +67,14 @@ public class ItemController {
 
 	@GetMapping(PATH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
-	public ItemFullDto findItemById(@PathVariable @NotNull @Positive final Long itemId) {
-		log.error("----findItemById itemId: {}", itemId);
+	public ItemFullDto findItemById(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
+			@PathVariable @NotNull @Positive final Long itemId) {
+		log.trace("findItemById itemId: {}, userId: {}", itemId, userId);
 		Item item = itemService.findItemById(itemId);
-		log.error("----find item in DB: {}", item.toString());
-		Booking[] bookings = itemService.findLastBooking(itemId);
-		log.error("----bookings: [0]: {}, [1]: {}", bookings[0], bookings[1]);
+		log.trace("find item in DB: {}", item.toString());
+		Booking[] bookings = itemService.findLastBooking(itemId, userId);
+		log.trace("bookings: [0]: {}, [1]: {}", bookings[0], bookings[1]);
 		List<CommentItem> comments = itemService.findCommentsByItemId(itemId);
-		comments.forEach(v -> {
-			log.error("----comment: {}", v.toString());
-		});
 		return CommentItemMapper.toFullDto(item, comments, bookings);
 	}
 
@@ -100,16 +98,21 @@ public class ItemController {
 
 	@PostMapping("/{itemId}/comment")
 	public CommentAnsDto addComment(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid CommentDto dto) {
-		log.error("___addComment: userId: {}, itemId: {};", userId, itemId);
-		log.error("___CommentDTO: {}", dto.toString());
-		User user = itemService.findUserById(userId);
-		log.error("___find user in DB: {}", user.toString());
-		Item item = itemService.findItemById(itemId);
+			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid final CommentDto dto) {
+		log.trace("___addComment: userId: {}, itemId: {};", userId, itemId);
+		log.trace("___CommentDTO: {}", dto.toString());
+
 		itemService.hasApprovedBooking(userId, itemId);
-		log.error("___find item in DB: {}", item.toString());
+
+		User user = itemService.findUserById(userId);
+		log.trace("___find user in DB: {}", user.toString());
+
+		Item item = itemService.findItemById(itemId);
+		log.trace("___find item in DB: {}", item.toString());
+
 		CommentItem comment = itemService.addComment(CommentItemMapper.toModel(user, item, dto.getText()));
-		log.error("___comment: {}", comment.toString());
+		log.trace("___comment: {}", comment.toString());
+
 		return CommentItemMapper.toCommentUserDto(comment);
 	}
 

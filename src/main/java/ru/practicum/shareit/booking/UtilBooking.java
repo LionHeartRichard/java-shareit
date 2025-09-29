@@ -19,10 +19,6 @@ public class UtilBooking {
 			new Current(), TmpState.FUTURE, new Future(), TmpState.PAST, new Past(), TmpState.REJECTED, new Rejected(),
 			TmpState.WAITING, new Waiting());
 
-	private static interface BookingHandler {
-		Predicate<Booking> filterTmpState();
-	}
-
 	private static class All implements BookingHandler {
 		@Override
 		public Predicate<Booking> filterTmpState() {

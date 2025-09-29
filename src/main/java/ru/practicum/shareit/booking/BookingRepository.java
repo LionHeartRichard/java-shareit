@@ -30,4 +30,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	@Query(value = "SELECT * FROM booking WHERE item_id = :item_id AND start_ > :start_ ORDER BY start_ ASC LIMIT 1", nativeQuery = true)
 	Optional<Booking> findNextBooking(@Param("item_id") final Long itemId, @Param("start_") final Long currentTime);
 
+	@Query(value = "select COUNT(*)>0 from booking where item_id = :item_id and user_id = :user_id and status = 'APPROVED' and end_ < :end_", nativeQuery = true)
+	boolean hasApprovedBooking(@Param("user_id") final Long userId, @Param("item_id") final Long itemId,
+			@Param("end_") final Long time);
+
 }
