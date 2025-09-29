@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.TmpState;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingFullDto;
+import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
 
@@ -32,6 +33,7 @@ import ru.practicum.shareit.user.User;
 @RequiredArgsConstructor
 public class BookingController {
 
+	ItemMapper mapper;
 	BookingService service;
 	private static final String HEADER = "X-Sharer-User-Id";
 	private static final String PATH_BOOKING = "/{bookingId}";
@@ -44,7 +46,7 @@ public class BookingController {
 		log.trace("find user in DB for createBooking: {}", user.toString());
 		final Item item = service.findItemById(dto.getItemId());
 		log.trace("find item in DB for createBooking: {}", item.toString());
-		final Booking ans = service.createBooking(BookingMapper.toModel(user, item, dto));
+		final Booking ans = service.createBooking(mapper.toEntity(user, item, dto));
 		log.trace("ans booking in DB: {}", ans.toString());
 		return BookingMapper.toDto(ans);
 	}

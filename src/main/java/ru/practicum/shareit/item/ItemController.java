@@ -84,7 +84,7 @@ public class ItemController {
 		log.trace("findItemsByOwner: userId = {}", userId);
 		final List<Item> items = itemService.findItemsByOwner(userId);
 		log.trace("items: {}", items);
-		return items.stream().map(v -> ItemMapper.toDto(v)).toList();
+		return items.stream().map(v -> mapper.toDto(v)).toList();
 	}
 
 	@GetMapping("/search")
@@ -93,7 +93,7 @@ public class ItemController {
 		log.trace("searchAvailableItems: {}", text);
 		final List<Item> items = itemService.searchAvailableItemsByText(text);
 		log.trace("items: {}", items);
-		return items.stream().map(v -> ItemMapper.toDto(v)).toList();
+		return items.stream().map(v -> mapper.toDto(v)).toList();
 	}
 
 	@PostMapping("/{itemId}/comment")
@@ -103,7 +103,7 @@ public class ItemController {
 		log.error("___CommentDTO: {}", dto.toString());
 		final CommentItem comment = itemService.addComment(userId, itemId, dto.toString());
 		log.error("___comment: {}", comment.toString());
-		return CommentItemMapper.toDto(comment, dto.getText());
+		return mapper.toCommentDto(comment);
 	}
 
 }
