@@ -40,11 +40,11 @@ public class BookingController {
 	public BookingFullDto createBooking(@RequestHeader(HEADER) @NotNull @Positive final Long bookerId,
 			@RequestBody @Valid BookingCreateDto dto) {
 		log.trace("createBooking: {}", dto.toString());
-		User user = service.findUserById(bookerId);
+		final User user = service.findUserById(bookerId);
 		log.trace("find user in DB for createBooking: {}", user.toString());
-		Item item = service.findItemById(dto.getItemId());
+		final Item item = service.findItemById(dto.getItemId());
 		log.trace("find item in DB for createBooking: {}", item.toString());
-		Booking ans = service.createBooking(BookingMapper.toModel(user, item, dto));
+		final Booking ans = service.createBooking(BookingMapper.toModel(user, item, dto));
 		log.trace("ans booking in DB: {}", ans.toString());
 		return BookingMapper.toDto(ans);
 	}
@@ -53,7 +53,7 @@ public class BookingController {
 	public BookingFullDto findByUserIdAndBookingId(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @Positive Long bookingId) {
 		log.trace("BookingFullDto: userId = {}, bookingId = {}", userId, bookingId);
-		Booking ans = service.findByUserIdAndBookingId(userId, bookingId);
+		final Booking ans = service.findByUserIdAndBookingId(userId, bookingId);
 		log.trace("ans booking in DB: {}", ans.toString());
 		return BookingMapper.toDto(ans);
 	}
@@ -62,7 +62,7 @@ public class BookingController {
 	public List<BookingFullDto> findByUserIdAndState(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@RequestParam(required = false, defaultValue = "ALL") String state) {
 		log.trace("findByBookerIdAndState: bookerId = {}, state = {}", userId, state);
-		List<Booking> ans = service.findByUserIdAndState(userId, TmpState.valueOf(state));
+		final List<Booking> ans = service.findByUserIdAndState(userId, TmpState.valueOf(state));
 		log.trace("List<Booking> ans: {}", ans.toString());
 		return ans.stream().map(v -> BookingMapper.toDto(v)).toList();
 	}

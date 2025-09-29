@@ -1,31 +1,26 @@
 package ru.practicum.shareit.item;
 
+import java.util.List;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.commentitem.CommentItem;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemFullDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 
-public class ItemMapper {
+@Mapper
+public interface ItemMapper {
 
-	private ItemMapper() {
-	}
+	Item toEntity(ItemCreateDto dto);
 
-	public static Item toModel(ItemCreateDto dto) {
-		Item ans = Item.builder().id(null).name(dto.getName()).available(dto.getAvailable())
-				.description(dto.getDescription()).user(null).build();
-		return ans;
-	}
+	ItemDto toDto(Item item);
 
-	public static Item toModel(Item item, ItemUpdateDto dto) {
-		final String name = dto.hasName() ? dto.getName() : item.getName();
-		final Boolean available = dto.hasAvailable() ? dto.getAvailable() : item.getAvailable();
-		final String description = dto.hasDescription() ? dto.getDescription() : item.getDescription();
-		Item ans = item.toBuilder().name(name).available(available).description(description).build();
-		return ans;
-	}
+	Item toEntity(Item item, @MappingTarget ItemUpdateDto dto);
 
-	public static ItemDto toDto(Item item) {
-		ItemDto dto = ItemDto.builder().id(item.getId()).name(item.getName()).available(item.getAvailable())
-				.description(item.getDescription()).build();
-		return dto;
-	}
+	ItemFullDto toFullDto(Item item, List<CommentItem> comments, Booking[] bookings);
+
 }
