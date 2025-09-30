@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.user.dto.UserCreateDto;
-import ru.practicum.shareit.user.dto.UserFullDto;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserUpdateDto;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -29,47 +29,46 @@ import ru.practicum.shareit.user.dto.UserUpdateDto;
 @RequiredArgsConstructor
 public class UserController {
 
-	UserMapper mapper;
-	UserService userService;
+	UserService service;
 	private static final String PATH_USER = "/{userId}";
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public UserFullDto createUser(@RequestBody @Valid UserCreateDto dto) {
+	public UserDto createUser(@RequestBody @Valid UserCreateDto dto) {
 		log.trace("createUser: {}", dto.toString());
-		final User user = userService.createUser(mapper.toEntity(dto));
+		final User user = service.createUser(UserMapper.toModel(dto));
 		log.trace("user in DB: {}", user.toString());
-		UserFullDto ans = mapper.toDto(user);
+		UserDto ans = UserMapper.toDto(user);
 		log.trace("ans full dto: {}", ans.toString());
 		return ans;
 	}
 
 	@PatchMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.OK)
-	public UserFullDto updateUser(@PathVariable @NotNull @Positive final Long userId,
+	public UserDto updateUser(@PathVariable @NotNull @Positive final Long userId,
 			@RequestBody @Valid UserUpdateDto dto) {
 		log.trace("UserId: {}, updateUser: {}", userId, dto.toString());
-		final User user = userService.findUserById(userId);
+		final User user = service.findUserById(userId);
 		log.trace("Old user in DB: {}", user.toString());
-		final User ans = userService.updateUser(mapper.toEntity(dto, user));
+		final User ans = service.updateUser(UserMapper.toModel(dto, user));
 		log.trace("Update user, ans: {}", ans.toString());
-		return mapper.toDto(ans);
+		return UserMapper.toDto(ans);
 	}
 
 	@GetMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.OK)
-	public UserFullDto findUserById(@PathVariable @NotNull @Positive final Long userId) {
+	public UserDto findUserById(@PathVariable @NotNull @Positive final Long userId) {
 		log.trace("findUserById: userId = {}", userId);
-		final User ans = userService.findUserById(userId);
+		final User ans = service.findUserById(userId);
 		log.trace("find user in DB: {}", ans.toString());
-		return mapper.toDto(ans);
+		return UserMapper.toDto(ans);
 	}
 
 	@DeleteMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteUserById(@PathVariable @NotNull @Positive final Long userId) {
 		log.trace("deleteUserById: userId: {}", userId);
-		userService.deleteUserById(userId);
+		service.deleteUserById(userId);
 	}
 
 }

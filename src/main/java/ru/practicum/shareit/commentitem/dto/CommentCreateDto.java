@@ -1,7 +1,6 @@
 package ru.practicum.shareit.commentitem.dto;
 
-import java.time.LocalDateTime;
-
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,10 +15,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CommentDto {
-	Long id;
+public class CommentCreateDto {
+	@NotBlank(message = "Comment is blank!!!")
 	String text;
-	String authorName;
-	LocalDateTime created;
-
 }

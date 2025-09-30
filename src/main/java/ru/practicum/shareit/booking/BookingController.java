@@ -21,7 +21,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.TmpState;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
-import ru.practicum.shareit.booking.dto.BookingFullDto;
+import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
@@ -33,26 +33,25 @@ import ru.practicum.shareit.user.User;
 @RequiredArgsConstructor
 public class BookingController {
 
-	ItemMapper mapper;
 	BookingService service;
 	private static final String HEADER = "X-Sharer-User-Id";
 	private static final String PATH_BOOKING = "/{bookingId}";
 
 	@PostMapping
-	public BookingFullDto createBooking(@RequestHeader(HEADER) @NotNull @Positive final Long bookerId,
+	public BookingDto createBooking(@RequestHeader(HEADER) @NotNull @Positive final Long bookerId,
 			@RequestBody @Valid BookingCreateDto dto) {
 		log.trace("createBooking: {}", dto.toString());
 		final User user = service.findUserById(bookerId);
 		log.trace("find user in DB for createBooking: {}", user.toString());
 		final Item item = service.findItemById(dto.getItemId());
 		log.trace("find item in DB for createBooking: {}", item.toString());
-		final Booking ans = service.createBooking(mapper.toEntity(user, item, dto));
+		final Booking ans = service.createBooking(BookingMapper.toModel(user, item, dto));
 		log.trace("ans booking in DB: {}", ans.toString());
 		return BookingMapper.toDto(ans);
 	}
 
 	@GetMapping(PATH_BOOKING)
-	public BookingFullDto findByUserIdAndBookingId(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
+	public BookingDto findByUserIdAndBookingId(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @Positive Long bookingId) {
 		log.trace("BookingFullDto: userId = {}, bookingId = {}", userId, bookingId);
 		final Booking ans = service.findByUserIdAndBookingId(userId, bookingId);
@@ -61,7 +60,7 @@ public class BookingController {
 	}
 
 	@GetMapping
-	public List<BookingFullDto> findByUserIdAndState(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
+	public List<BookingDto> findByUserIdAndState(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@RequestParam(required = false, defaultValue = "ALL") String state) {
 		log.trace("findByBookerIdAndState: bookerId = {}, state = {}", userId, state);
 		final List<Booking> ans = service.findByUserIdAndState(userId, TmpState.valueOf(state));
@@ -70,7 +69,7 @@ public class BookingController {
 	}
 
 	@GetMapping("/owner")
-	public List<BookingFullDto> findByOwnerIdAndState(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
+	public List<BookingDto> findByOwnerIdAndState(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@RequestParam(required = false, defaultValue = "ALL") String state) {
 		log.trace("findByUserIdAndState: userId = {}, state = {}", userId, state);
 		List<Booking> ans = service.findByUserIdAndState(userId, TmpState.valueOf(state));
@@ -79,7 +78,7 @@ public class BookingController {
 	}
 
 	@PatchMapping(PATH_BOOKING)
-	public BookingFullDto approvedByUserIdAndBookingId(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
+	public BookingDto approvedByUserIdAndBookingId(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @Positive Long bookingId, @RequestParam Boolean approved) {
 		log.trace("approvedByUserIdAndBookingId: userId: {}, bookingId: {}, approved: {}", userId, bookingId, approved);
 		Booking ans = service.approvedByUserIdAndBookingId(userId, bookingId, approved);

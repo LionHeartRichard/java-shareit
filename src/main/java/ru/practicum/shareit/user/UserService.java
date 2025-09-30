@@ -14,32 +14,32 @@ import ru.practicum.shareit.exception.NotFoundException;
 @RequiredArgsConstructor
 public class UserService {
 
-	UserRepository userRepository;
+	UserRepository rep;
 
 	@Transactional
 	public User createUser(User user) {
-		if (!userRepository.hasEmail(user.getEmail())) {
-			return userRepository.save(user);
+		if (!rep.hasEmail(user.getEmail())) {
+			return rep.save(user);
 		}
 		throw new ConflictException(User.EMAIL_IN_USE);
 	}
 
 	@Transactional
 	public User updateUser(User user) {
-		if (!userRepository.emailIsUsed(user.getId(), user.getEmail())) {
-			return userRepository.save(user);
+		if (!rep.emailIsUsed(user.getId(), user.getEmail())) {
+			return rep.save(user);
 		}
 		throw new ConflictException(User.EMAIL_IN_USE);
 
 	}
 
 	public User findUserById(Long id) {
-		return userRepository.findById(id).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		return rep.findById(id).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
 	}
 
 	@Transactional
 	public void deleteUserById(Long id) {
-		userRepository.deleteById(id);
+		rep.deleteById(id);
 	}
 
 }

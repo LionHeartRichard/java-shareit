@@ -6,14 +6,23 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
-@Value
+@Getter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder(toBuilder = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingCreateDto {
-	@NotNull
-	@Positive
+	@NotNull(message = "Item id is null!!!")
+	@Positive(message = "Item id < 0 !!!")
 	Long itemId;
 	@FutureOrPresent
 	@NotNull

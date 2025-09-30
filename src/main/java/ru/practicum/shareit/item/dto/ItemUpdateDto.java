@@ -1,16 +1,25 @@
 package ru.practicum.shareit.item.dto;
 
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
-@Value
+@Getter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder(toBuilder = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemUpdateDto {
-	@Size(max = 50)
+	@Size(max = 50, message = "The name for item cannot be longer than 50 characters!!!")
 	String name;
 	Boolean available;
-	@Size(max = 200)
+	@Size(max = 200, message = "The description for item cannot be longer than 200 characters!!!")
 	String description;
 
 	public boolean hasName() {

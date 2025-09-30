@@ -1,16 +1,19 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.booking.dto;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.commentitem.dto.CommentDto;
+import ru.practicum.shareit.booking.BookingStatus;
+
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.user.dto.UserDto;
 
 @Getter
 @ToString
@@ -18,15 +21,12 @@ import ru.practicum.shareit.commentitem.dto.CommentDto;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemFullDto {
+public class BookingDto {
 	Long id;
-	String name;
-	Boolean available;
-	String description;
-	Long userId;
+	ItemDto item;
+	UserDto booker;
+	LocalDateTime start;
+	LocalDateTime end;
+	BookingStatus status;
 
-	List<CommentDto> comments;
-
-	BookingDto lastBooking;
-	BookingDto nextBooking;
 }
