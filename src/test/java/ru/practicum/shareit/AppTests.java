@@ -3,6 +3,6 @@ package ru.practicum.shareit;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AppTests {
+public class AppTests {
 
 }
