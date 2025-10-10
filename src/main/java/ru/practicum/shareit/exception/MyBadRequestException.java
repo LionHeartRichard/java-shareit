@@ -1,5 +1,6 @@
 package ru.practicum.shareit.exception;
-// 400
+
+// Return status code 400
 
 public class MyBadRequestException extends RuntimeException {
 	public MyBadRequestException(String message) {

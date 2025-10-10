@@ -1,6 +1,6 @@
 package ru.practicum.shareit.exception;
 
-// 403
+// Return status code 403
 
 public class AccessException extends RuntimeException {
 	public AccessException(String message) {

@@ -1,6 +1,6 @@
 package ru.practicum.shareit.exception;
 
-//409
+//Return status code 409
 
 public class ConflictException extends RuntimeException {
 	public ConflictException(String message) {
