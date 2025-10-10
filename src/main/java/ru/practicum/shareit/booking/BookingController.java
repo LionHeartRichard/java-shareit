@@ -52,9 +52,9 @@ public class BookingController {
 	@GetMapping(PATH_BOOKING)
 	public BookingDto findByUserIdAndBookingId(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @Positive Long bookingId) {
-		log.trace("BookingFullDto: userId = {}, bookingId = {}", userId, bookingId);
+		log.error("____findByUserIdAndBookingId: userId = {}, bookingId = {}", userId, bookingId);
 		final Booking ans = service.findByUserIdAndBookingId(userId, bookingId);
-		log.trace("ans booking in DB: {}", ans.toString());
+		log.error("_____ans booking in DB: {}", ans.toString());
 		return BookingMapper.toDto(ans);
 	}
 
@@ -79,9 +79,10 @@ public class BookingController {
 	@PatchMapping(PATH_BOOKING)
 	public BookingDto approvedByUserIdAndBookingId(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @Positive Long bookingId, @RequestParam Boolean approved) {
-		log.trace("approvedByUserIdAndBookingId: userId: {}, bookingId: {}, approved: {}", userId, bookingId, approved);
+		log.trace("-+-  approvedByUserIdAndBookingId: userId: {}, bookingId: {}, approved: {}", userId, bookingId,
+				approved);
 		Booking ans = service.approvedByUserIdAndBookingId(userId, bookingId, approved);
-		log.trace("ans booking in DB: {}", ans.toString());
+		log.trace("%%%%%%  ans booking in DB: {}", ans.toString());
 		return BookingMapper.toDtoSaveStatus(ans);
 	}
 }

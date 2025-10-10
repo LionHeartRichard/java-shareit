@@ -48,26 +48,31 @@ public class BookingService {
 	}
 
 	public Booking findByUserIdAndBookingId(Long userId, Long bookingId) {
-		repUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
-		return repBooking.findByUserIdAndId(userId, bookingId)
-				.orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
+		if (repUser.hasId(userId)) {
+			return repBooking.findById(bookingId).orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
+		}
+		throw new NotFoundException(User.NOT_FOUND);
 	}
 
 	public List<Booking> findByUserIdAndState(Long userId, TmpState state) {
-		repUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
-		List<Booking> ans = repBooking.findByUserId(userId);
-		return ans.stream().filter(UtilBooking.filterByState(state)).toList();
+		if (repUser.hasId(userId)) {
+			List<Booking> ans = repBooking.findByUserId(userId);
+			return ans.stream().filter(UtilBooking.filterByState(state)).toList();
+		}
+		throw new NotFoundException(User.NOT_FOUND);
 	}
 
 	public Booking approvedByUserIdAndBookingId(Long userId, Long bookingId, Boolean approved) {
 		final Booking booking = repBooking.findById(bookingId)
 				.orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
-		repUser.findById(userId).orElseThrow(() -> new AccessException(User.NO_ACCESS));
-		if (booking.getStatus() != BookingStatus.WAITING) {
-			throw new MyBadRequestException(Booking.ERROR_STATUS);
+		if (repUser.hasId(userId)) {
+			if (booking.getStatus() != BookingStatus.WAITING) {
+				throw new MyBadRequestException(Booking.ERROR_STATUS);
+			}
+			BookingStatus status = approved ? BookingStatus.APPROVED : BookingStatus.REJECTED;
+			return repBooking.save(booking.toBuilder().status(status).build());
 		}
-		BookingStatus status = approved ? BookingStatus.APPROVED : BookingStatus.REJECTED;
-		return repBooking.save(booking.toBuilder().status(status).build());
+		throw new AccessException(User.NO_ACCESS);
 	}
 
 }

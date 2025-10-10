@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.UtilMapper;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
@@ -21,7 +20,6 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
-@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Service
@@ -73,7 +71,6 @@ public class ItemService {
 			final User user = repUser.findById(userId).get();
 			final CommentItem comment = CommentItemMapper.toModel(user, item, text);
 			final CommentItem ans = repComment.save(comment);
-			log.error("*****   ans = {}", ans.toString());
 			return ans;
 		}
 		throw new MyBadRequestException(CommentItem.NO_COMMIT);

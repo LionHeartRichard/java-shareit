@@ -98,10 +98,10 @@ public class ItemController {
 	@PostMapping("/{itemId}/comment")
 	public CommentDto addComment(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid final CommentCreateDto dto) {
-		log.error("___addComment: userId: {}, itemId: {};", userId, itemId);
-		log.error("___CommentDTO: {}", dto.toString());
+		log.trace("addComment: userId: {}, itemId: {};", userId, itemId);
+		log.trace("CommentDTO: {}", dto.toString());
 		final CommentItem comment = service.addComment(userId, itemId, dto.getText());
-		log.error("___comment: {}", comment.toString());
+		log.trace("comment: {}", comment.toString());
 		return CommentItemMapper.toDto(comment);
 	}
 
