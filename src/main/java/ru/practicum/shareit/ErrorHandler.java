@@ -22,12 +22,12 @@ public class ErrorHandler {
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ErrorResponse handleException(final Exception e) {
-//		log.error("Error: ", e);
-//		return new ErrorResponse(e.getMessage());
+		log.error("Error: ", e);
+		return new ErrorResponse(e.getMessage());
 
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		e.printStackTrace(new PrintStream(out));
-		return new ErrorResponse(out.toString(StandardCharsets.UTF_8));
+//		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+//		e.printStackTrace(new PrintStream(out));
+//		return new ErrorResponse(out.toString(StandardCharsets.UTF_8));
 
 	}
 
