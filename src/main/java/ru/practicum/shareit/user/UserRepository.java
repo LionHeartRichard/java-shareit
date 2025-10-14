@@ -1,19 +1,19 @@
 package ru.practicum.shareit.user;
 
-import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository {
-	User createUser(User user);
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
 
-	User updateUser(User user);
+	@Query(value = "SELECT COUNT(*) > 0 FROM user_ WHERE email = :email", nativeQuery = true)
+	boolean hasEmail(@Param("email") final String email);
 
-	Optional<User> findUserById(Long id);
+	@Query(value = "SELECT COUNT(*) > 0 FROM user_ WHERE email = :email AND id <> :id", nativeQuery = true)
+	boolean emailIsUsed(@Param("id") final Long userId, @Param("email") final String email);
 
-	boolean deleteUserById(Long id);
-
-	boolean hasUserById(Long id);
-
-	boolean hasUserByEmail(User user);
-
-	public boolean isUsedEmail(User user);
+	@Query(value = "SELECT COUNT(*) > 0 FROM user_ WHERE id = :id", nativeQuery = true)
+	boolean hasId(@Param("id") final Long userId);
 }

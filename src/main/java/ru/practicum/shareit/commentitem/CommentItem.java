@@ -1,11 +1,9 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.commentitem;
 
 import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,18 +22,20 @@ import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
 
 @Entity
-@Table(name = "booking")
+@Table(name = "comment_item")
 @Getter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Booking {
+public class CommentItem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
+	@Column
+	String text;
 
 	@JoinColumn(name = "item_id")
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -45,23 +45,7 @@ public class Booking {
 	@ManyToOne(fetch = FetchType.LAZY)
 	User user;
 
-	@Column(name = "start_")
-	Long start;
-	@Column(name = "end_")
-	Long end;
-
-	@Enumerated(EnumType.STRING)
-	BookingStatus status;
-
-	public static final String NOT_FOUND = "Booking not found!";
-	public static final String NOT_OWNER = "User is not the owner of the item, access denied!";
-	public static final String ERROR_STATUS = "The booking status cannot be changed!";
-	public static final String ERROR_TIME = "The booking start time cannot be later than the end time!";
-	public static final String NOT_COMPLETED = "Booking not completed";
-
-	public boolean isOwner(Long userId) {
-		return Long.compare(user.getId(), userId) == 0;
-	}
+	Long created;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -71,7 +55,7 @@ public class Booking {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Booking other = (Booking) obj;
+		CommentItem other = (CommentItem) obj;
 		return Objects.equals(id, other.id);
 	}
 
@@ -80,4 +64,5 @@ public class Booking {
 		return Objects.hash(id);
 	}
 
+	public static final String NO_COMMIT = "The user cannot leave a comment because he is not the owner";
 }

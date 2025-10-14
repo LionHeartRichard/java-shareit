@@ -4,16 +4,25 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
+@Getter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder(toBuilder = true)
-@Value
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreateDto {
-	@NotBlank
-	@Size(max = 50)
+	@NotBlank(message = "Name is blank!!!")
+	@Size(max = 50, message = "The name cannot be longer than 50 characters!!!")
 	String name;
-	@NotNull
-	@Email
+	@NotNull(message = "Email is blank!!!")
+	@Email(message = "Invalid email!!!")
 	String email;
 }

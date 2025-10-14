@@ -1,6 +1,6 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.commentitem.dto;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -9,8 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.commentitem.dto.CommentDto;
 
 @Getter
 @ToString
@@ -18,15 +16,10 @@ import ru.practicum.shareit.commentitem.dto.CommentDto;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemFullDto {
+public class CommentDto {
 	Long id;
-	String name;
-	Boolean available;
-	String description;
-	Long userId;
+	String text;
+	String authorName;
+	LocalDateTime created;
 
-	List<CommentDto> comments;
-
-	BookingDto lastBooking;
-	BookingDto nextBooking;
 }

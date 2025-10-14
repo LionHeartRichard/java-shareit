@@ -30,4 +30,7 @@ hs_err_pid*
 /bin/
 /target/
 
+*.db
 /db/
+
+/compose/volumes/
