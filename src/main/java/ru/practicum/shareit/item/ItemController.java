@@ -15,18 +15,21 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemFullDto;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.commentitem.CommentItem;
+import ru.practicum.shareit.commentitem.CommentItemMapper;
+import ru.practicum.shareit.commentitem.dto.CommentCreateDto;
+import ru.practicum.shareit.commentitem.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemCreateDto;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
-
-/**
- * TODO Sprint add-controllers.
- */
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -35,59 +38,71 @@ import ru.practicum.shareit.item.dto.ItemUpdateDto;
 @RequiredArgsConstructor
 public class ItemController {
 
-	ItemService itemService;
+	ItemService service;
 	private static final String HEADER = "X-Sharer-User-Id";
 	private static final String PATH_ITEM = "/{itemId}";
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ItemFullDto createItem(@RequestHeader(HEADER) @Positive final Long userId,
+	public ItemDto createItem(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@RequestBody @Valid ItemCreateDto dto) {
-		log.trace("createItem: ", dto.toString());
-		Item ans = itemService.createItem(userId, ItemMapper.toModel(dto));
-		log.trace(ans.toString());
+		log.trace("createItem: {}", dto.toString());
+		final Item ans = service.createItem(userId, ItemMapper.toModel(dto));
+		log.trace("ans item in DB: {}", ans.toString());
 		return ItemMapper.toDto(ans);
 	}
 
 	@PatchMapping(PATH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
-	public ItemFullDto updateItem(@RequestHeader(HEADER) @Positive final Long userId,
+	public ItemDto updateItem(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @Positive final Long itemId, @RequestBody @Valid ItemUpdateDto dto) {
-		log.trace("updateItem: ", dto.toString());
-		Item item = itemService.findItemById(itemId);
-		log.trace(item.toString());
-		Item ans = itemService.updateItem(userId, ItemMapper.toModel(item, dto));
-		log.trace(ans.toString());
+		log.trace("updateItem, userId:{}, ItemUpdateDto: {}", userId, dto.toString());
+		final Item item = service.findItemById(itemId);
+		log.trace("old item in DB: {}", item.toString());
+		final Item ans = service.updateItem(userId, ItemMapper.toModel(item, dto));
+		log.trace("ans item update: {}", ans.toString());
 		return ItemMapper.toDto(ans);
 	}
 
 	@GetMapping(PATH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
-	public ItemFullDto findItemById(@PathVariable @Positive final Long itemId) {
-		log.trace("findItemById: itemId = ", itemId);
-		Item item = itemService.findItemById(itemId);
-		log.trace(item.toString());
-		ItemFullDto ans = ItemMapper.toDto(item);
-		log.trace(ans.toString());
-		return ans;
+	public ItemFullDto findItemById(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
+			@PathVariable @NotNull @Positive final Long itemId) {
+		log.trace("findItemById itemId: {}, userId: {}", itemId, userId);
+		final Item item = service.findItemById(itemId);
+		log.trace("find item in DB: {}", item.toString());
+		final Booking[] bookings = service.findLastBooking(itemId, userId);
+		log.trace("bookings: [0]: {}, [1]: {}", bookings[0], bookings[1]);
+		final List<CommentItem> comments = service.findCommentsByItemId(itemId);
+		return CommentItemMapper.toFullDto(item, comments, bookings);
 	}
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<ItemFullDto> findItemsByOwner(@RequestHeader(HEADER) @Positive final Long userId) {
-		log.trace("findItemsByOwner: userId = ", userId);
-		List<Item> items = itemService.findItemsByOwner(userId);
+	public List<ItemDto> findItemsByOwner(@RequestHeader(HEADER) @NotNull @Positive final Long userId) {
+		log.trace("findItemsByOwner: userId = {}", userId);
+		final List<Item> items = service.findItemsByOwner(userId);
 		log.trace("items: {}", items);
 		return items.stream().map(v -> ItemMapper.toDto(v)).toList();
 	}
 
 	@GetMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
-	public List<ItemFullDto> searchAvailableItemsByName(@RequestParam final String text) {
-		log.trace("searchAvailableItems: ", text);
-		List<Item> items = itemService.searchAvailableItemsByName(text);
+	public List<ItemDto> searchAvailableItemsByText(@RequestParam final String text) {
+		log.trace("searchAvailableItems: {}", text);
+		final List<Item> items = service.searchAvailableItemsByText(text);
 		log.trace("items: {}", items);
 		return items.stream().map(v -> ItemMapper.toDto(v)).toList();
+	}
+
+	@PostMapping("/{itemId}/comment")
+	public CommentDto addComment(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
+			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid final CommentCreateDto dto) {
+		log.trace("addComment: userId: {}, itemId: {};", userId, itemId);
+		log.trace("CommentDTO: {}", dto.toString());
+		final CommentItem comment = service.addComment(userId, itemId, dto.getText());
+		log.trace("comment: {}", comment.toString());
+		return CommentItemMapper.toDto(comment);
 	}
 
 }
