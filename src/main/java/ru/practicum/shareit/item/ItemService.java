@@ -25,27 +25,27 @@ import ru.practicum.shareit.user.UserRepository;
 @Service
 public class ItemService {
 
-	ItemRepository repItem;
-	UserRepository repUser;
-	CommentItemRepository repComment;
-	BookingRepository repBooking;
+	ItemRepository repoItem;
+	UserRepository repoUser;
+	CommentItemRepository repoComment;
+	BookingRepository repoBooking;
 
 	@Transactional
 	public Item createItem(final Long userId, final Item item) {
-		User user = repUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
-		Item ans = repItem.save(item.toBuilder().user(user).build());
+		User user = repoUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		Item ans = repoItem.save(item.toBuilder().user(user).build());
 		return ans;
 	}
 
 	public Item findItemById(final Long id) {
-		return repItem.findById(id).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
+		return repoItem.findById(id).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
 	}
 
 	@Transactional
 	public Item updateItem(final Long userId, final Item item) {
-		if (repUser.hasId(userId)) {
+		if (repoUser.hasId(userId)) {
 			if (item.isOwner(userId)) {
-				return repItem.save(item);
+				return repoItem.save(item);
 			}
 			throw new AccessException(Item.NOT_OWNER);
 		}
@@ -54,54 +54,54 @@ public class ItemService {
 	}
 
 	public List<Item> findItemsByOwner(final Long userId) {
-		return repItem.findItemsByUserId(userId);
+		return repoItem.findItemsByUserId(userId);
 	}
 
 	public List<Item> searchAvailableItemsByText(final String text) {
 		if (text == null || text.isBlank()) {
 			return List.of();
 		}
-		return repItem.searchAvailableItemsByText("%" + text + "%");
+		return repoItem.searchAvailableItemsByText("%" + text + "%");
 	}
 
 	@Transactional
 	public CommentItem addComment(final Long userId, final Long itemId, final String text) {
 		if (hasApprovedBooking(userId, itemId)) {
-			final Item item = repItem.findById(itemId).get();
-			final User user = repUser.findById(userId).get();
+			final Item item = repoItem.findById(itemId).get();
+			final User user = repoUser.findById(userId).get();
 			final CommentItem comment = CommentItemMapper.toModel(user, item, text);
-			final CommentItem ans = repComment.save(comment);
+			final CommentItem ans = repoComment.save(comment);
 			return ans;
 		}
 		throw new MyBadRequestException(CommentItem.NO_COMMIT);
 	}
 
 	public User findUserById(final Long userId) {
-		return repUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		return repoUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
 	}
 
 	public List<CommentItem> findCommentsByItemId(final Long itemId) {
-		return repComment.findAllByItemId(itemId);
+		return repoComment.findAllByItemId(itemId);
 	}
 
 	public Booking[] findLastBooking(final Long itemId, final Long userId) {
-		if (repItem.isOwner(itemId, userId)) {
+		if (repoItem.isOwner(itemId, userId)) {
 			final Long currentTime = UtilMapper.getCurrentTime();
-			Booking lastBooking = repBooking.findLastBooking(itemId, currentTime).orElse(null);
-			Booking nextBooking = repBooking.findNextBooking(itemId, currentTime).orElse(null);
+			Booking lastBooking = repoBooking.findLastBooking(itemId, currentTime).orElse(null);
+			Booking nextBooking = repoBooking.findNextBooking(itemId, currentTime).orElse(null);
 			return new Booking[] {lastBooking, nextBooking};
 		}
 		return new Booking[] {null, null};
 	}
 
 	public Booking findBookingByUserIdByItemId(final Long userId, final Long itemId) {
-		return repBooking.findByUserIdAndItemId(userId, itemId)
+		return repoBooking.findByUserIdAndItemId(userId, itemId)
 				.orElseThrow(() -> new MyBadRequestException(Booking.NOT_FOUND));
 	}
 
 	public boolean hasApprovedBooking(final Long userId, final Long itemId) {
 		final Long time = UtilMapper.getCurrentTime();
-		if (repBooking.hasApprovedBooking(userId, itemId, time)) {
+		if (repoBooking.hasApprovedBooking(userId, itemId, time)) {
 			return true;
 		}
 		return false;

@@ -23,16 +23,16 @@ import ru.practicum.shareit.user.UserRepository;
 @Service
 public class BookingService {
 
-	BookingRepository repBooking;
-	UserRepository repUser;
-	ItemRepository repItem;
+	BookingRepository repoBooking;
+	UserRepository repoUser;
+	ItemRepository repoItem;
 
 	public User findUserById(Long bookerId) {
-		return repUser.findById(bookerId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		return repoUser.findById(bookerId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
 	}
 
 	public Item findItemById(Long itemId) {
-		Item ans = repItem.findById(itemId).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
+		Item ans = repoItem.findById(itemId).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
 		if (ans.getAvailable()) {
 			return ans;
 		}
@@ -42,35 +42,35 @@ public class BookingService {
 	@Transactional
 	public Booking createBooking(Booking booking) {
 		if (Long.compare(booking.getStart(), booking.getEnd()) < 0) {
-			return repBooking.save(booking);
+			return repoBooking.save(booking);
 		}
 		throw new ConflictException(Booking.ERROR_TIME);
 	}
 
 	public Booking findByUserIdAndBookingId(Long userId, Long bookingId) {
-		if (repUser.hasId(userId)) {
-			return repBooking.findById(bookingId).orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
+		if (repoUser.hasId(userId)) {
+			return repoBooking.findById(bookingId).orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
 		}
 		throw new NotFoundException(User.NOT_FOUND);
 	}
 
 	public List<Booking> findByUserIdAndState(Long userId, TmpState state) {
-		if (repUser.hasId(userId)) {
-			List<Booking> ans = repBooking.findByUserId(userId);
+		if (repoUser.hasId(userId)) {
+			List<Booking> ans = repoBooking.findByUserId(userId);
 			return ans.stream().filter(UtilBooking.filterByState(state)).toList();
 		}
 		throw new NotFoundException(User.NOT_FOUND);
 	}
 
 	public Booking approvedByUserIdAndBookingId(Long userId, Long bookingId, Boolean approved) {
-		final Booking booking = repBooking.findById(bookingId)
+		final Booking booking = repoBooking.findById(bookingId)
 				.orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
-		if (repUser.hasId(userId)) {
+		if (repoUser.hasId(userId)) {
 			if (booking.getStatus() != BookingStatus.WAITING) {
 				throw new MyBadRequestException(Booking.ERROR_STATUS);
 			}
 			BookingStatus status = approved ? BookingStatus.APPROVED : BookingStatus.REJECTED;
-			return repBooking.save(booking.toBuilder().status(status).build());
+			return repoBooking.save(booking.toBuilder().status(status).build());
 		}
 		throw new AccessException(User.NO_ACCESS);
 	}
