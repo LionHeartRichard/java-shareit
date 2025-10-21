@@ -15,18 +15,18 @@ public class UtilBooking {
 		return STATE_HANDLER.get(state).filterTmpState();
 	}
 
-	private static final Map<TmpState, BookingHandler> STATE_HANDLER = Map.of(TmpState.ALL, new All(), TmpState.CURRENT,
+	private static final Map<TmpState, FunctionBooking> STATE_HANDLER = Map.of(TmpState.ALL, new All(), TmpState.CURRENT,
 			new Current(), TmpState.FUTURE, new Future(), TmpState.PAST, new Past(), TmpState.REJECTED, new Rejected(),
 			TmpState.WAITING, new Waiting());
 
-	private static class All implements BookingHandler {
+	private static class All implements FunctionBooking {
 		@Override
 		public Predicate<Booking> filterTmpState() {
 			return v -> true;
 		}
 	}
 
-	private static class Current implements BookingHandler {
+	private static class Current implements FunctionBooking {
 		@Override
 		public Predicate<Booking> filterTmpState() {
 			final Long time = UtilMapper.getCurrentTime();
@@ -35,7 +35,7 @@ public class UtilBooking {
 		}
 	}
 
-	private static class Past implements BookingHandler {
+	private static class Past implements FunctionBooking {
 		@Override
 		public Predicate<Booking> filterTmpState() {
 			final Long time = UtilMapper.getCurrentTime();
@@ -43,7 +43,7 @@ public class UtilBooking {
 		}
 	}
 
-	private static class Future implements BookingHandler {
+	private static class Future implements FunctionBooking {
 		@Override
 		public Predicate<Booking> filterTmpState() {
 			final Long time = UtilMapper.getCurrentTime();
@@ -51,14 +51,14 @@ public class UtilBooking {
 		}
 	}
 
-	private static class Waiting implements BookingHandler {
+	private static class Waiting implements FunctionBooking {
 		@Override
 		public Predicate<Booking> filterTmpState() {
 			return v -> v.getStatus() == BookingStatus.WAITING;
 		}
 	}
 
-	private static class Rejected implements BookingHandler {
+	private static class Rejected implements FunctionBooking {
 		@Override
 		public Predicate<Booking> filterTmpState() {
 			return v -> v.getStatus() == BookingStatus.REJECTED;

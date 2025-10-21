@@ -1,5 +1,9 @@
 package ru.practicum.shareit.user;
 
+import ru.practicum.shareit.user.dto.UserCreateDto;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserUpdateDto;
+
 public class UserMapper {
 
 	private UserMapper() {

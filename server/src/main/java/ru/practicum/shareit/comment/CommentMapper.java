@@ -2,16 +2,14 @@ package ru.practicum.shareit.comment;
 
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.UtilMapper;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingMapper;
-import ru.practicum.shareit.item.CommentDto;
+import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.ItemFullDto;
+import ru.practicum.shareit.item.dto.ItemFullDto;
 import ru.practicum.shareit.user.User;
 
-@Slf4j
 public class CommentMapper {
 
 	private CommentMapper() {
@@ -26,8 +24,6 @@ public class CommentMapper {
 
 	public static ItemFullDto toFullDto(final Item item, final List<Comment> comments, final Booking[] bookings) {
 		final List<CommentDto> commentsUsers = comments.stream().map(v -> toDto(v)).toList();
-
-		commentsUsers.forEach(v -> log.error("   ----   " + v));
 
 		final ItemFullDto ans = ItemFullDto.builder().id(item.getId()).name(item.getName())
 				.available(item.getAvailable()).description(item.getDescription()).userId(item.getUser().getId())
