@@ -1,5 +1,30 @@
 # описания сервисов (контейнеров), которые должны быть развёрнуты
 services:
+
+  gateway:
+    build: gateway  # Указывает путь к директории с Dockerfile для сборки образа gateway
+    image: shareit-gateway  # Имя создаваемого/используемого образа контейнера
+    container_name: shareit-gateway  # Явное задание имени контейнера (вместо стандартного генерируемого)
+    ports:
+      - "8080:8080"  # Проброс портов: внешний порт 8080 → внутренний порт 8080 контейнера
+    depends_on:
+      - server  # Указывает, что контейнер gateway зависит от контейнера server (запускается после него)
+    environment:
+      - SHAREIT_SERVER_URL=http://server:9090  # Переменная окружения: URL сервера, к которому обращается gateway
+
+  server:
+    build: server  # Путь к директории с Dockerfile для сборки образа server
+    image: shareit-server  # Имя создаваемого/используемого образа контейнера
+    container_name: shareit-server  # Явное имя контейнера
+    ports:
+      - "9090:9090"  # Проброс портов: внешний 9090 → внутренний 9090 контейнера
+    depends_on:
+      - db  # Контейнер server зависит от db (запускается после базы данных)
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit_db  # URL БД для Spring-приложения
+      - SPRING_DATASOURCE_USERNAME=dbuser  # Имя пользователя для подключения к БД
+      - SPRING_DATASOURCE_PASSWORD=chAd_mark-78  # Пароль для подключения к БД
+
   # описание контейнера db
   db: # имя сервиса
     # образ, из которого должен быть запущен контейнер
