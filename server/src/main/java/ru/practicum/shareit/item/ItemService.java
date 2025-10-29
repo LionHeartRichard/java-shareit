@@ -12,6 +12,7 @@ import ru.practicum.shareit.UtilMapper;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.comment.Comment;
+import ru.practicum.shareit.comment.CommentMapper;
 import ru.practicum.shareit.comment.CommentRepository;
 import ru.practicum.shareit.exception.AccessException;
 import ru.practicum.shareit.exception.MyBadRequestException;
