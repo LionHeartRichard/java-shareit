@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.exception.MyBadRequestException;
-import ru.practicum.shareit.exception.ConflictException;
-import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.NotValidParamException;
+import ru.practicum.shareit.common.exception.ConflictException;
+import ru.practicum.shareit.common.exception.MyBadRequestException;
+import ru.practicum.shareit.common.exception.NotFoundException;
+import ru.practicum.shareit.common.exception.NotValidParamException;
 
 @Slf4j
 @RestControllerAdvice

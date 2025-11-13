@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.TmpState;
-import ru.practicum.shareit.booking.dto.BookingCreateDto;
-import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.common.dto.booking.BookingCreateDto;
+import ru.practicum.shareit.common.dto.booking.BookingDto;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
 

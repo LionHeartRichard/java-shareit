@@ -15,9 +15,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.user.dto.UserCreateDto;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserUpdateDto;
+import ru.practicum.shareit.common.dto.user.UserCreateDto;
+import ru.practicum.shareit.common.dto.user.UserDto;
+import ru.practicum.shareit.common.dto.user.UserUpdateDto;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j

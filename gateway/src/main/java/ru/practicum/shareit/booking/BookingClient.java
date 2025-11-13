@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import ru.practicum.shareit.BaseClient;
+import ru.practicum.shareit.common.dto.booking.BookingRequestDto;
 
 @Component
 public class BookingClient extends BaseClient {

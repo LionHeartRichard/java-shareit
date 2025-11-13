@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import ru.practicum.shareit.BaseClient;
+import ru.practicum.shareit.common.dto.comment.CommentRequestDto;
+import ru.practicum.shareit.common.dto.item.ItemRequestDto;
 
 @Component
 public class ItemClient extends BaseClient {

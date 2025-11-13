@@ -18,15 +18,15 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.item.dto.ItemFullDto;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.comment.Comment;
 import ru.practicum.shareit.comment.CommentMapper;
-import ru.practicum.shareit.comment.dto.CommentCreateDto;
-import ru.practicum.shareit.comment.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemCreateDto;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.common.dto.comment.CommentCreateDto;
+import ru.practicum.shareit.common.dto.comment.CommentDto;
+import ru.practicum.shareit.common.dto.item.ItemCreateDto;
+import ru.practicum.shareit.common.dto.item.ItemDto;
+import ru.practicum.shareit.common.dto.item.ItemFullDto;
+import ru.practicum.shareit.common.dto.item.ItemUpdateDto;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j

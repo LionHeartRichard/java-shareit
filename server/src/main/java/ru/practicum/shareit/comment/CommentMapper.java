@@ -5,9 +5,9 @@ import java.util.List;
 import ru.practicum.shareit.UtilMapper;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingMapper;
-import ru.practicum.shareit.comment.dto.CommentDto;
+import ru.practicum.shareit.common.dto.comment.CommentDto;
+import ru.practicum.shareit.common.dto.item.ItemFullDto;
 import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.dto.ItemFullDto;
 import ru.practicum.shareit.user.User;
 
 public class CommentMapper {
