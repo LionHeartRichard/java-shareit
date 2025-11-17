@@ -20,6 +20,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+
+import ru.practicum.shareit.common.StateBooking;
 import ru.practicum.shareit.common.dto.booking.BookingRequestDto;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -54,7 +56,7 @@ public class BookingController {
 			@RequestParam(name = "state", defaultValue = "all") final String stateParam,
 			@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
 			@Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
-		BookingState state = BookingState.from(stateParam)
+		StateBooking state = StateBooking.from(stateParam)
 				.orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
 		log.info("Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
 		return client.getBookings(userId, state, from, size);
@@ -64,7 +66,7 @@ public class BookingController {
 	public ResponseEntity<Object> findByOwnerIdAndState(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@RequestParam(required = false, defaultValue = "ALL") String state) {
 		log.info("Find by User ID and State: userId = {}, state = {}", userId, state);
-		return client.findByOwnerAndState(OWNER, userId, BookingState.valueOf(state));
+		return client.findByOwnerAndState(OWNER, userId, StateBooking.valueOf(state));
 	}
 
 	@PatchMapping(PATH)

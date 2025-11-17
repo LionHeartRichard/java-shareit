@@ -3,21 +3,22 @@ package ru.practicum.shareit.booking;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import ru.practicum.shareit.TmpState;
 import ru.practicum.shareit.UtilMapper;
+import ru.practicum.shareit.common.BookingStatus;
+import ru.practicum.shareit.common.StateBooking;
 
 public class UtilBooking {
 
 	private UtilBooking() {
 	}
 
-	public static Predicate<Booking> filterByState(TmpState state) {
+	public static Predicate<Booking> filterByState(StateBooking state) {
 		return STATE_HANDLER.get(state).filterTmpState();
 	}
 
-	private static final Map<TmpState, FunctionBooking> STATE_HANDLER = Map.of(TmpState.ALL, new All(), TmpState.CURRENT,
-			new Current(), TmpState.FUTURE, new Future(), TmpState.PAST, new Past(), TmpState.REJECTED, new Rejected(),
-			TmpState.WAITING, new Waiting());
+	private static final Map<StateBooking, FunctionBooking> STATE_HANDLER = Map.of(StateBooking.ALL, new All(),
+			StateBooking.CURRENT, new Current(), StateBooking.FUTURE, new Future(), StateBooking.PAST, new Past(),
+			StateBooking.REJECTED, new Rejected(), StateBooking.WAITING, new Waiting());
 
 	private static class All implements FunctionBooking {
 		@Override

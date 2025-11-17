@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.exception.ConflictException;
-import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.common.exception.ConflictException;
+import ru.practicum.shareit.common.exception.NotFoundException;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service

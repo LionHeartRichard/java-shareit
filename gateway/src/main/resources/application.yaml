@@ -1,6 +1,9 @@
 logging:
   level:
     org.springframework.web.client.RestTemplate: DEBUG
+    ru:
+      practicum:
+        shareit: INFO
 
 server:
   port: 8080

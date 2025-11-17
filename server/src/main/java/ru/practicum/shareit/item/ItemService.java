@@ -14,9 +14,9 @@ import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.comment.Comment;
 import ru.practicum.shareit.comment.CommentMapper;
 import ru.practicum.shareit.comment.CommentRepository;
-import ru.practicum.shareit.exception.AccessException;
-import ru.practicum.shareit.exception.MyBadRequestException;
-import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.common.exception.AccessException;
+import ru.practicum.shareit.common.exception.MyBadRequestException;
+import ru.practicum.shareit.common.exception.NotFoundException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 

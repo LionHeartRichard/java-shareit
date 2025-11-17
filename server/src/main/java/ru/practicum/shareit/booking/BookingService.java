@@ -8,11 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.TmpState;
-import ru.practicum.shareit.exception.MyBadRequestException;
-import ru.practicum.shareit.exception.AccessException;
-import ru.practicum.shareit.exception.ConflictException;
-import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.common.BookingStatus;
+import ru.practicum.shareit.common.StateBooking;
+import ru.practicum.shareit.common.exception.AccessException;
+import ru.practicum.shareit.common.exception.ConflictException;
+import ru.practicum.shareit.common.exception.MyBadRequestException;
+import ru.practicum.shareit.common.exception.NotFoundException;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.User;
@@ -54,7 +55,7 @@ public class BookingService {
 		throw new NotFoundException(User.NOT_FOUND);
 	}
 
-	public List<Booking> findByUserIdAndState(Long userId, TmpState state) {
+	public List<Booking> findByUserIdAndState(Long userId, StateBooking state) {
 		if (repoUser.hasId(userId)) {
 			List<Booking> ans = repoBooking.findByUserId(userId);
 			return ans.stream().filter(UtilBooking.filterByState(state)).toList();

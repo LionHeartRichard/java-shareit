@@ -38,3 +38,6 @@ logging:
   level: 
     org: 
       springframework: ERROR
+    ru:
+      practicum:
+        shareit: INFO

@@ -11,7 +11,7 @@ import jakarta.validation.constraints.FutureOrPresent;
 @Value
 @Builder(toBuilder = true)
 public class BookingRequestDto {
-	Long itemId;
+	Long itemId; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	@FutureOrPresent
 	LocalDateTime start;
 	@Future

@@ -7,7 +7,7 @@ import lombok.Value;
 @Value
 @Builder(toBuilder = true)
 public class ItemRequestDto {
-	Long itemId;
+	Long itemId; // !!!!!!!!!!!!!!!!!!!!
 	@Size(max = 50, message = "The name for item cannot be longer than 50 characters!!!")
 	String name;
 	Boolean available;

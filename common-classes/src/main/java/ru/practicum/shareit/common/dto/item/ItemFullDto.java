@@ -4,8 +4,8 @@ import java.util.List;
 
 import lombok.Builder;
 import lombok.Value;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.comment.dto.CommentDto;
+import ru.practicum.shareit.common.dto.booking.BookingDto;
+import ru.practicum.shareit.common.dto.comment.CommentDto;
 
 @Value
 @Builder(toBuilder = true)

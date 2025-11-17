@@ -12,6 +12,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import ru.practicum.shareit.BaseClient;
 import ru.practicum.shareit.common.dto.booking.BookingRequestDto;
+import ru.practicum.shareit.common.StateBooking;
 
 @Component
 public class BookingClient extends BaseClient {
@@ -24,7 +25,7 @@ public class BookingClient extends BaseClient {
 				.requestFactory(() -> new HttpComponentsClientHttpRequestFactory()).build());
 	}
 
-	public ResponseEntity<Object> getBookings(final Long userId, final BookingState state, final Integer from,
+	public ResponseEntity<Object> getBookings(final Long userId, final StateBooking state, final Integer from,
 			final Integer size) {
 		Map<String, Object> params = Map.of("state", state.name(), "from", from, "size", size);
 		return get("?state={state}&from={from}&size={size}", userId, params);
@@ -38,7 +39,7 @@ public class BookingClient extends BaseClient {
 		return get("/" + bookingId, userId);
 	}
 
-	public ResponseEntity<Object> findByOwnerAndState(final String path, final Long userId, final BookingState state) {
+	public ResponseEntity<Object> findByOwnerAndState(final String path, final Long userId, final StateBooking state) {
 		Map<String, Object> params = Map.of("state", state.name());
 		return get(path, userId, params);
 	}
