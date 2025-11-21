@@ -21,8 +21,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.common.dto.comment.CommentRequestDto;
-import ru.practicum.shareit.common.dto.item.ItemRequestDto;
+import ru.practicum.shareit.common.dto.comment.RequestCommentCreateDto;
+import ru.practicum.shareit.common.dto.item.ItemCreateDto;
+import ru.practicum.shareit.common.dto.item.ItemUpdateDto;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -39,16 +40,16 @@ public class ItemController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Object> createItem(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@RequestBody @Valid ItemRequestDto dto) {
-		log.info("Create Item: {}", dto.toString());
+			@RequestBody @Valid ItemCreateDto dto) {
+		log.info("<--GATEWAY-->  Create Item: {}", dto.toString());
 		return client.createItem(userId, dto);
 	}
 
 	@PatchMapping(PATH)
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Object> updateItem(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@PathVariable @Positive final Long itemId, @RequestBody @Valid ItemRequestDto dto) {
-		log.info("Update Item, userId:{}, dto: {}", userId, dto.toString());
+			@PathVariable @Positive final Long itemId, @RequestBody @Valid ItemUpdateDto dto) {
+		log.info("<--GATEWAY-->  Update Item, userId:{}, dto: {}", userId, dto.toString());
 		return client.updateItem(itemId, userId, dto);
 	}
 
@@ -56,14 +57,14 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Object> findItemById(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @NotNull @Positive final Long itemId) {
-		log.info("Find item by ID: itemId: {}, userId: {}", itemId, userId);
+		log.info("<--GATEWAY-->  Find item by ID: itemId: {}, userId: {}", itemId, userId);
 		return client.findById(itemId, userId);
 	}
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Object> findItemsByOwner(@RequestHeader(HEADER) @NotNull @Positive final Long userId) {
-		log.info("Find Items By Owner: userId: {}", userId);
+		log.info("<--GATEWAY-->  Find Items By Owner: userId: {}", userId);
 		return client.findByOwner(userId);
 	}
 
@@ -71,14 +72,14 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Object> searchAvailableItemsByText(
 			@RequestHeader(HEADER) @NotNull @Positive final Long userId, @RequestParam final String text) {
-		log.trace("Search by TEXT: text: {}", text);
+		log.trace("<--GATEWAY-->  Search by TEXT: text: {}", text);
 		return client.searchByText(SEARCH, userId, text);
 	}
 
 	@PostMapping("/{itemId}/comment")
 	public ResponseEntity<Object> addComment(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid final CommentRequestDto dto) {
-		log.info("Add Comment: text: {}, userId: {}, itemId: {};", dto.getText(), userId, itemId);
+			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid final RequestCommentCreateDto dto) {
+		log.info("<--GATEWAY-->  Add Comment: text: {}, userId: {}, itemId: {};", dto.getText(), userId, itemId);
 		return client.addComment(itemId, userId, dto);
 	}
 

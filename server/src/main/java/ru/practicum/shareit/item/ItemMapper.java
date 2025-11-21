@@ -1,21 +1,19 @@
 package ru.practicum.shareit.item;
 
-import ru.practicum.shareit.common.dto.item.ItemCreateDto;
 import ru.practicum.shareit.common.dto.item.ItemDto;
-import ru.practicum.shareit.common.dto.item.ItemUpdateDto;
 
 public class ItemMapper {
 
 	private ItemMapper() {
 	}
 
-	public static Item toModel(final ItemCreateDto dto) {
-		final Item ans = Item.builder().id(null).name(dto.getName()).available(dto.getAvailable())
+	public static Item toModel(final ItemDto dto) {
+		final Item ans = Item.builder().id(dto.getId()).name(dto.getName()).available(dto.getAvailable())
 				.description(dto.getDescription()).user(null).build();
 		return ans;
 	}
 
-	public static Item toModel(final Item item, final ItemUpdateDto dto) {
+	public static Item toModel(final Item item, final ItemDto dto) {
 		final String name = dto.hasName() ? dto.getName() : item.getName();
 		final Boolean available = dto.hasAvailable() ? dto.getAvailable() : item.getAvailable();
 		final String description = dto.hasDescription() ? dto.getDescription() : item.getDescription();

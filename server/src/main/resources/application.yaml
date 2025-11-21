@@ -18,7 +18,18 @@ spring:
   jpa:
     hibernate: 
       ddl-auto: none   # Отключает автоматическую генерацию схемы БД. Возможные значения: create, update, create-drop, none 
-                       # none - самый безопасный режим, когда схема не меняется автоматически
+                       # none - самый безопасный режим, когда схема не меняется автоматиче
+                       # Форматируем SQL для читаемости в логах
+      format_sql: true
+                       # Добавляем комментарии к SQL (например, имя метода репозитория)
+      use_sql_comments: true
+                       # Экранируем ВСЕ идентификаторы (таблицы, столбцы) в кавычки
+                       # Пример: "user"."first_name" вместо user.first_name
+                       # Необходимо, если имена содержат ключевые слова SQL или спецсимволы
+      globally_quoted_identifiers: true
+                       # Включаем экранирование даже для DDL‑операций (CREATE TABLE и т.п.)
+                       # Если false — экранирование только для DML (SELECT/INSERT/UPDATE)
+      globally_quoted_identifiers_skip_column_definitions: false
     properties:
       hibernate: 
         format_sql: true 		# Форматирует SQL запросы перед их выполнением
@@ -40,4 +51,4 @@ logging:
       springframework: ERROR
     ru:
       practicum:
-        shareit: INFO
+        shareit: TRACE

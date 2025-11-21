@@ -26,7 +26,7 @@ public class UserService {
 
 	@Transactional
 	public User updateUser(final User user) {
-		if (!repo.emailIsUsed(user.getId(), user.getEmail())) {
+		if (!repo.emailAndIdIsUsed(user.getId(), user.getEmail())) {
 			return repo.save(user);
 		}
 		throw new ConflictException(User.EMAIL_IN_USE);
@@ -40,6 +40,10 @@ public class UserService {
 	@Transactional
 	public void deleteUserById(final Long id) {
 		repo.deleteById(id);
+	}
+
+	public User findByEmail(final String email) {
+		return repo.findByEmail(email).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
 	}
 
 }

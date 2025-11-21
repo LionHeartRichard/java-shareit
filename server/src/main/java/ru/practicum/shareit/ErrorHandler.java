@@ -28,7 +28,6 @@ public class ErrorHandler {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		e.printStackTrace(new PrintStream(out));
 		return new ErrorResponse(out.toString(StandardCharsets.UTF_8));
-
 	}
 
 	@ExceptionHandler(NotFoundException.class)

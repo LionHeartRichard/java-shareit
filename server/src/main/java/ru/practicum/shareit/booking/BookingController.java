@@ -12,15 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
-import ru.practicum.shareit.common.dto.booking.BookingCreateDto;
 import ru.practicum.shareit.common.dto.booking.BookingDto;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
@@ -39,12 +35,11 @@ public class BookingController {
 	private static final String PATH_BOOKING = "/{bookingId}";
 
 	@PostMapping
-	public BookingDto createBooking(@RequestHeader(HEADER) @NotNull @Positive final Long bookerId,
-			@RequestBody @Valid BookingCreateDto dto) {
+	public BookingDto createBooking(@RequestHeader(HEADER) final Long bookerId, @RequestBody BookingDto dto) {
 		log.trace("createBooking: {}", dto.toString());
 		final User user = service.findUserById(bookerId);
 		log.trace("find user in DB for createBooking: {}", user.toString());
-		final Item item = service.findItemById(dto.getItemId());
+		final Item item = service.findItemById(dto.getItem().getId());
 		log.trace("find item in DB for createBooking: {}", item.toString());
 		final Booking ans = service.createBooking(BookingMapper.toModel(user, item, dto));
 		log.trace("ans booking in DB: {}", ans.toString());
@@ -52,8 +47,8 @@ public class BookingController {
 	}
 
 	@GetMapping(PATH_BOOKING)
-	public BookingDto findByUserIdAndBookingId(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@PathVariable @NotNull @Positive final Long bookingId) {
+	public BookingDto findByUserIdAndBookingId(@RequestHeader(HEADER) final Long userId,
+			@PathVariable final Long bookingId) {
 		log.trace("findByUserIdAndBookingId: userId = {}, bookingId = {}", userId, bookingId);
 		final Booking ans = service.findByUserIdAndBookingId(userId, bookingId);
 		log.trace("ans booking in DB: {}", ans.toString());
@@ -61,7 +56,7 @@ public class BookingController {
 	}
 
 	@GetMapping
-	public List<BookingDto> findByUserIdAndState(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
+	public List<BookingDto> findByUserIdAndState(@RequestHeader(HEADER) final Long userId,
 			@RequestParam(required = false, defaultValue = "ALL") String state) {
 		log.trace("findByBookerIdAndState: bookerId = {}, state = {}", userId, state);
 		final List<Booking> ans = service.findByUserIdAndState(userId, StateBooking.valueOf(state));
@@ -70,7 +65,7 @@ public class BookingController {
 	}
 
 	@GetMapping("/owner")
-	public List<BookingDto> findByOwnerIdAndState(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
+	public List<BookingDto> findByOwnerIdAndState(@RequestHeader(HEADER) final Long userId,
 			@RequestParam(required = false, defaultValue = "ALL") String state) {
 		log.trace("findByUserIdAndState: userId = {}, state = {}", userId, state);
 		List<Booking> ans = service.findByUserIdAndState(userId, StateBooking.valueOf(state));
@@ -79,8 +74,8 @@ public class BookingController {
 	}
 
 	@PatchMapping(PATH_BOOKING)
-	public BookingDto approvedByUserIdAndBookingId(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@PathVariable @NotNull @Positive final Long bookingId, @RequestParam @NotNull Boolean approved) {
+	public BookingDto approvedByUserIdAndBookingId(@RequestHeader(HEADER) final Long userId,
+			@PathVariable final Long bookingId, @RequestParam Boolean approved) {
 		log.trace("approvedByUserIdAndBookingId: userId: {}, bookingId: {}, approved: {}", userId, bookingId, approved);
 		Booking ans = service.approvedByUserIdAndBookingId(userId, bookingId, approved);
 		log.trace("ans booking in DB: {}", ans.toString());

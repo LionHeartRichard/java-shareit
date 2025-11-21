@@ -1,9 +1,13 @@
+spring:
+  profiles:
+    active: default
+
 logging:
   level:
-    org.springframework.web.client.RestTemplate: DEBUG
+    org.springframework.web.client.RestTemplate: ERROR
     ru:
       practicum:
-        shareit: INFO
+        shareit: TRACE
 
 server:
   port: 8080

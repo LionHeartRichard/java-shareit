@@ -21,7 +21,42 @@ spring:
       separator: ";"
       continue-on-error: false
 
-logging:
-  level:
-    org:
+# Настройки JPA/Hibernate
+  jpa:
+# Указываем диалект Hibernate для H2
+# Обеспечивает корректную генерацию SQL под синтаксис H2
+    database-platform: org.hibernate.dialect.H2Dialect
+# Включаем вывод SQL‑запросов в лог (полезно для отладки тестов)
+    show-sql: true
+
+# Настройки Hibernate через свойства
+    properties:
+      hibernate: 
+# Форматируем SQL для читаемости в логах
+        format_sql: true
+# Добавляем комментарии к SQL (например, имя метода репозитория)
+        use_sql_comments: true
+# Экранируем ВСЕ идентификаторы (таблицы, столбцы) в кавычки
+# Пример: "user"."first_name" вместо user.first_name
+# Необходимо, если имена содержат ключевые слова SQL или спецсимволы
+        globally_quoted_identifiers: true
+# Включаем экранирование даже для DDL‑операций (CREATE TABLE и т.п.)
+# Если false — экранирование только для DML (SELECT/INSERT/UPDATE)
+        globally_quoted_identifiers_skip_column_definitions: false
+
+# Стратегия генерации схемы БД при запуске тестов
+# create-drop: 
+#   - CREATE — создает схему перед тестом
+#   - DROP — удаляет схему после теста
+# Гарантирует чистоту окружения для каждого теста
+    hibernate:
+      ddl-auto: create-drop
+      dialect: org.hibernate.dialect.H2Dialect
+
+logging: 
+  level: 
+    org: 
       springframework: ERROR
+    ru:
+      practicum:
+        shareit: INFO

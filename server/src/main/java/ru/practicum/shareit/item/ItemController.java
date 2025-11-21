@@ -13,10 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-
 import org.springframework.http.HttpStatus;
 
 import lombok.AccessLevel;
@@ -28,10 +24,8 @@ import ru.practicum.shareit.comment.Comment;
 import ru.practicum.shareit.comment.CommentMapper;
 import ru.practicum.shareit.common.dto.comment.CommentCreateDto;
 import ru.practicum.shareit.common.dto.comment.CommentDto;
-import ru.practicum.shareit.common.dto.item.ItemCreateDto;
 import ru.practicum.shareit.common.dto.item.ItemDto;
 import ru.practicum.shareit.common.dto.item.ItemFullDto;
-import ru.practicum.shareit.common.dto.item.ItemUpdateDto;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -46,8 +40,7 @@ public class ItemController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ItemDto createItem(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@RequestBody @Valid ItemCreateDto dto) {
+	public ItemDto createItem(@RequestHeader(HEADER) final Long userId, @RequestBody ItemDto dto) {
 		log.trace("createItem: {}", dto.toString());
 		final Item ans = service.createItem(userId, ItemMapper.toModel(dto));
 		log.trace("ans item in DB: {}", ans.toString());
@@ -56,8 +49,8 @@ public class ItemController {
 
 	@PatchMapping(PATH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
-	public ItemDto updateItem(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid ItemUpdateDto dto) {
+	public ItemDto updateItem(@RequestHeader(HEADER) final Long userId, @PathVariable final Long itemId,
+			@RequestBody ItemDto dto) {
 		log.trace("updateItem, userId:{}, ItemUpdateDto: {}", userId, dto.toString());
 		final Item item = service.findItemById(itemId);
 		log.trace("old item in DB: {}", item.toString());
@@ -68,8 +61,7 @@ public class ItemController {
 
 	@GetMapping(PATH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
-	public ItemFullDto findItemById(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@PathVariable @NotNull @Positive final Long itemId) {
+	public ItemFullDto findItemById(@RequestHeader(HEADER) final Long userId, @PathVariable final Long itemId) {
 		log.trace("findItemById itemId: {}, userId: {}", itemId, userId);
 		final Item item = service.findItemById(itemId);
 		log.trace("find item in DB: {}", item.toString());
@@ -81,7 +73,7 @@ public class ItemController {
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<ItemDto> findItemsByOwner(@RequestHeader(HEADER) @NotNull @Positive final Long userId) {
+	public List<ItemDto> findItemsByOwner(@RequestHeader(HEADER) final Long userId) {
 		log.trace("findItemsByOwner: userId = {}", userId);
 		final List<Item> items = service.findItemsByOwner(userId);
 		log.trace("items: {}", items);
@@ -98,8 +90,8 @@ public class ItemController {
 	}
 
 	@PostMapping("/{itemId}/comment")
-	public CommentDto addComment(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@PathVariable @NotNull @Positive final Long itemId, @RequestBody final CommentCreateDto dto) {
+	public CommentDto addComment(@RequestHeader(HEADER) final Long userId, @PathVariable final Long itemId,
+			@RequestBody final CommentCreateDto dto) {
 		log.trace("addComment: userId: {}, itemId: {};", userId, itemId);
 		log.trace("CommentDTO: {}", dto.toString());
 		final Comment comment = service.addComment(userId, itemId, dto.getText());

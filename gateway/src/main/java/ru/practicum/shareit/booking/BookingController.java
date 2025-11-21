@@ -22,7 +22,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import ru.practicum.shareit.common.StateBooking;
-import ru.practicum.shareit.common.dto.booking.BookingRequestDto;
+import ru.practicum.shareit.common.dto.booking.BookingCreateDto;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Controller
@@ -39,15 +39,15 @@ public class BookingController {
 
 	@PostMapping
 	public ResponseEntity<Object> createBooking(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@RequestBody @Valid final BookingRequestDto requestDto) {
-		log.info("Creating booking {}, userId={}", requestDto, userId);
-		return client.createBooking(userId, requestDto);
+			@RequestBody @Valid final BookingCreateDto dto) {
+		log.info("<--GATEWAY--> Creating booking {}, userId={}", dto, userId);
+		return client.createBooking(userId, dto);
 	}
 
 	@GetMapping(PATH)
 	public ResponseEntity<Object> getBooking(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable final Long bookingId) {
-		log.info("Get booking {}, userId={}", bookingId, userId);
+		log.info("<--GATEWAY-->  Get booking {}, userId={}", bookingId, userId);
 		return client.getBooking(userId, bookingId);
 	}
 
@@ -58,14 +58,15 @@ public class BookingController {
 			@Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
 		StateBooking state = StateBooking.from(stateParam)
 				.orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
-		log.info("Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
+		log.info("<--GATEWAY-->  Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from,
+				size);
 		return client.getBookings(userId, state, from, size);
 	}
 
 	@GetMapping(OWNER)
 	public ResponseEntity<Object> findByOwnerIdAndState(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@RequestParam(required = false, defaultValue = "ALL") String state) {
-		log.info("Find by User ID and State: userId = {}, state = {}", userId, state);
+		log.info("<--GATEWAY-->  Find by User ID and State: userId = {}, state = {}", userId, state);
 		return client.findByOwnerAndState(OWNER, userId, StateBooking.valueOf(state));
 	}
 
@@ -73,8 +74,8 @@ public class BookingController {
 	public ResponseEntity<Object> approvedByUserIdAndBookingId(
 			@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @NotNull @Positive Long bookingId, @RequestParam @NotNull Boolean approved) {
-		log.info("Approved by User ID and BookingId: userId: {}, bookingId: {}, approved: {}", userId, bookingId,
-				approved);
+		log.info("<--GATEWAY-->  Approved by User ID and BookingId: userId: {}, bookingId: {}, approved: {}", userId,
+				bookingId, approved);
 		return client.approved(bookingId, userId, approved);
 	}
 }

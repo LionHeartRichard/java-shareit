@@ -10,19 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-
 import org.springframework.http.HttpStatus;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.common.dto.user.UserCreateDto;
 import ru.practicum.shareit.common.dto.user.UserDto;
-import ru.practicum.shareit.common.dto.user.UserUpdateDto;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -30,12 +24,13 @@ import ru.practicum.shareit.common.dto.user.UserUpdateDto;
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
 public class UserController {
+
 	UserService service;
 	private static final String PATH_USER = "/{userId}";
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public UserDto createUser(@RequestBody @Valid UserCreateDto dto) {
+	public UserDto createUser(@RequestBody UserDto dto) {
 		log.trace("createUser: {}", dto.toString());
 		final User user = service.createUser(UserMapper.toModel(dto));
 		log.trace("user in DB: {}", user.toString());
@@ -46,8 +41,7 @@ public class UserController {
 
 	@PatchMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.OK)
-	public UserDto updateUser(@PathVariable @NotNull @Positive final Long userId,
-			@RequestBody @Valid UserUpdateDto dto) {
+	public UserDto updateUser(@PathVariable final Long userId, @RequestBody UserDto dto) {
 		log.trace("UserId: {}, updateUser: {}", userId, dto.toString());
 		final User user = service.findUserById(userId);
 		log.trace("Old user in DB: {}", user.toString());
@@ -58,7 +52,7 @@ public class UserController {
 
 	@GetMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.OK)
-	public UserDto findUserById(@PathVariable @NotNull @Positive final Long userId) {
+	public UserDto findUserById(@PathVariable final Long userId) {
 		log.trace("findUserById: userId = {}", userId);
 		final User ans = service.findUserById(userId);
 		log.trace("find user in DB: {}", ans.toString());
@@ -67,7 +61,7 @@ public class UserController {
 
 	@DeleteMapping(PATH_USER)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteUserById(@PathVariable @NotNull @Positive final Long userId) {
+	public void deleteUserById(@PathVariable final Long userId) {
 		log.trace("deleteUserById: userId: {}", userId);
 		service.deleteUserById(userId);
 	}
