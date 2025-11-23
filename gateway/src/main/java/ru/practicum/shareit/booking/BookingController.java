@@ -38,24 +38,24 @@ public class BookingController {
 	private static final String OWNER = "/owner";
 
 	@PostMapping
-	public ResponseEntity<Object> createBooking(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@RequestBody @Valid final BookingCreateDto dto) {
+	public ResponseEntity<Object> createBooking(@RequestHeader(HEADER) @NotNull @Positive Long userId,
+			@RequestBody @Valid BookingCreateDto dto) {
 		log.info("<--GATEWAY--> Creating booking {}, userId={}", dto, userId);
 		return client.createBooking(userId, dto);
 	}
 
 	@GetMapping(PATH)
-	public ResponseEntity<Object> getBooking(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@PathVariable final Long bookingId) {
+	public ResponseEntity<Object> getBooking(@RequestHeader(HEADER) @NotNull @Positive Long userId,
+			@PathVariable Long bookingId) {
 		log.info("<--GATEWAY-->  Get booking {}, userId={}", bookingId, userId);
 		return client.getBooking(userId, bookingId);
 	}
 
 	@GetMapping
-	public ResponseEntity<Object> getBookings(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@RequestParam(name = "state", defaultValue = "all") final String stateParam,
-			@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") final Integer from,
-			@Positive @RequestParam(name = "size", defaultValue = "10") final Integer size) {
+	public ResponseEntity<Object> getBookings(@RequestHeader(HEADER) @NotNull @Positive Long userId,
+			@RequestParam(name = "state", defaultValue = "all") String stateParam,
+			@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+			@Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
 		StateBooking state = StateBooking.from(stateParam)
 				.orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
 		log.info("<--GATEWAY-->  Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from,
@@ -64,7 +64,7 @@ public class BookingController {
 	}
 
 	@GetMapping(OWNER)
-	public ResponseEntity<Object> findByOwnerIdAndState(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
+	public ResponseEntity<Object> findByOwnerIdAndState(@RequestHeader(HEADER) @NotNull @Positive Long userId,
 			@RequestParam(required = false, defaultValue = "ALL") String state) {
 		log.info("<--GATEWAY-->  Find by User ID and State: userId = {}, state = {}", userId, state);
 		return client.findByOwnerAndState(OWNER, userId, StateBooking.valueOf(state));

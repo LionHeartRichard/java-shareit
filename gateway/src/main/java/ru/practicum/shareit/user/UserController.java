@@ -41,7 +41,7 @@ public class UserController {
 
 	@PatchMapping(PATH)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<Object> updateUser(@PathVariable @NotNull @Positive final Long userId,
+	public ResponseEntity<Object> updateUser(@PathVariable @NotNull @Positive Long userId,
 			@RequestBody @Valid UserUpdateDto dto) {
 		log.info("<--GATEWAY-->  Update User userId: {}, updateUser: {}", userId, dto.toString());
 		return client.updateUser(userId, dto);
@@ -49,14 +49,14 @@ public class UserController {
 
 	@GetMapping(PATH)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<Object> findUserById(@PathVariable @NotNull @Positive final Long userId) {
+	public ResponseEntity<Object> findUserById(@PathVariable @NotNull @Positive Long userId) {
 		log.info("<--GATEWAY-->  Find User By Id: userId = {}", userId);
 		return client.getUser(userId);
 	}
 
 	@DeleteMapping(PATH)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public ResponseEntity<Object> deleteUserById(@PathVariable @NotNull @Positive final Long userId) {
+	public ResponseEntity<Object> deleteUserById(@PathVariable @NotNull @Positive Long userId) {
 		log.info("<--GATEWAY-->  Delete User By Id: userId: {}", userId);
 		return client.deleteUser(userId);
 	}

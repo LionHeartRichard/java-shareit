@@ -20,31 +20,30 @@ public class BookingClient extends BaseClient {
 	private static final String API = "/bookings";
 
 	@Autowired
-	public BookingClient(@Value("${shareit-server.url}") final String serverUrl, RestTemplateBuilder builder) {
+	public BookingClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
 		super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API))
 				.requestFactory(() -> new HttpComponentsClientHttpRequestFactory()).build());
 	}
 
-	public ResponseEntity<Object> getBookings(final Long userId, final StateBooking state, final Integer from,
-			final Integer size) {
+	public ResponseEntity<Object> getBookings(Long userId, StateBooking state, Integer from, Integer size) {
 		Map<String, Object> params = Map.of("state", state.name(), "from", from, "size", size);
 		return get("?state={state}&from={from}&size={size}", userId, params);
 	}
 
-	public ResponseEntity<Object> createBooking(final Long userId, final BookingCreateDto dto) {
+	public ResponseEntity<Object> createBooking(Long userId, BookingCreateDto dto) {
 		return post("", userId, dto);
 	}
 
-	public ResponseEntity<Object> getBooking(final Long userId, final Long bookingId) {
+	public ResponseEntity<Object> getBooking(Long userId, Long bookingId) {
 		return get("/" + bookingId, userId);
 	}
 
-	public ResponseEntity<Object> findByOwnerAndState(final String path, final Long userId, final StateBooking state) {
+	public ResponseEntity<Object> findByOwnerAndState(String path, Long userId, StateBooking state) {
 		Map<String, Object> params = Map.of("state", state.name());
 		return get(path, userId, params);
 	}
 
-	public ResponseEntity<Object> approved(final Long bookingId, final Long userId, final Boolean approved) {
+	public ResponseEntity<Object> approved(Long bookingId, Long userId, Boolean approved) {
 		Map<String, Object> params = Map.of("approved", approved);
 		return patch("/" + bookingId, userId, params, null);
 	}

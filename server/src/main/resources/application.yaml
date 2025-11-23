@@ -31,17 +31,17 @@ spring:
                                 # Для разработки/тестов лучше create-drop; для продакшена — none или update
 
 
-      format_sql: true           # Форматирует SQL‑запросы в логах (удобно для отладки)
-      use_sql_comments: true      # Добавляет комментарии к SQL (например, имя метода репозитория)
+      format_sql: false           # Форматирует SQL‑запросы в логах (удобно для отладки)
+      use_sql_comments: false      # Добавляет комментарии к SQL (например, имя метода репозитория)
       globally_quoted_identifiers: true  # Экранирует все идентификаторы в кавычки ("user"."name")
-      globally_quoted_identifiers_skip_column_definitions: false  # Экранирование и для DDL (CREATE TABLE)
+      globally_quoted_identifiers_skip_column_definitions: true  # Экранирование и для DDL (CREATE TABLE)
 
 
     properties:
       hibernate:
         format_sql: true        # Дублирует format_sql (на случай, если выше не сработало)
         dialect: org.hibernate.dialect.PostgreSQLDialect  # Диалект Hibernate для PostgreSQL
-        show_sql: true          # Выводит SQL‑запросы в консоль (полезно для отладки)
+        show_sql: false          # Выводит SQL‑запросы в консоль (полезно для отладки)
         # Для более детального лога можно добавить:
         # hibernate.type.descriptor.sql.basicBinder.trace: true
 
@@ -59,9 +59,8 @@ spring:
 logging:
   level:
     org:
-      springframework: ERROR      # Уровень логирования для Spring (только ошибки)
+      springframework: ERROR
+      hibernate: ERROR
     ru:
       practicum:
-        shareit: TRACE          # Уровень логирования для нашего пакета (максимально подробно)
-    org.hibernate: DEBUG        # Дополнительно: логировать SQL‑запросы Hibernate
-    org.springframework.jdbc: DEBUG  # Логировать JDBC‑операции
+        shareit: ERROR

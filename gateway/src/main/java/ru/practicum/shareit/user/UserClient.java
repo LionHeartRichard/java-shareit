@@ -18,7 +18,7 @@ public class UserClient extends BaseClient {
 	private static final String API = "/users";
 
 	@Autowired
-	public UserClient(@Value("${shareit-server.url}") final String serverUrl, RestTemplateBuilder builder) {
+	public UserClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
 		super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API))
 				.requestFactory(() -> new HttpComponentsClientHttpRequestFactory()).build());
 	}
@@ -27,19 +27,19 @@ public class UserClient extends BaseClient {
 		return get("");
 	}
 
-	public ResponseEntity<Object> getUser(final Long userId) {
+	public ResponseEntity<Object> getUser(Long userId) {
 		return get("/" + userId);
 	}
 
-	public ResponseEntity<Object> createUser(final UserCreateDto userDto) {
+	public ResponseEntity<Object> createUser(UserCreateDto userDto) {
 		return post("", userDto);
 	}
 
-	public ResponseEntity<Object> updateUser(final Long userId, final UserUpdateDto userDto) {
+	public ResponseEntity<Object> updateUser(Long userId, UserUpdateDto userDto) {
 		return put("/" + userId, userId, userDto);
 	}
 
-	public ResponseEntity<Object> deleteUser(final Long userId) {
+	public ResponseEntity<Object> deleteUser(Long userId) {
 		return delete("/" + userId, userId);
 	}
 

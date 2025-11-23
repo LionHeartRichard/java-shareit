@@ -19,20 +19,20 @@ public class ItemClient extends BaseClient {
 
 	private static final String API = "/items";
 
-	public ItemClient(@Value("${shareit-server.url}") final String serverUrl, RestTemplateBuilder builder) {
+	public ItemClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
 		super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API))
 				.requestFactory(() -> new HttpComponentsClientHttpRequestFactory()).build());
 	}
 
-	public ResponseEntity<Object> createItem(final Long userId, final ItemCreateDto dto) {
-		return post("", dto);
+	public ResponseEntity<Object> createItem(Long userId, ItemCreateDto dto) {
+		return post("", userId, dto);
 	}
 
-	public ResponseEntity<Object> updateItem(final Long itemId, final Long userId, final ItemUpdateDto dto) {
+	public ResponseEntity<Object> updateItem(Long itemId, Long userId, ItemUpdateDto dto) {
 		return put("/" + itemId, userId, dto);
 	}
 
-	public ResponseEntity<Object> findById(final Long itemId, final Long userId) {
+	public ResponseEntity<Object> findById(Long itemId, Long userId) {
 		return get("/" + itemId, userId);
 	}
 
@@ -40,12 +40,12 @@ public class ItemClient extends BaseClient {
 		return get("", userId);
 	}
 
-	public ResponseEntity<Object> searchByText(final String search, final Long userId, final String text) {
+	public ResponseEntity<Object> searchByText(String search, Long userId, String text) {
 		Map<String, Object> params = Map.of("text", text);
 		return get(search, userId, params);
 	}
 
-	public ResponseEntity<Object> addComment(final Long itemId, final Long userId, final RequestCommentCreateDto dto) {
+	public ResponseEntity<Object> addComment(Long itemId, Long userId, RequestCommentCreateDto dto) {
 		return post("/" + itemId + "/comment", userId, dto);
 	}
 

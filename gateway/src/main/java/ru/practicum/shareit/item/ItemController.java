@@ -57,6 +57,7 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Object> findItemById(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @NotNull @Positive final Long itemId) {
+		log.error("<--GATEWAY--> method findItemById: userId: " + userId);
 		log.info("<--GATEWAY-->  Find item by ID: itemId: {}, userId: {}", itemId, userId);
 		return client.findById(itemId, userId);
 	}
