@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import ru.practicum.shareit.BaseClient;
-import ru.practicum.shareit.common.dto.booking.BookingCreateDto;
+import ru.practicum.shareit.common.dto.booking.BookingValidDto;
 import ru.practicum.shareit.common.StateBooking;
 
 @Component
@@ -30,7 +30,7 @@ public class BookingClient extends BaseClient {
 		return get("?state={state}&from={from}&size={size}", userId, params);
 	}
 
-	public ResponseEntity<Object> createBooking(Long userId, BookingCreateDto dto) {
+	public ResponseEntity<Object> createBooking(Long userId, BookingValidDto dto) {
 		return post("", userId, dto);
 	}
 

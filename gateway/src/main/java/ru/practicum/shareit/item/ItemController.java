@@ -21,7 +21,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.common.dto.comment.RequestCommentCreateDto;
+import ru.practicum.shareit.common.dto.comment.ValidCommentDto;
 import ru.practicum.shareit.common.dto.item.ItemCreateDto;
 import ru.practicum.shareit.common.dto.item.ItemUpdateDto;
 
@@ -57,7 +57,7 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Object> findItemById(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
 			@PathVariable @NotNull @Positive final Long itemId) {
-		log.error("<--GATEWAY--> method findItemById: userId: " + userId);
+		log.info("<--GATEWAY--> method findItemById: userId: " + userId);
 		log.info("<--GATEWAY-->  Find item by ID: itemId: {}, userId: {}", itemId, userId);
 		return client.findById(itemId, userId);
 	}
@@ -73,13 +73,13 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Object> searchAvailableItemsByText(
 			@RequestHeader(HEADER) @NotNull @Positive final Long userId, @RequestParam final String text) {
-		log.trace("<--GATEWAY-->  Search by TEXT: text: {}", text);
+		log.info("<--GATEWAY-->  Search by TEXT: text: {}", text);
 		return client.searchByText(SEARCH, userId, text);
 	}
 
 	@PostMapping("/{itemId}/comment")
 	public ResponseEntity<Object> addComment(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid final RequestCommentCreateDto dto) {
+			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid final ValidCommentDto dto) {
 		log.info("<--GATEWAY-->  Add Comment: text: {}, userId: {}, itemId: {};", dto.getText(), userId, itemId);
 		return client.addComment(itemId, userId, dto);
 	}

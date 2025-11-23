@@ -20,7 +20,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookingCreateDto {
+public class BookingValidDto {
 	@NotNull(message = "Item id is null!!!")
 	@Positive(message = "Item id < 0 !!!")
 	Long itemId;

@@ -17,4 +17,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	@Query(value = "select COUNT(*)>0 from item where id = :id and user_id = :user_id;", nativeQuery = true)
 	boolean isOwner(@Param("id") final Long id, @Param("user_id") final Long userId);
 
+	List<Item> findByRequestIdOrderByRequestIdDesc(Long id);
+
 }

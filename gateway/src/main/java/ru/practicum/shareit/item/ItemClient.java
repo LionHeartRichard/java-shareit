@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import ru.practicum.shareit.BaseClient;
-import ru.practicum.shareit.common.dto.comment.RequestCommentCreateDto;
+import ru.practicum.shareit.common.dto.comment.ValidCommentDto;
 import ru.practicum.shareit.common.dto.item.ItemCreateDto;
 import ru.practicum.shareit.common.dto.item.ItemUpdateDto;
 
@@ -45,7 +45,7 @@ public class ItemClient extends BaseClient {
 		return get(search, userId, params);
 	}
 
-	public ResponseEntity<Object> addComment(Long itemId, Long userId, RequestCommentCreateDto dto) {
+	public ResponseEntity<Object> addComment(Long itemId, Long userId, ValidCommentDto dto) {
 		return post("/" + itemId + "/comment", userId, dto);
 	}
 

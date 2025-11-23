@@ -22,7 +22,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import ru.practicum.shareit.common.StateBooking;
-import ru.practicum.shareit.common.dto.booking.BookingCreateDto;
+import ru.practicum.shareit.common.dto.booking.BookingValidDto;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Controller
@@ -39,7 +39,7 @@ public class BookingController {
 
 	@PostMapping
 	public ResponseEntity<Object> createBooking(@RequestHeader(HEADER) @NotNull @Positive Long userId,
-			@RequestBody @Valid BookingCreateDto dto) {
+			@RequestBody @Valid BookingValidDto dto) {
 		log.info("<--GATEWAY--> Creating booking {}, userId={}", dto, userId);
 		return client.createBooking(userId, dto);
 	}
