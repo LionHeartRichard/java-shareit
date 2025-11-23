@@ -1,54 +1,67 @@
 server:
-  port: 9090
+  port: 9090  # Порт, на котором будет работать приложение (например, http://localhost:9090)
 
 spring:
   profiles:
-    active: default
-  datasource: 
-    url: jdbc:postgresql://localhost:7432/shareit_db
-    username: dbuser
-    password: chAd_mark-78
-    driver-class-name: org.postgresql.Driver
-    initialization-mode: always # Режим инициализации: всегда выполнять скрипты. Возможные значения: always, embedded, never
+    active: default  # Активный профиль Spring (можно переопределить через -Dspring.profiles.active=test)
 
-    hikari:                   # Настройки пула соединений HikariCP
-      maximum-pool-size: 20   # Максимальное количество соединений в пуле
-      idle-timeout: 30000     # Время ожидания (в миллисекундах) для неактивных соединений
+  datasource:
+    url: jdbc:postgresql://localhost:7432/shareit_db  # URL подключения к PostgreSQL
+    username: dbuser                                   # Имя пользователя БД
+    password: chAd_mark-78                           # Пароль пользователя БД
+    driver-class-name: org.postgresql.Driver         # JDBC‑драйвер для PostgreSQL
+
+    initialization-mode: always  # Режим инициализации: всегда выполнять SQL‑скрипты при старте
+                                 # Возможные значения: always, embedded, never
+
+    hikari:                                             # Настройки пула соединений HikariCP
+      maximum-pool-size: 20                       # Макс. число соединений в пуле (рекомендуется 10–20 для небольших приложений)
+      idle-timeout: 30000                          # Время (мс), через которое неактивное соединение будет закрыто (30 сек)
+      connection-timeout: 30000                   # Время ожидания получения соединения из пула (30 сек)
+      leak-detection-threshold: 60000           # Время (мс) для обнаружения утечек соединений (60 сек)
 
   jpa:
-    hibernate: 
-      ddl-auto: none   # Отключает автоматическую генерацию схемы БД. Возможные значения: create, update, create-drop, none 
-                       # none - самый безопасный режим, когда схема не меняется автоматиче
-                       # Форматируем SQL для читаемости в логах
-      format_sql: true
-                       # Добавляем комментарии к SQL (например, имя метода репозитория)
-      use_sql_comments: true
-                       # Экранируем ВСЕ идентификаторы (таблицы, столбцы) в кавычки
-                       # Пример: "user"."first_name" вместо user.first_name
-                       # Необходимо, если имена содержат ключевые слова SQL или спецсимволы
-      globally_quoted_identifiers: true
-                       # Включаем экранирование даже для DDL‑операций (CREATE TABLE и т.п.)
-                       # Если false — экранирование только для DML (SELECT/INSERT/UPDATE)
-      globally_quoted_identifiers_skip_column_definitions: false
+    hibernate:
+      ddl-auto: create-drop  # АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ СХЕМЫ БД
+                                # Значения:
+                                #   - create: создаёт схему при старте, НЕ удаляет при остановке
+                                #   - update: обновляет схему, НЕ удаляет
+                                #   - create-drop: создаёт при старте, УДАЛЯЕТ при остановке (идеально для тестов)
+                                #   - none: не изменяет схему (ручное управление)
+                                # Для разработки/тестов лучше create-drop; для продакшена — none или update
+
+
+      format_sql: true           # Форматирует SQL‑запросы в логах (удобно для отладки)
+      use_sql_comments: true      # Добавляет комментарии к SQL (например, имя метода репозитория)
+      globally_quoted_identifiers: true  # Экранирует все идентификаторы в кавычки ("user"."name")
+      globally_quoted_identifiers_skip_column_definitions: false  # Экранирование и для DDL (CREATE TABLE)
+
+
     properties:
-      hibernate: 
-        format_sql: true 		# Форматирует SQL запросы перед их выполнением
-        dialect: org.hibernate.dialect.PostgreSQLDialect   # Диалект PostgreSQL для корректной работы с БД
+      hibernate:
+        format_sql: true        # Дублирует format_sql (на случай, если выше не сработало)
+        dialect: org.hibernate.dialect.PostgreSQLDialect  # Диалект Hibernate для PostgreSQL
+        show_sql: true          # Выводит SQL‑запросы в консоль (полезно для отладки)
+        # Для более детального лога можно добавить:
+        # hibernate.type.descriptor.sql.basicBinder.trace: true
 
-  sql:                           # Настройки выполнения SQL скриптов
+  sql:
     init:
-      mode: always # Всегда выполнять скрипты инициализации
-      platform: postgresql # Платформа для выполнения скриптов
-      encoding: UTF-8 # Кодировка для выполнения скриптов
-      separator: ";"  # Разделитель SQL команд
-      data-locations: classpath:schema.sql # Путь к файлу SQL скриптов относительно classpath
-      continue-on-error: false   # Останавливать выполнение при ошибке
-      fail-on-error: true        # Вызывать исключение при ошибке
+      mode: always              # Всегда выполнять SQL‑скрипты при старте приложения
+      platform: postgresql      # Платформа БД для скриптов (влияет на синтаксис)
+      encoding: UTF-8            # Кодировка SQL‑файлов
+      separator: ";"             # Разделитель SQL‑команд в скрипте
+      data-locations: classpath:schema.sql  # Путь к SQL‑скрипту (можно указать несколько через запятую)
+      continue-on-error: false  # Останавливать выполнение при первой ошибке
+      fail-on-error: true      # Вызывать исключение, если скрипт не выполнился
 
-logging: 
-  level: 
-    org: 
-      springframework: ERROR
+
+logging:
+  level:
+    org:
+      springframework: ERROR      # Уровень логирования для Spring (только ошибки)
     ru:
       practicum:
-        shareit: TRACE
+        shareit: TRACE          # Уровень логирования для нашего пакета (максимально подробно)
+    org.hibernate: DEBUG        # Дополнительно: логировать SQL‑запросы Hibernate
+    org.springframework.jdbc: DEBUG  # Логировать JDBC‑операции

@@ -9,23 +9,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.nio.charset.StandardCharsets;
 import org.springframework.http.MediaType;
 
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import ru.practicum.shareit.common.dto.user.UserDto;
 
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
+
 	@Mock
 	private UserService service;
 
@@ -33,40 +31,52 @@ public class UserControllerTest {
 	private UserController controller;
 
 	private final ObjectMapper objMapper = new ObjectMapper();
-
 	private MockMvc mvc;
-	private UserDto dto;
 	private User user;
 
 	@BeforeEach
 	void setUp() {
 		mvc = MockMvcBuilders.standaloneSetup(controller).build();
-		dto = UserDto.builder().id(1L).name("testName").email("testEmail@mail.com").build();
 		user = User.builder().id(1L).name("testName").email("testEmail@mail.com").build();
+
+		when(service.createUser(any(User.class))).thenReturn(user);
 	}
 
 	@Test
 	void createUserTest() throws Exception {
-		when(service.createUser(any())).thenReturn(user);
-
-		mvc.perform(post("/users").content(objMapper.writeValueAsString(dto)).characterEncoding(StandardCharsets.UTF_8)
+		mvc.perform(post("/users").content(objMapper.writeValueAsString(user)).characterEncoding(StandardCharsets.UTF_8)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated()).andExpect(jsonPath("$.id", is(dto.getId()), Long.class))
-				.andExpect(jsonPath("$.name", is(dto.getName()))).andExpect(jsonPath("$.email", is(dto.getEmail())));
+				.andExpect(status().isCreated()).andExpect(jsonPath("$.id", is(user.getId()), Long.class))
+				.andExpect(jsonPath("$.name", is(user.getName()))).andExpect(jsonPath("$.email", is(user.getEmail())));
 	}
 
-	@Test
-	void updateUserTest() throws Exception {
-
-	}
-
-	@Test
-	void findUserByIdTest() throws Exception {
-
-	}
-
-	@Test
-	void deleteUserByIdTest() throws Exception {
-
-	}
+//	@Test
+//	void updateUserTest() throws Exception {
+//		User upUser = User.builder().id(1L).name("updatedName").email("updatedEmail@mail.com").build();
+//
+//		when(service.updateUser(any(User.class))).thenReturn(upUser);
+//
+//		mvc.perform(patch("/users/{id}", 1L).content(objMapper.writeValueAsString(upUser))
+//				.characterEncoding(StandardCharsets.UTF_8).contentType(MediaType.APPLICATION_JSON)
+//				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+//				.andExpect(jsonPath("$.id", is(upUser.getId()), Long.class))
+//				.andExpect(jsonPath("$.name", is(upUser.getName())))
+//				.andExpect(jsonPath("$.email", is(upUser.getEmail())));
+//	}
+//
+//	@Test
+//	void findUserByIdTest() throws Exception {
+//		when(service.findUserById(1L)).thenReturn(user);
+//
+//		mvc.perform(get("/users/{id}", 1L).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+//				.andExpect(jsonPath("$.id", is(user.getId()), Long.class))
+//				.andExpect(jsonPath("$.name", is(user.getName()))).andExpect(jsonPath("$.email", is(user.getEmail())));
+//	}
+//
+//	@Test
+//	void deleteUserByIdTest() throws Exception {
+//		doNothing().when(service).deleteUserById(1L);
+//
+//		mvc.perform(delete("/users/{id}", 1L)).andExpect(status().isNoContent());
+//	}
 }
