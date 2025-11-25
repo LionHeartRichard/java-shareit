@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking;
 import ru.practicum.shareit.UtilMapper;
 import ru.practicum.shareit.common.BookingStatus;
 import ru.practicum.shareit.common.dto.booking.BookingDto;
+import ru.practicum.shareit.common.dto.booking.BookingFullDto;
 
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemMapper;
@@ -24,20 +25,22 @@ public class BookingMapper {
 		return null;
 	}
 
-	public static BookingDto toDto(final Booking booking) {
+	public static BookingFullDto toDto(final Booking booking) {
 		if (booking != null) {
-			final BookingDto ans = BookingDto.builder().id(booking.getId()).item(ItemMapper.toDto(booking.getItem()))
-					.booker(UserMapper.toDto(booking.getUser())).start(UtilMapper.toLocalDateTime(booking.getStart()))
+			final BookingFullDto ans = BookingFullDto.builder().id(booking.getId())
+					.item(ItemMapper.toDto(booking.getItem())).booker(UserMapper.toDto(booking.getUser()))
+					.start(UtilMapper.toLocalDateTime(booking.getStart()))
 					.end(UtilMapper.toLocalDateTime(booking.getEnd())).status(BookingStatus.WAITING).build();
 			return ans;
 		}
 		return null;
 	}
 
-	public static BookingDto toDtoSaveStatus(final Booking booking) {
+	public static BookingFullDto toDtoSaveStatus(final Booking booking) {
 		if (booking != null) {
-			final BookingDto ans = BookingDto.builder().id(booking.getId()).item(ItemMapper.toDto(booking.getItem()))
-					.booker(UserMapper.toDto(booking.getUser())).start(UtilMapper.toLocalDateTime(booking.getStart()))
+			final BookingFullDto ans = BookingFullDto.builder().id(booking.getId())
+					.item(ItemMapper.toDto(booking.getItem())).booker(UserMapper.toDto(booking.getUser()))
+					.start(UtilMapper.toLocalDateTime(booking.getStart()))
 					.end(UtilMapper.toLocalDateTime(booking.getEnd())).status(booking.getStatus()).build();
 			return ans;
 		}

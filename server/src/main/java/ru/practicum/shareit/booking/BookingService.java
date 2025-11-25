@@ -8,8 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.UtilMapper;
 import ru.practicum.shareit.common.BookingStatus;
 import ru.practicum.shareit.common.StateBooking;
+import ru.practicum.shareit.common.dto.booking.BookingDto;
+import ru.practicum.shareit.common.dto.booking.BookingFullDto;
 import ru.practicum.shareit.common.exception.AccessException;
 import ru.practicum.shareit.common.exception.ConflictException;
 import ru.practicum.shareit.common.exception.MyBadRequestException;
@@ -28,42 +31,36 @@ public class BookingService {
 	UserRepository repoUser;
 	ItemRepository repoItem;
 
-	public User findUserById(Long bookerId) {
-		return repoUser.findById(bookerId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
-	}
-
-	public Item findItemById(Long itemId) {
-		Item ans = repoItem.findById(itemId).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
-		if (ans.getAvailable()) {
-			return ans;
-		}
-		throw new MyBadRequestException(Item.NOT_AVAILABLE);
-	}
-
 	@Transactional
-	public Booking createBooking(Booking booking) {
-		if (Long.compare(booking.getStart(), booking.getEnd()) < 0) {
-			return repoBooking.save(booking);
+	public BookingFullDto createBooking(final Long userId, final BookingDto dto) {
+		long start = UtilMapper.toLong(dto.getStart());
+		long end = UtilMapper.toLong(dto.getEnd());
+		if (Long.compare(start, end) < 0) {
+			User user = repoUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+			Item item = repoItem.findById(dto.getItemId()).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
+			Booking booking = BookingMapper.toModel(user, item, dto);
+			return BookingMapper.toDtoSaveStatus(repoBooking.save(booking));
 		}
 		throw new ConflictException(Booking.ERROR_TIME);
 	}
 
-	public Booking findByUserIdAndBookingId(Long userId, Long bookingId) {
+	public BookingFullDto findByUserIdAndBookingId(Long userId, Long bookingId) {
 		if (repoUser.hasId(userId)) {
-			return repoBooking.findById(bookingId).orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
+			Booking ans = repoBooking.findById(bookingId).orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
+			return BookingMapper.toDto(ans);
 		}
 		throw new NotFoundException(User.NOT_FOUND);
 	}
 
-	public List<Booking> findByUserIdAndState(Long userId, StateBooking state) {
+	public List<BookingFullDto> findByUserIdAndState(Long userId, StateBooking state) {
 		if (repoUser.hasId(userId)) {
 			List<Booking> ans = repoBooking.findByUserId(userId);
-			return ans.stream().filter(UtilBooking.filterByState(state)).toList();
+			return ans.stream().filter(UtilBooking.filterByState(state)).map(BookingMapper::toDto).toList();
 		}
 		throw new NotFoundException(User.NOT_FOUND);
 	}
 
-	public Booking approvedByUserIdAndBookingId(Long userId, Long bookingId, Boolean approved) {
+	public BookingFullDto approvedByUserIdAndBookingId(Long userId, Long bookingId, Boolean approved) {
 		final Booking booking = repoBooking.findById(bookingId)
 				.orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
 		if (repoUser.hasId(userId)) {
@@ -71,7 +68,8 @@ public class BookingService {
 				throw new MyBadRequestException(Booking.ERROR_STATUS);
 			}
 			BookingStatus status = approved ? BookingStatus.APPROVED : BookingStatus.REJECTED;
-			return repoBooking.save(booking.toBuilder().status(status).build());
+			Booking ans = repoBooking.save(booking.toBuilder().status(status).build());
+			return BookingMapper.toDto(ans);
 		}
 		throw new AccessException(User.NO_ACCESS);
 	}

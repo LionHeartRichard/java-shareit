@@ -3,7 +3,7 @@ package ru.practicum.shareit.common.dto.item;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareit.common.dto.booking.BookingDto;
+import ru.practicum.shareit.common.dto.booking.BookingFullDto;
 import ru.practicum.shareit.common.dto.comment.CommentDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,8 +24,8 @@ public class ItemFullDto {
 
 	List<CommentDto> comments;
 
-	BookingDto lastBooking;
-	BookingDto nextBooking;
+	BookingFullDto lastBooking;
+	BookingFullDto nextBooking;
 
 	Long requestId;
 }
