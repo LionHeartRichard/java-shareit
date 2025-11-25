@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.common.dto.user.UserDto;
+import ru.practicum.shareit.common.dto.user.UserFullDto;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -28,51 +29,40 @@ import ru.practicum.shareit.common.dto.user.UserDto;
 public class UserController {
 
 	UserService service;
-	UserMapper mapper;
 	private static final String USER_ID = "/{userId}";
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public UserDto createUser(@RequestBody UserDto dto) {
-		log.info("createUser: {}", dto.toString());
-		final User user = service.createUser(mapper.toModel(dto));
-		log.info("user in DB: {}", user);
-		UserDto ans = mapper.toDto(user);
-		log.info("ans full dto: {}", ans);
-		return ans;
+	public UserFullDto createUser(@RequestBody UserDto dto) {
+		log.info("<--SERVER-->  CREATE User, dto: {}", dto.toString());
+		return service.createUser(dto);
 	}
 
 	@PatchMapping(USER_ID)
 	@ResponseStatus(HttpStatus.OK)
-	public UserDto updateUser(@PathVariable final Long userId, @RequestBody UserDto dto) {
-		log.info("UserId: {}, updateUser(Dto): {}", userId, dto.toString());
-		final User user = service.findUserById(userId);
-		log.info("Old user in DB: {}", user);
-		final User ans = service.updateUser(mapper.toModel(dto, user));
-		log.info("Update user, ans: {}", ans);
-		return mapper.toDto(ans);
+	public UserFullDto updateUser(@PathVariable final Long userId, @RequestBody UserFullDto dto) {
+		log.info("<--SERVER-->  UPDATE User id: {}, dto: {}", userId, dto.toString());
+		return service.updateUser(userId, dto);
 	}
 
 	@GetMapping(USER_ID)
 	@ResponseStatus(HttpStatus.OK)
-	public UserDto findUserById(@PathVariable final Long userId) {
-		log.info("findUserById: userId = {}", userId);
-		final User ans = service.findUserById(userId);
-		log.info("find user in DB: {}", ans);
-		return mapper.toDto(ans);
+	public UserFullDto findUserById(@PathVariable final Long userId) {
+		log.info("<--SERVER-->  FIND User, id: {}", userId);
+		return service.findUserById(userId);
 	}
 
 	@DeleteMapping(USER_ID)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteUserById(@PathVariable final Long userId) {
-		log.info("deleteUserById: userId: {}", userId);
+		log.info("<--SERVER-->  DELETE User, id: {}", userId);
 		service.deleteUserById(userId);
 	}
 
 	@GetMapping
-	public List<UserDto> getAllUsers() {
+	public List<UserFullDto> getAllUsers() {
 		log.info("getAllUsers");
-		return service.findAll().stream().map(v -> mapper.toDto(v)).toList();
+		return service.findAll();
 	}
 
 }

@@ -12,7 +12,17 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDto {
+public class UserFullDto {
+
+	Long id;
 	String name;
 	String email;
+
+	public boolean hasName() {
+		return !(name == null || name.isBlank());
+	}
+
+	public boolean hasEmail() {
+		return !(email == null || email.isBlank());
+	}
 }

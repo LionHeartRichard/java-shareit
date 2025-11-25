@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.common.dto.user.UserDto;
+import ru.practicum.shareit.common.dto.user.UserFullDto;
 import ru.practicum.shareit.common.exception.ConflictException;
 import ru.practicum.shareit.common.exception.NotFoundException;
 
@@ -19,24 +21,27 @@ public class UserService {
 	UserRepository repo;
 
 	@Transactional
-	public User createUser(final User user) {
-		if (!repo.hasEmail(user.getEmail())) {
-			return repo.save(user);
+	public UserFullDto createUser(final UserDto dto) {
+		if (!repo.hasEmail(dto.getEmail())) {
+			return UserMapper.toDto(repo.save(UserMapper.toModel(dto)));
 		}
 		throw new ConflictException(User.EMAIL_IN_USE);
 	}
 
 	@Transactional
-	public User updateUser(final User user) {
-		if (!repo.emailAndIdIsUsed(user.getId(), user.getEmail())) {
-			return repo.save(user);
+	public UserFullDto updateUser(final Long userId, final UserFullDto dto) {
+		User user = repo.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		if (!repo.emailIsUsed(userId, user.getEmail())) {
+			User ans = UserMapper.toModel(dto, user);
+			return UserMapper.toDto(repo.save(ans));
 		}
 		throw new ConflictException(User.EMAIL_IN_USE);
 
 	}
 
-	public User findUserById(final Long id) {
-		return repo.findById(id).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+	public UserFullDto findUserById(final Long id) {
+		User ans = repo.findById(id).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		return UserMapper.toDto(ans);
 	}
 
 	@Transactional
@@ -48,8 +53,8 @@ public class UserService {
 		return repo.findByEmail(email).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
 	}
 
-	public List<User> findAll() {
-		return repo.findAll();
+	public List<UserFullDto> findAll() {
+		return repo.findAll().stream().map(v -> UserMapper.toDto(v)).toList();
 	}
 
 }

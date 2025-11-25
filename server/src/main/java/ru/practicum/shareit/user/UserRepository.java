@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	boolean hasEmail(@Param("email") final String email);
 
 	@Query(value = "SELECT COUNT(*) > 0 FROM user_ WHERE email = :email AND id <> :id", nativeQuery = true)
-	boolean emailAndIdIsUsed(@Param("id") final Long userId, @Param("email") final String email);
+	boolean emailIsUsed(@Param("id") final Long userId, @Param("email") final String email);
 
 	@Query(value = "SELECT COUNT(*) > 0 FROM user_ WHERE id = :id", nativeQuery = true)
 	boolean hasId(@Param("id") final Long userId);
