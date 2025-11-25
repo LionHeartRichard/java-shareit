@@ -29,6 +29,7 @@ public class ItemService {
 	UserRepository repoUser;
 	CommentRepository repoComment;
 	BookingRepository repoBooking;
+	CommentMapper commentMapper;
 
 	@Transactional
 	public Item createItem(final Long userId, final Item item) {
@@ -69,7 +70,7 @@ public class ItemService {
 		if (hasApprovedBooking(userId, itemId)) {
 			final Item item = repoItem.findById(itemId).get();
 			final User user = repoUser.findById(userId).get();
-			final Comment comment = CommentMapper.toModel(user, item, text);
+			final Comment comment = commentMapper.toModel(user, item, text);
 			final Comment ans = repoComment.save(comment);
 			return ans;
 		}

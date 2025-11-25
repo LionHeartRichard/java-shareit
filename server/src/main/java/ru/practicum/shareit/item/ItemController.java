@@ -35,6 +35,8 @@ import ru.practicum.shareit.common.dto.item.ItemFullDto;
 public class ItemController {
 
 	ItemService service;
+	ItemMapper mapper;
+	CommentMapper commentMapper;
 	private static final String HEADER = "X-Sharer-User-Id";
 	private static final String PATH_ITEM = "/{itemId}";
 
@@ -42,9 +44,9 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ItemDto createItem(@RequestHeader(HEADER) final Long userId, @RequestBody ItemDto dto) {
 		log.trace("createItem: {}", dto.toString());
-		final Item ans = service.createItem(userId, ItemMapper.toModel(dto));
+		final Item ans = service.createItem(userId, mapper.toModel(dto));
 		log.trace("ans item in DB: {}", ans.toString());
-		return ItemMapper.toDto(ans);
+		return mapper.toDto(ans);
 	}
 
 	@PatchMapping(PATH_ITEM)
@@ -54,9 +56,9 @@ public class ItemController {
 		log.trace("updateItem, userId:{}, ItemUpdateDto: {}", userId, dto.toString());
 		final Item item = service.findItemById(itemId);
 		log.trace("old item in DB: {}", item.toString());
-		final Item ans = service.updateItem(userId, ItemMapper.toModel(item, dto));
+		final Item ans = service.updateItem(userId, mapper.toModel(item, dto));
 		log.trace("ans item update: {}", ans.toString());
-		return ItemMapper.toDto(ans);
+		return mapper.toDto(ans);
 	}
 
 	@GetMapping(PATH_ITEM)
@@ -68,7 +70,7 @@ public class ItemController {
 		final Booking[] bookings = service.findLastBooking(itemId, userId);
 		log.trace("bookings: [0]: {}, [1]: {}", bookings[0], bookings[1]);
 		final List<Comment> comments = service.findCommentsByItemId(itemId);
-		return CommentMapper.toFullDto(item, comments, bookings);
+		return commentMapper.toFullDto(item, comments, bookings);
 	}
 
 	@GetMapping
@@ -77,7 +79,7 @@ public class ItemController {
 		log.trace("findItemsByOwner: userId = {}", userId);
 		final List<Item> items = service.findItemsByOwner(userId);
 		log.trace("items: {}", items);
-		return items.stream().map(v -> ItemMapper.toDto(v)).toList();
+		return items.stream().map(v -> mapper.toDto(v)).toList();
 	}
 
 	@GetMapping("/search")
@@ -86,7 +88,7 @@ public class ItemController {
 		log.trace("searchAvailableItems: {}", text);
 		final List<Item> items = service.searchAvailableItemsByText(text);
 		log.trace("items: {}", items);
-		return items.stream().map(v -> ItemMapper.toDto(v)).toList();
+		return items.stream().map(v -> mapper.toDto(v)).toList();
 	}
 
 	@PostMapping("/{itemId}/comment")
@@ -96,7 +98,7 @@ public class ItemController {
 		log.trace("CommentDTO: {}", dto.toString());
 		final Comment comment = service.addComment(userId, itemId, dto.getText());
 		log.trace("comment: {}", comment.toString());
-		return CommentMapper.toDto(comment);
+		return commentMapper.toDto(comment);
 	}
 
 }

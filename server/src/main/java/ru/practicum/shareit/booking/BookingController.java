@@ -31,6 +31,7 @@ import ru.practicum.shareit.common.StateBooking;
 public class BookingController {
 
 	BookingService service;
+	BookingMapper mapper;
 	private static final String HEADER = "X-Sharer-User-Id";
 	private static final String PATH_BOOKING = "/{bookingId}";
 
@@ -41,9 +42,9 @@ public class BookingController {
 		log.trace("find user in DB for createBooking: {}", user.toString());
 		final Item item = service.findItemById(dto.getItem().getId());
 		log.trace("find item in DB for createBooking: {}", item.toString());
-		final Booking ans = service.createBooking(BookingMapper.toModel(user, item, dto));
+		final Booking ans = service.createBooking(mapper.toModel(user, item, dto));
 		log.trace("ans booking in DB: {}", ans.toString());
-		return BookingMapper.toDto(ans);
+		return mapper.toDto(ans);
 	}
 
 	@GetMapping(PATH_BOOKING)
@@ -52,7 +53,7 @@ public class BookingController {
 		log.trace("findByUserIdAndBookingId: userId = {}, bookingId = {}", userId, bookingId);
 		final Booking ans = service.findByUserIdAndBookingId(userId, bookingId);
 		log.trace("ans booking in DB: {}", ans.toString());
-		return BookingMapper.toDto(ans);
+		return mapper.toDto(ans);
 	}
 
 	@GetMapping
@@ -61,7 +62,7 @@ public class BookingController {
 		log.trace("findByBookerIdAndState: bookerId = {}, state = {}", userId, state);
 		final List<Booking> ans = service.findByUserIdAndState(userId, StateBooking.valueOf(state));
 		log.trace("List<Booking> ans: {}", ans.toString());
-		return ans.stream().map(v -> BookingMapper.toDto(v)).toList();
+		return ans.stream().map(v -> mapper.toDto(v)).toList();
 	}
 
 	@GetMapping("/owner")
@@ -70,7 +71,7 @@ public class BookingController {
 		log.trace("findByUserIdAndState: userId = {}, state = {}", userId, state);
 		List<Booking> ans = service.findByUserIdAndState(userId, StateBooking.valueOf(state));
 		log.trace("List<Booking> ans: {}", ans.toString());
-		return ans.stream().map(v -> BookingMapper.toDto(v)).toList();
+		return ans.stream().map(v -> mapper.toDto(v)).toList();
 	}
 
 	@PatchMapping(PATH_BOOKING)
@@ -79,6 +80,6 @@ public class BookingController {
 		log.trace("approvedByUserIdAndBookingId: userId: {}, bookingId: {}, approved: {}", userId, bookingId, approved);
 		Booking ans = service.approvedByUserIdAndBookingId(userId, bookingId, approved);
 		log.trace("ans booking in DB: {}", ans.toString());
-		return BookingMapper.toDtoSaveStatus(ans);
+		return mapper.toDtoSaveStatus(ans);
 	}
 }

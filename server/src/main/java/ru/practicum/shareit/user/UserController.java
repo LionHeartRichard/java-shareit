@@ -48,7 +48,7 @@ public class UserController {
 		log.info("UserId: {}, updateUser(Dto): {}", userId, dto.toString());
 		final User user = service.findUserById(userId);
 		log.info("Old user in DB: {}", user);
-		final User ans = service.updateUser(UserMapper.toModel(dto, user));
+		final User ans = service.updateUser(mapper.toModel(dto, user));
 		log.info("Update user, ans: {}", ans);
 		return mapper.toDto(ans);
 	}
