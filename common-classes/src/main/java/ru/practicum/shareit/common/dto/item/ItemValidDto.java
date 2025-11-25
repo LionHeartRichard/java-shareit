@@ -17,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemCreateDto {
+public class ItemValidDto {
 	@NotBlank(message = "Name item is blank!!!")
 	@Size(max = 50, message = "The name for item cannot be longer than 50 characters!!!")
 	String name;

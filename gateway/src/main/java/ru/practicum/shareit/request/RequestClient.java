@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import ru.practicum.shareit.common.dto.request.ValidRequestDto;
+import ru.practicum.shareit.common.dto.request.RequestValidDto;
 
 import ru.practicum.shareit.BaseClient;
 
@@ -33,7 +33,7 @@ public class RequestClient extends BaseClient {
 		return get("/" + requestId, userId);
 	}
 
-	public ResponseEntity<Object> createRequest(Long userId, ValidRequestDto dto) {
+	public ResponseEntity<Object> createRequest(Long userId, RequestValidDto dto) {
 		return post("", userId, dto);
 	}
 

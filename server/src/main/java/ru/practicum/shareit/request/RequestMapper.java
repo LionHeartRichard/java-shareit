@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import ru.practicum.shareit.common.dto.item.ItemDto;
-import ru.practicum.shareit.common.dto.request.CreateRequestDto;
+import ru.practicum.shareit.common.dto.request.RequestDescriptDto;
 import ru.practicum.shareit.common.dto.request.RequestDto;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemMapper;
@@ -14,7 +14,7 @@ public class RequestMapper {
 	private RequestMapper() {
 	}
 
-	public static Request toModel(CreateRequestDto dto) {
+	public static Request toModel(RequestDescriptDto dto) {
 		return Request.builder().description(dto.getDescription()).created(LocalDateTime.now()).build();
 	}
 

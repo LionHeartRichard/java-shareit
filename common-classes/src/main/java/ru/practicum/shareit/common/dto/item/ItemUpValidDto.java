@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemUpdateDto {
+public class ItemUpValidDto {
 	@Size(max = 50, message = "The name for item cannot be longer than 50 characters!!!")
 	String name;
 	Boolean available;

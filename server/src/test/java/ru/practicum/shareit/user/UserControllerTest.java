@@ -1,82 +1,101 @@
 package ru.practicum.shareit.user;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.common.dto.user.UserDto;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
-import org.springframework.http.MediaType;
+import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(controllers = UserController.class)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserControllerTest {
 
-	@Mock
-	private UserService service;
+	@Autowired
+	ObjectMapper objMapper;
 
-	@InjectMocks
-	private UserController controller;
+	@MockBean
+	UserService userService;
 
-	private final ObjectMapper objMapper = new ObjectMapper();
-	private MockMvc mvc;
-	private User user;
+	@MockBean
+	UserMapper userMapper;
 
-	@BeforeEach
-	void setUp() {
-		mvc = MockMvcBuilders.standaloneSetup(controller).build();
-		user = User.builder().id(1L).name("testName").email("testEmail@mail.com").build();
+	@Autowired
+	MockMvc mvc;
 
-		when(service.createUser(any(User.class))).thenReturn(user);
-	}
+	final User createUser = new User(null, "name", "email@mail.ru");
+	final User updateUser = new User(1L, "upName", "up_email@mail.ru");
+
+	final User expectedCreateUser = new User(1L, "name", "email@mail.ru");
+	final User expectedUpdateUser = new User(1L, "upName", "up_email@mail.ru");
+
+	final UserDto dto = new UserDto(1L, "upName", "up_email@mail.ru");
 
 	@Test
 	void createUserTest() throws Exception {
-		mvc.perform(post("/users").content(objMapper.writeValueAsString(user)).characterEncoding(StandardCharsets.UTF_8)
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated()).andExpect(jsonPath("$.id", is(user.getId()), Long.class))
-				.andExpect(jsonPath("$.name", is(user.getName()))).andExpect(jsonPath("$.email", is(user.getEmail())));
+		when(userService.createUser(createUser)).thenReturn(expectedCreateUser);
+
+		mvc.perform(post("/users").content(objMapper.writeValueAsString(createUser))
+				.characterEncoding(StandardCharsets.UTF_8).contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").value(expectedCreateUser.getId()))
+				.andExpect(jsonPath("$.name").value(expectedCreateUser.getName()))
+				.andExpect(jsonPath("$.email").value(expectedCreateUser.getEmail()));
 	}
 
-//	@Test
-//	void updateUserTest() throws Exception {
-//		User upUser = User.builder().id(1L).name("updatedName").email("updatedEmail@mail.com").build();
-//
-//		when(service.updateUser(any(User.class))).thenReturn(upUser);
-//
-//		mvc.perform(patch("/users/{id}", 1L).content(objMapper.writeValueAsString(upUser))
-//				.characterEncoding(StandardCharsets.UTF_8).contentType(MediaType.APPLICATION_JSON)
-//				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-//				.andExpect(jsonPath("$.id", is(upUser.getId()), Long.class))
-//				.andExpect(jsonPath("$.name", is(upUser.getName())))
-//				.andExpect(jsonPath("$.email", is(upUser.getEmail())));
-//	}
-//
-//	@Test
-//	void findUserByIdTest() throws Exception {
-//		when(service.findUserById(1L)).thenReturn(user);
-//
-//		mvc.perform(get("/users/{id}", 1L).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-//				.andExpect(jsonPath("$.id", is(user.getId()), Long.class))
-//				.andExpect(jsonPath("$.name", is(user.getName()))).andExpect(jsonPath("$.email", is(user.getEmail())));
-//	}
-//
-//	@Test
-//	void deleteUserByIdTest() throws Exception {
-//		doNothing().when(service).deleteUserById(1L);
-//
-//		mvc.perform(delete("/users/{id}", 1L)).andExpect(status().isNoContent());
-//	}
+	@Test
+	void updateUserTest() throws Exception {
+		when(userService.updateUser(updateUser)).thenReturn(expectedUpdateUser);
+		when(userService.findUserById(1L)).thenReturn(createUser);
+		when(userMapper.toModel(dto, createUser)).thenReturn(expectedUpdateUser);
+
+		mvc.perform(patch("/users/1").content(objMapper.writeValueAsString(updateUser))
+				.characterEncoding(StandardCharsets.UTF_8).contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(expectedUpdateUser.getId()))
+				.andExpect(jsonPath("$.name").value(expectedUpdateUser.getName()))
+				.andExpect(jsonPath("$.email").value(expectedUpdateUser.getEmail()));
+	}
+
+	@Test
+	void findUserByIdTest() throws Exception {
+		when(userService.findUserById(1L)).thenReturn(expectedCreateUser);
+
+		mvc.perform(get("/users/1").characterEncoding(StandardCharsets.UTF_8).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.id").value(expectedCreateUser.getId()))
+				.andExpect(jsonPath("$.name").value(expectedCreateUser.getName()))
+				.andExpect(jsonPath("$.email").value(expectedCreateUser.getEmail()));
+	}
+
+	@Test
+	void deleteUserByIdTest() throws Exception {
+		doNothing().when(userService).deleteUserById(1L);
+		mvc.perform(delete("/users/1")).andExpect(status().isOk());
+		verify(userService, times(1)).deleteUserById(1L);
+	}
+
+	@Test
+	void getAllUsersTest() throws Exception {
+		when(userService.findAll()).thenReturn(List.of(expectedCreateUser));
+
+		mvc.perform(get("/users").characterEncoding(StandardCharsets.UTF_8).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)))
+				.andExpect(jsonPath("$[0].id").value(expectedCreateUser.getId()))
+				.andExpect(jsonPath("$[0].name").value(expectedCreateUser.getName()))
+				.andExpect(jsonPath("$[0].email").value(expectedCreateUser.getEmail()));
+	}
 }

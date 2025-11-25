@@ -15,7 +15,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.common.dto.request.CreateRequestDto;
+import ru.practicum.shareit.common.dto.request.RequestDescriptDto;
 import ru.practicum.shareit.common.dto.request.RequestDto;
 import ru.practicum.shareit.item.Item;
 
@@ -31,7 +31,7 @@ public class RequestController {
 	private static final String HEADER = "X-Sharer-User-Id";
 
 	@PostMapping
-	public RequestDto create(@RequestHeader(HEADER) Long userId, @RequestBody CreateRequestDto dto) {
+	public RequestDto create(@RequestHeader(HEADER) Long userId, @RequestBody RequestDescriptDto dto) {
 		log.info("CreateRequestDto, userId : {}", userId);
 		log.info("CreateRequestDto: {}", dto.toString());
 		return RequestMapper.toDto(service.create(userId, RequestMapper.toModel(dto)));

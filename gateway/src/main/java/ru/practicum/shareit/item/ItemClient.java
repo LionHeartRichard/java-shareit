@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import ru.practicum.shareit.BaseClient;
-import ru.practicum.shareit.common.dto.comment.ValidCommentDto;
-import ru.practicum.shareit.common.dto.item.ItemCreateDto;
-import ru.practicum.shareit.common.dto.item.ItemUpdateDto;
+import ru.practicum.shareit.common.dto.comment.CommentValidDto;
+import ru.practicum.shareit.common.dto.item.ItemValidDto;
+import ru.practicum.shareit.common.dto.item.ItemUpValidDto;
 
 @Component
 public class ItemClient extends BaseClient {
@@ -24,11 +24,11 @@ public class ItemClient extends BaseClient {
 				.requestFactory(() -> new HttpComponentsClientHttpRequestFactory()).build());
 	}
 
-	public ResponseEntity<Object> createItem(Long userId, ItemCreateDto dto) {
+	public ResponseEntity<Object> createItem(Long userId, ItemValidDto dto) {
 		return post("", userId, dto);
 	}
 
-	public ResponseEntity<Object> updateItem(Long itemId, Long userId, ItemUpdateDto dto) {
+	public ResponseEntity<Object> updateItem(Long itemId, Long userId, ItemUpValidDto dto) {
 		return put("/" + itemId, userId, dto);
 	}
 
@@ -45,7 +45,7 @@ public class ItemClient extends BaseClient {
 		return get(search, userId, params);
 	}
 
-	public ResponseEntity<Object> addComment(Long itemId, Long userId, ValidCommentDto dto) {
+	public ResponseEntity<Object> addComment(Long itemId, Long userId, CommentValidDto dto) {
 		return post("/" + itemId + "/comment", userId, dto);
 	}
 

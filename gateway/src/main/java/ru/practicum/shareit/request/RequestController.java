@@ -16,7 +16,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.common.dto.request.ValidRequestDto;
+import ru.practicum.shareit.common.dto.request.RequestValidDto;
 
 @RestController
 @RequestMapping(path = "/requests")
@@ -30,7 +30,7 @@ public class RequestController {
 
 	@PostMapping
 	public ResponseEntity<Object> createRequest(@RequestHeader(HEADER) Long userId,
-			@Valid @RequestBody ValidRequestDto dto) {
+			@Valid @RequestBody RequestValidDto dto) {
 		return client.createRequest(userId, dto);
 	}
 

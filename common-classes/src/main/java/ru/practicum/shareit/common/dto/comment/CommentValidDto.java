@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ValidCommentDto {
+public class CommentValidDto {
 	@NotBlank(message = "Comment is blank!!!")
 	String text;
 }

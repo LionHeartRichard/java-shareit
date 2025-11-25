@@ -19,8 +19,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.common.dto.user.UserCreateDto;
-import ru.practicum.shareit.common.dto.user.UserUpdateDto;
+import ru.practicum.shareit.common.dto.user.UserValidDto;
+import ru.practicum.shareit.common.dto.user.UserUpValidDto;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -34,7 +34,7 @@ public class UserController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Object> createUser(@RequestBody @Valid UserCreateDto dto) {
+	public ResponseEntity<Object> createUser(@RequestBody @Valid UserValidDto dto) {
 		log.info("<--GATEWAY-->  Create User: {}", dto.toString());
 		return client.createUser(dto);
 	}
@@ -42,7 +42,7 @@ public class UserController {
 	@PatchMapping(PATH)
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Object> updateUser(@PathVariable @NotNull @Positive Long userId,
-			@RequestBody @Valid UserUpdateDto dto) {
+			@RequestBody @Valid UserUpValidDto dto) {
 		log.info("<--GATEWAY-->  Update User userId: {}, updateUser: {}", userId, dto.toString());
 		return client.updateUser(userId, dto);
 	}
@@ -59,6 +59,12 @@ public class UserController {
 	public ResponseEntity<Object> deleteUserById(@PathVariable @NotNull @Positive Long userId) {
 		log.info("<--GATEWAY-->  Delete User By Id: userId: {}", userId);
 		return client.deleteUser(userId);
+	}
+
+	@GetMapping
+	public ResponseEntity<Object> getAllUsers() {
+		log.info("<--GATEWAY-->   getAllUsers");
+		return client.getAllUsers();
 	}
 
 }

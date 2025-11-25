@@ -21,9 +21,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.common.dto.comment.ValidCommentDto;
-import ru.practicum.shareit.common.dto.item.ItemCreateDto;
-import ru.practicum.shareit.common.dto.item.ItemUpdateDto;
+import ru.practicum.shareit.common.dto.comment.CommentValidDto;
+import ru.practicum.shareit.common.dto.item.ItemValidDto;
+import ru.practicum.shareit.common.dto.item.ItemUpValidDto;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -40,7 +40,7 @@ public class ItemController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Object> createItem(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@RequestBody @Valid ItemCreateDto dto) {
+			@RequestBody @Valid ItemValidDto dto) {
 		log.info("<--GATEWAY-->  Create Item: {}", dto.toString());
 		return client.createItem(userId, dto);
 	}
@@ -48,7 +48,7 @@ public class ItemController {
 	@PatchMapping(PATH)
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Object> updateItem(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@PathVariable @Positive final Long itemId, @RequestBody @Valid ItemUpdateDto dto) {
+			@PathVariable @Positive final Long itemId, @RequestBody @Valid ItemUpValidDto dto) {
 		log.info("<--GATEWAY-->  Update Item, userId:{}, dto: {}", userId, dto.toString());
 		return client.updateItem(itemId, userId, dto);
 	}
@@ -79,7 +79,7 @@ public class ItemController {
 
 	@PostMapping("/{itemId}/comment")
 	public ResponseEntity<Object> addComment(@RequestHeader(HEADER) @NotNull @Positive final Long userId,
-			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid final ValidCommentDto dto) {
+			@PathVariable @NotNull @Positive final Long itemId, @RequestBody @Valid final CommentValidDto dto) {
 		log.info("<--GATEWAY-->  Add Comment: text: {}, userId: {}, itemId: {};", dto.getText(), userId, itemId);
 		return client.addComment(itemId, userId, dto);
 	}

@@ -1,5 +1,7 @@
 package ru.practicum.shareit.user;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +46,10 @@ public class UserService {
 
 	public User findByEmail(final String email) {
 		return repo.findByEmail(email).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+	}
+
+	public List<User> findAll() {
+		return repo.findAll();
 	}
 
 }

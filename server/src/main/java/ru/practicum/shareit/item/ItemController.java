@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.comment.Comment;
 import ru.practicum.shareit.comment.CommentMapper;
-import ru.practicum.shareit.common.dto.comment.CommentCreateDto;
+import ru.practicum.shareit.common.dto.comment.CommentTextDto;
 import ru.practicum.shareit.common.dto.comment.CommentDto;
 import ru.practicum.shareit.common.dto.item.ItemDto;
 import ru.practicum.shareit.common.dto.item.ItemFullDto;
@@ -91,7 +91,7 @@ public class ItemController {
 
 	@PostMapping("/{itemId}/comment")
 	public CommentDto addComment(@RequestHeader(HEADER) final Long userId, @PathVariable final Long itemId,
-			@RequestBody final CommentCreateDto dto) {
+			@RequestBody final CommentTextDto dto) {
 		log.trace("addComment: userId: {}, itemId: {};", userId, itemId);
 		log.trace("CommentDTO: {}", dto.toString());
 		final Comment comment = service.addComment(userId, itemId, dto.getText());
