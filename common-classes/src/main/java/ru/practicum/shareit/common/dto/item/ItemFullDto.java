@@ -1,20 +1,16 @@
 package ru.practicum.shareit.common.dto.item;
 
 import java.util.List;
-
 import lombok.Builder;
+import lombok.Data;
 import ru.practicum.shareit.common.dto.booking.BookingDto;
 import ru.practicum.shareit.common.dto.comment.CommentDto;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-@Getter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
