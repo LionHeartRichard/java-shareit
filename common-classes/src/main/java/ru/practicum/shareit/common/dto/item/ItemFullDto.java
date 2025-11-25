@@ -26,4 +26,6 @@ public class ItemFullDto {
 
 	BookingDto lastBooking;
 	BookingDto nextBooking;
+
+	Long requestId;
 }

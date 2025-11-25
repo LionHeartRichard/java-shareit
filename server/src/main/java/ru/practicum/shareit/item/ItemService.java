@@ -14,9 +14,14 @@ import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.comment.Comment;
 import ru.practicum.shareit.comment.CommentMapper;
 import ru.practicum.shareit.comment.CommentRepository;
-import ru.practicum.shareit.common.exception.AccessException;
+import ru.practicum.shareit.common.dto.comment.CommentDto;
+import ru.practicum.shareit.common.dto.item.ItemDto;
+import ru.practicum.shareit.common.dto.item.ItemFullDto;
+import ru.practicum.shareit.common.dto.item.ItemNewDto;
 import ru.practicum.shareit.common.exception.MyBadRequestException;
 import ru.practicum.shareit.common.exception.NotFoundException;
+import ru.practicum.shareit.request.Request;
+import ru.practicum.shareit.request.RequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -29,63 +34,57 @@ public class ItemService {
 	UserRepository repoUser;
 	CommentRepository repoComment;
 	BookingRepository repoBooking;
-	CommentMapper commentMapper;
+	RequestRepository requestRepo;
 
 	@Transactional
-	public Item createItem(final Long userId, final Item item) {
+	public ItemDto createItem(final Long userId, final ItemNewDto dto) {
 		User user = repoUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
-		Item ans = repoItem.save(item.toBuilder().user(user).build());
-		return ans;
-	}
+		Item ans = repoItem.save(ItemMapper.toModel(dto).toBuilder().owner(user).build());
 
-	public Item findItemById(final Long id) {
-		return repoItem.findById(id).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
+		if (dto.hasRequestId()) {
+			Request request = requestRepo.findById(dto.getRequestId())
+					.orElseThrow(() -> new NotFoundException(Request.NOT_FOUND));
+			ans.setRequest(request);
+		}
+		return ItemMapper.toDto(ans);
 	}
 
 	@Transactional
-	public Item updateItem(final Long userId, final Item item) {
+	public ItemDto updateItem(final Long userId, final ItemDto dto) {
+		if (!repoUser.hasId(userId)) {
+			throw new NotFoundException(User.NOT_FOUND);
+		}
+
+		Item item = repoItem.findById(dto.getId()).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
+		if (!item.isOwner(userId)) {
+			throw new MyBadRequestException(Item.NOT_OWNER);
+		}
+		if (item.getRequest() != null) {
+			Request request = requestRepo.findById(item.getId())
+					.orElseThrow(() -> new NotFoundException(Request.NOT_FOUND));
+			item.setRequest(request);
+		}
+
+		Item ans = repoItem.save(ItemMapper.toModel(item, dto));
+		return ItemMapper.toDto(ans);
+	}
+
+	public ItemFullDto findItemById(final Long userId, final Long id) {
+		Item item = repoItem.findById(id).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
 		if (repoUser.hasId(userId)) {
-			if (item.isOwner(userId)) {
-				return repoItem.save(item);
-			}
-			throw new AccessException(Item.NOT_OWNER);
+			throw new NotFoundException(User.NOT_FOUND);
 		}
-		throw new NotFoundException(User.NOT_FOUND);
-
+		return setFullDto(userId, item);
 	}
 
-	public List<Item> findItemsByOwner(final Long userId) {
-		return repoItem.findItemsByUserId(userId);
+	private ItemFullDto setFullDto(Long userId, Item item) {
+		List<CommentDto> comments = repoComment.findAllByItemId(item.getId()).stream().map(v -> CommentMapper.toDto(v))
+				.toList();
+		Booking[] bookings = findLastBooking(item.getId(), userId);
+		return ItemMapper.toDto(item, comments, bookings);
 	}
 
-	public List<Item> searchAvailableItemsByText(final String text) {
-		if (text == null || text.isBlank()) {
-			return List.of();
-		}
-		return repoItem.searchAvailableItemsByText("%" + text + "%");
-	}
-
-	@Transactional
-	public Comment addComment(final Long userId, final Long itemId, final String text) {
-		if (hasApprovedBooking(userId, itemId)) {
-			final Item item = repoItem.findById(itemId).get();
-			final User user = repoUser.findById(userId).get();
-			final Comment comment = commentMapper.toModel(user, item, text);
-			final Comment ans = repoComment.save(comment);
-			return ans;
-		}
-		throw new MyBadRequestException(Comment.NO_COMMIT);
-	}
-
-	public User findUserById(final Long userId) {
-		return repoUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
-	}
-
-	public List<Comment> findCommentsByItemId(final Long itemId) {
-		return repoComment.findAllByItemId(itemId);
-	}
-
-	public Booking[] findLastBooking(final Long itemId, final Long userId) {
+	private Booking[] findLastBooking(final Long itemId, final Long userId) {
 		if (repoItem.isOwner(itemId, userId)) {
 			final Long currentTime = UtilMapper.getCurrentTime();
 			Booking lastBooking = repoBooking.findLastBooking(itemId, currentTime).orElse(null);
@@ -95,9 +94,33 @@ public class ItemService {
 		return new Booking[] {null, null};
 	}
 
-	public Booking findBookingByUserIdByItemId(final Long userId, final Long itemId) {
-		return repoBooking.findByUserIdAndItemId(userId, itemId)
-				.orElseThrow(() -> new MyBadRequestException(Booking.NOT_FOUND));
+	public List<ItemDto> findItemsByOwner(final Long userId) {
+		if (repoUser.hasId(userId)) {
+			return repoItem.findByOwnerIdOrderByIdAsc(userId).stream().map(ItemMapper::toDto).toList();
+		}
+		throw new NotFoundException(User.NOT_FOUND);
+	}
+
+	public List<ItemDto> searchAvailableItemsByText(final Long userId, final String text) {
+		if (!repoUser.hasId(userId)) {
+			throw new NotFoundException(User.NOT_FOUND);
+		}
+		if (text == null || text.isBlank()) {
+			return List.of();
+		}
+		return repoItem.searchAvailableItemsByText("%" + text + "%").stream().map(ItemMapper::toDto).toList();
+	}
+
+	@Transactional
+	public CommentDto addComment(final Long userId, final Long itemId, final String text) {
+		if (hasApprovedBooking(userId, itemId)) {
+			final Item item = repoItem.findById(itemId).get();
+			final User user = repoUser.findById(userId).get();
+			final Comment comment = CommentMapper.toModel(user, item, text);
+			final Comment ans = repoComment.save(comment);
+			return CommentMapper.toDto(ans);
+		}
+		throw new MyBadRequestException(Comment.NO_COMMIT);
 	}
 
 	public boolean hasApprovedBooking(final Long userId, final Long itemId) {

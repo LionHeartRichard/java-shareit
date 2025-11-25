@@ -51,7 +51,7 @@ public class RequestController {
 	@GetMapping("/{requestId}")
 	public RequestFullDto findRequestByUserId(@RequestHeader(HEADER) Long userId,
 			@PathVariable("requestId") Long requestId) {
-		log.info("getRequestById, userId: {}, requestId: {}", userId, requestId);
+		log.info("<--SERVER-->  FIND RequestByUserId, userId: {}, requestId: {}", userId, requestId);
 		return service.findRequestByUserId(userId, requestId);
 	}
 }

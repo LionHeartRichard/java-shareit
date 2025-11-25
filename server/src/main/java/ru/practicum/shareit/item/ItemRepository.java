@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-	List<Item> findItemsByUserId(final Long userId);
+	List<Item> findByOwnerIdOrderByIdAsc(final Long userId);
 
 	@Query("FROM Item as i where i.available = true and "
 			+ "(upper(i.name) like upper(?1) or upper(i.description) like upper(?1))")

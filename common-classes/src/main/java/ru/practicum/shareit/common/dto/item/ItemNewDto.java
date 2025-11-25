@@ -1,9 +1,9 @@
 package ru.practicum.shareit.common.dto.item;
 
-import lombok.Builder;
-import lombok.Data;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
@@ -12,24 +12,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemDto {
-	Long id;
+public class ItemNewDto {
 	String name;
-	Boolean available;
 	String description;
+	Boolean available;
 	Long requestId;
-
-	public boolean hasName() {
-		return !(name == null || name.isBlank());
-	}
-
-	public boolean hasAvailable() {
-		return available != null;
-	}
-
-	public boolean hasDescription() {
-		return !(description == null || description.isBlank());
-	}
 
 	public boolean hasRequestId() {
 		return requestId != null;
