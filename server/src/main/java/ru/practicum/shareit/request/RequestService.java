@@ -8,9 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.common.dto.item.ItemDto;
+import ru.practicum.shareit.common.dto.request.RequestDto;
+import ru.practicum.shareit.common.dto.request.RequestFullDto;
 import ru.practicum.shareit.common.exception.MyBadRequestException;
 import ru.practicum.shareit.common.exception.NotFoundException;
-import ru.practicum.shareit.item.Item;
+import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
@@ -27,41 +30,52 @@ public class RequestService {
 	ItemRepository itemRepo;
 
 	@Transactional
-	public Request create(Long userId, Request request) {
-		User requester = userRepo.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
-		request.setRequester(requester);
-		return requestRepo.save(request);
+	public RequestFullDto createRequest(Long userId, RequestDto dto) {
+		User user = userRepo.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		Request ans = RequestMapper.toModel(dto);
+		ans.setRequester(user);
+		return RequestMapper.toDto(requestRepo.save(ans));
 	}
 
-	public List<Request> getAllRequestsById(Long userId) {
+	public List<RequestFullDto> findAllRequestsByUserId(Long userId) {
 		if (userRepo.hasId(userId)) {
-			return requestRepo.findAllByRequesterId(userId, Sort.by(Sort.Direction.DESC, "created"));
+			return requestRepo.findAllByRequesterId(userId, Sort.by(Sort.Direction.DESC, "created")).stream().map(v -> {
+				RequestFullDto ans = RequestMapper.toDto(v);
+				setItems(ans);
+				return ans;
+			}).toList();
 		}
 		throw new NotFoundException(User.NOT_FOUND);
 	}
 
-	public List<Request> findAll(Long userId, Integer from, Integer size) {
+	public List<RequestFullDto> findAll(Long userId, Integer from, Integer size) {
 		if (from < 0 || size < 0) {
 			throw new MyBadRequestException("Arguments cannot be negative!!!");
 		}
-		if (!userRepo.hasId(userId)) {
-			throw new NotFoundException(User.NOT_FOUND);
-		}
-		return requestRepo.findAll(PageRequest.of((from / size), size, Sort.by(Sort.Direction.DESC, "created")))
-				.stream().toList();
-
-	}
-
-	public Request findById(Long userId, Long requestId) {
 		if (userRepo.hasId(userId)) {
-			Request request = requestRepo.findById(requestId)
-					.orElseThrow(() -> new NotFoundException(Request.NOT_FOUND));
-			return request;
+			return requestRepo.findAll(PageRequest.of((from / size), size, Sort.by(Sort.Direction.DESC, "created")))
+					.stream().map(v -> {
+						RequestFullDto ans = RequestMapper.toDto(v);
+						setItems(ans);
+						return ans;
+					}).toList();
 		}
 		throw new NotFoundException(User.NOT_FOUND);
 	}
 
-	public List<Item> getRequestItems(Long requestId) {
-		return itemRepo.findByRequestIdOrderByRequestIdDesc(requestId);
+	public RequestFullDto findRequestByUserId(Long userId, Long requestId) {
+		if (userRepo.hasId(userId)) {
+			Request request = requestRepo.findById(requestId)
+					.orElseThrow(() -> new NotFoundException(Request.NOT_FOUND));
+			return RequestMapper.toDto(request);
+		}
+		throw new NotFoundException(User.NOT_FOUND);
 	}
+
+	private void setItems(RequestFullDto dto) {
+		List<ItemDto> items = itemRepo.findByRequestIdOrderByRequestIdDesc(dto.getId()).stream().map(ItemMapper::toDto)
+				.toList();
+		dto.setItems(items);
+	}
+
 }

@@ -15,9 +15,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.common.dto.request.RequestDescriptDto;
 import ru.practicum.shareit.common.dto.request.RequestDto;
-import ru.practicum.shareit.item.Item;
+import ru.practicum.shareit.common.dto.request.RequestFullDto;
 
 @Slf4j
 @RestController
@@ -27,35 +26,32 @@ import ru.practicum.shareit.item.Item;
 public class RequestController {
 
 	RequestService service;
-
 	private static final String HEADER = "X-Sharer-User-Id";
 
 	@PostMapping
-	public RequestDto create(@RequestHeader(HEADER) Long userId, @RequestBody RequestDescriptDto dto) {
-		log.info("CreateRequestDto, userId : {}", userId);
-		log.info("CreateRequestDto: {}", dto.toString());
-		return RequestMapper.toDto(service.create(userId, RequestMapper.toModel(dto)));
+	public RequestFullDto create(@RequestHeader(HEADER) Long userId, @RequestBody RequestDto dto) {
+		log.info("<--SERVER-->  CREATE Request, userId : {}, dto: {}", userId, dto.toString());
+		return service.createRequest(userId, dto);
 	}
 
 	@GetMapping
-	public List<RequestDto> getAllRequestsById(@RequestHeader(HEADER) Long userId) {
-		log.info("getAllRequestsById, userId: {}", userId);
-		return service.getAllRequestsById(userId).stream().map(v -> RequestMapper.toDto(v)).toList();
+	public List<RequestFullDto> findAllRequestsByUserId(@RequestHeader(HEADER) Long userId) {
+		log.info("<--SERVER-->  FIND ALL Requests, userId: {}", userId);
+		return service.findAllRequestsByUserId(userId);
 	}
 
 	@GetMapping("/all")
-	public List<RequestDto> getAllRequests(@RequestHeader(HEADER) Long userId,
+	public List<RequestFullDto> findAllRequests(@RequestHeader(HEADER) Long userId,
 			@RequestParam(name = "from", defaultValue = "0") Integer from,
 			@RequestParam(name = "size", defaultValue = "50") Integer size) {
-		log.info("getAllRequests: userId: {}, from: {}, size: {}", userId, from, size);
-		return service.findAll(userId, from, size).stream().map(v -> RequestMapper.toDto(v)).toList();
+		log.info("<--SERVER-->  FIND All Requests, userId: {}, from: {}, size: {}", userId, from, size);
+		return service.findAll(userId, from, size);
 	}
 
 	@GetMapping("/{requestId}")
-	public RequestDto getRequestById(@RequestHeader(HEADER) Long userId, @PathVariable("requestId") Long requestId) {
+	public RequestFullDto findRequestByUserId(@RequestHeader(HEADER) Long userId,
+			@PathVariable("requestId") Long requestId) {
 		log.info("getRequestById, userId: {}, requestId: {}", userId, requestId);
-		List<Item> items = service.getRequestItems(requestId);
-		RequestDto ans = RequestMapper.toDto(service.findById(userId, requestId), items);
-		return ans;
+		return service.findRequestByUserId(userId, requestId);
 	}
 }
