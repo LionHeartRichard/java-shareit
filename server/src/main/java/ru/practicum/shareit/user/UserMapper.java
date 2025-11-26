@@ -24,7 +24,7 @@ public class UserMapper {
 		return ans;
 	}
 
-	public static User toModel(final UserFullDto dto, final User user) {
+	public static User toModel(final UserDto dto, final User user) {
 		final String name = dto.hasName() ? dto.getName() : user.getName();
 		final String email = dto.hasEmail() ? dto.getEmail() : user.getEmail();
 		final User ans = User.builder().id(user.getId()).name(name).email(email).build();

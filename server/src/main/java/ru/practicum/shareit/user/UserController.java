@@ -40,7 +40,7 @@ public class UserController {
 
 	@PatchMapping(USER_ID)
 	@ResponseStatus(HttpStatus.OK)
-	public UserFullDto updateUser(@PathVariable final Long userId, @RequestBody UserFullDto dto) {
+	public UserFullDto updateUser(@PathVariable final Long userId, @RequestBody UserDto dto) {
 		log.info("<--SERVER-->  UPDATE User id: {}, dto: {}", userId, dto.toString());
 		return service.updateUser(userId, dto);
 	}

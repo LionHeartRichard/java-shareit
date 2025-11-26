@@ -29,7 +29,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserFullDto updateUser(final Long userId, final UserFullDto dto) {
+	public UserFullDto updateUser(final Long userId, final UserDto dto) {
 		User user = repo.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
 		if (!repo.emailIsUsed(userId, user.getEmail())) {
 			User ans = UserMapper.toModel(dto, user);
