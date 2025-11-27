@@ -2,8 +2,6 @@ server:
   port: 9090  # Порт, на котором будет работать приложение (например, http://localhost:9090)
 
 spring:
-  profiles:
-    active: default  # Активный профиль Spring (можно переопределить через -Dspring.profiles.active=test)
 
   datasource:
     url: jdbc:postgresql://localhost:7432/shareit_db  # URL подключения к PostgreSQL
