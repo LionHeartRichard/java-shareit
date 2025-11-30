@@ -10,15 +10,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	@Query(value = "SELECT COUNT(*) > 0 FROM user_ WHERE email = :email", nativeQuery = true)
-	boolean hasEmail(@Param("email") final String email);
+	@Query("SELECT COUNT(u) > 0 FROM User u WHERE u.email = :email")
+	boolean hasEmail(@Param("email") String email);
 
-	@Query(value = "SELECT COUNT(*) > 0 FROM user_ WHERE email = :email AND id <> :id", nativeQuery = true)
-	boolean emailIsUsed(@Param("id") final Long userId, @Param("email") final String email);
+	@Query("SELECT COUNT(u) > 0 FROM User u WHERE u.email = :email AND u.id <> :id")
+	boolean emailIsUsed(@Param("id") Long userId, @Param("email") String email);
 
-	@Query(value = "SELECT COUNT(*) > 0 FROM user_ WHERE id = :id", nativeQuery = true)
-	boolean hasId(@Param("id") final Long userId);
+	@Query("SELECT COUNT(u) > 0 FROM User u WHERE u.id = :id")
+	boolean hasId(@Param("id") Long userId);
 
-	@Query(value = "SELECT * FROM user_ WHERE email =:email", nativeQuery = true)
-	Optional<User> findByEmail(@Param("email") final String email);
+	@Query("SELECT u FROM User u WHERE u.email = :email")
+	Optional<User> findByEmail(@Param("email") String email);
 }

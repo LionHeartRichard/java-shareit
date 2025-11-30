@@ -10,13 +10,12 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
 	List<Item> findByOwnerIdOrderByIdAsc(final Long userId);
 
-	@Query("FROM Item as i where i.available = true and "
-			+ "(upper(i.name) like upper(?1) or upper(i.description) like upper(?1))")
-	List<Item> searchAvailableItemsByText(final String text);
+	@Query("FROM Item i WHERE i.available = TRUE AND " + "(UPPER(i.name) LIKE UPPER(CONCAT('%', :text, '%')) "
+			+ "OR UPPER(i.description) LIKE UPPER(CONCAT('%', :text, '%')))")
+	List<Item> searchAvailableItemsByText(@Param("text") final String text);
 
-	@Query(value = "select COUNT(*)>0 from item where id = :id and user_id = :user_id;", nativeQuery = true)
-	boolean isOwner(@Param("id") final Long id, @Param("user_id") final Long userId);
+	@Query("SELECT COUNT(i) > 0 FROM Item i WHERE i.id = :id AND i.owner.id = :userId")
+	boolean isOwner(@Param("id") final Long id, @Param("userId") final Long userId);
 
 	List<Item> findByRequestIdOrderByRequestIdDesc(Long id);
-
 }
