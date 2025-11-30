@@ -1,6 +1,7 @@
 server:
   port: 9090  # Порт, на котором будет работать приложение (например, http://localhost:9090)
 
+spring.main.banner-mode: off
 spring:
 
   datasource:
@@ -34,7 +35,6 @@ spring:
       globally_quoted_identifiers: true  # Экранирует все идентификаторы в кавычки ("user"."name")
       globally_quoted_identifiers_skip_column_definitions: true  # Экранирование и для DDL (CREATE TABLE)
 
-
     properties:
       hibernate:
         format_sql: true        # Дублирует format_sql (на случай, если выше не сработало)
@@ -45,7 +45,7 @@ spring:
 
   sql:
     init:
-      mode: always              # Всегда выполнять SQL‑скрипты при старте приложения
+      mode: never
       platform: postgresql      # Платформа БД для скриптов (влияет на синтаксис)
       encoding: UTF-8            # Кодировка SQL‑файлов
       separator: ";"             # Разделитель SQL‑команд в скрипте
