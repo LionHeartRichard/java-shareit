@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,9 +88,11 @@ public class ItemService {
 	private Booking[] findLastBooking(final Long itemId, final Long userId) {
 		if (repoItem.isOwner(itemId, userId)) {
 			final Long currentTime = UtilMapper.getCurrentTime();
-			Booking lastBooking = repoBooking.findLastBooking(itemId, currentTime).orElse(null);
-			Booking nextBooking = repoBooking.findNextBooking(itemId, currentTime).orElse(null);
-			return new Booking[] {lastBooking, nextBooking};
+			List<Booking> lastBookings = repoBooking.findLastBooking(itemId, currentTime, PageRequest.of(0, 1));
+			List<Booking> nextBookings = repoBooking.findNextBooking(itemId, currentTime, PageRequest.of(0, 1));
+			Booking last = lastBookings.isEmpty() ? null : lastBookings.get(0);
+			Booking next = nextBookings.isEmpty() ? null : nextBookings.get(0);
+			return new Booking[] {last, next};
 		}
 		return new Booking[] {null, null};
 	}
@@ -108,7 +111,7 @@ public class ItemService {
 		if (text == null || text.isBlank()) {
 			return List.of();
 		}
-		return repoItem.searchAvailableItemsByText("%" + text + "%").stream().map(ItemMapper::toDto).toList();
+		return repoItem.searchAvailableItemsByText(text).stream().map(ItemMapper::toDto).toList();
 	}
 
 	@Transactional
