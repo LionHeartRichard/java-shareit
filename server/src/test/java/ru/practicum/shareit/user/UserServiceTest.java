@@ -119,11 +119,13 @@ public class UserServiceTest {
 
 	@Test
 	void throwExceptionWhenEmailIsDuplicateWhenUpdateUserTest() {
-		UserFullDto dto = userService.createUser(user);
-		UserFullDto otherDto = userService.createUser(other);
-		UserDto upUser = UserDto.builder().name(dto.getName()).email(otherDto.getEmail()).build();
 
-		assertThatThrownBy(() -> userService.updateUser(dto.getId(), upUser)).isInstanceOf(ConflictException.class);
+		userService.createUser(user);
+		UserFullDto otherDto = userService.createUser(other);
+		UserDto upUser = other.toBuilder().email(user.getEmail()).build();
+
+		assertThatThrownBy(() -> userService.updateUser(otherDto.getId(), upUser))
+				.isInstanceOf(ConflictException.class);
 	}
 
 }
