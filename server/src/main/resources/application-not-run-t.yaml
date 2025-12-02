@@ -41,7 +41,7 @@ spring:
         # globally_quoted_identifiers_skip_column_definitions: false  # Экранирование и для DDL (CREATE TABLE)
 
     hibernate:
-      ddl-auto: create  # Стратегия генерации схемы БД
+      ddl-auto: create-drop  # Стратегия генерации схемы БД
         # create-drop:
         #   - CREATE: создаёт схему при старте приложения
         #   - DROP: удаляет схему при остановке приложения

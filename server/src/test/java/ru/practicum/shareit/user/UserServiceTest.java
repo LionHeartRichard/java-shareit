@@ -1,7 +1,5 @@
 package ru.practicum.shareit.user;
 
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.common.dto.user.UserDto;
 import ru.practicum.shareit.common.dto.user.UserFullDto;
 import ru.practicum.shareit.common.exception.ConflictException;
@@ -23,13 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserServiceTest {
 	@Autowired
-	UserService userService;
+	private UserService userService;
 
-	static UserDto user;
-	static UserDto other;
+	private static UserDto user;
+	private static UserDto other;
 
 	@BeforeAll
 	static void setUp() {

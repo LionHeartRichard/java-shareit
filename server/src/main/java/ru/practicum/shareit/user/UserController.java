@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,8 +41,15 @@ public class UserController {
 
 	@PatchMapping(USER_ID)
 	@ResponseStatus(HttpStatus.OK)
-	public UserFullDto updateUser(@PathVariable final Long userId, @RequestBody UserDto dto) {
-		log.info("<--SERVER-->  UPDATE User id: {}, dto: {}", userId, dto.toString());
+	public UserFullDto updateUserPatch(@PathVariable final Long userId, @RequestBody UserDto dto) {
+		log.info("<--SERVER-->   @PatchMapping UPDATE User id: {}, dto: {}", userId, dto.toString());
+		return service.updateUser(userId, dto);
+	}
+
+	@PutMapping(USER_ID)
+	@ResponseStatus(HttpStatus.OK)
+	public UserFullDto updateUserPut(@PathVariable final Long userId, @RequestBody UserDto dto) {
+		log.info("<--SERVER-->   @PutMapping UPDATE User id: {}, dto: {}", userId, dto.toString());
 		return service.updateUser(userId, dto);
 	}
 

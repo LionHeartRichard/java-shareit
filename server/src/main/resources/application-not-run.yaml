@@ -10,7 +10,7 @@ spring:
     password: chAd_mark-78                           # Пароль пользователя БД
     driver-class-name: org.postgresql.Driver         # JDBC‑драйвер для PostgreSQL
 
-    initialization-mode: always  # Режим инициализации: всегда выполнять SQL‑скрипты при старте
+    initialization-mode: never  # Режим инициализации: всегда выполнять SQL‑скрипты при старте
                                  # Возможные значения: always, embedded, never
 
     hikari:                                             # Настройки пула соединений HikariCP
@@ -49,7 +49,7 @@ spring:
       platform: postgresql      # Платформа БД для скриптов (влияет на синтаксис)
       encoding: UTF-8            # Кодировка SQL‑файлов
       separator: ";"             # Разделитель SQL‑команд в скрипте
-      data-locations: classpath:schema.sql  # Путь к SQL‑скрипту (можно указать несколько через запятую)
+      # data-locations: classpath:schema.sql  # Путь к SQL‑скрипту (можно указать несколько через запятую)
       continue-on-error: false  # Останавливать выполнение при первой ошибке
       fail-on-error: true      # Вызывать исключение, если скрипт не выполнился
 

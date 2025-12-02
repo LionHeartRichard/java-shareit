@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -41,9 +42,17 @@ public class UserController {
 
 	@PatchMapping(PATH)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<Object> updateUser(@PathVariable @NotNull @Positive Long userId,
+	public ResponseEntity<Object> updateUserPatch(@PathVariable @NotNull @Positive Long userId,
 			@RequestBody @Valid UserUpValidDto dto) {
-		log.info("<--GATEWAY-->  Update User userId: {}, updateUser: {}", userId, dto.toString());
+		log.info("<--GATEWAY--> @PatchMapping  Update User userId: {}, updateUser: {}", userId, dto.toString());
+		return client.updateUser(userId, dto);
+	}
+
+	@PutMapping(PATH)
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<Object> updateUserPut(@PathVariable @NotNull @Positive Long userId,
+			@RequestBody @Valid UserUpValidDto dto) {
+		log.info("<--GATEWAY-->    @PatchMapping  Update User userId: {}, updateUser: {}", userId, dto.toString());
 		return client.updateUser(userId, dto);
 	}
 
