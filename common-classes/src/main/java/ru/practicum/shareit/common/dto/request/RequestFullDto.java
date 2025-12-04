@@ -2,7 +2,7 @@ package ru.practicum.shareit.common.dto.request;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import ru.practicum.shareit.common.dto.item.ItemDto;
+import ru.practicum.shareit.common.dto.item.ItemFullDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,5 +20,5 @@ public class RequestFullDto {
 	String description;
 	String requesterName;
 	LocalDateTime created;
-	List<ItemDto> items;
+	List<ItemFullDto> items;
 }

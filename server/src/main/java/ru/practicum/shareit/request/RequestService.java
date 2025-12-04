@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.common.dto.item.ItemDto;
+import ru.practicum.shareit.common.dto.item.ItemFullDto;
 import ru.practicum.shareit.common.dto.request.RequestDto;
 import ru.practicum.shareit.common.dto.request.RequestFullDto;
 import ru.practicum.shareit.common.exception.MyBadRequestException;
@@ -73,8 +73,8 @@ public class RequestService {
 	}
 
 	private void setItems(RequestFullDto dto) {
-		List<ItemDto> items = itemRepo.findByRequestIdOrderByRequestIdDesc(dto.getId()).stream().map(ItemMapper::toDto)
-				.toList();
+		List<ItemFullDto> items = itemRepo.findByRequestIdOrderByRequestIdDesc(dto.getId()).stream()
+				.map(ItemMapper::toDto).toList();
 		dto.setItems(items);
 	}
 

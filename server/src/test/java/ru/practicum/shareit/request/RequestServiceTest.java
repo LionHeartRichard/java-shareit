@@ -3,7 +3,7 @@ package ru.practicum.shareit.request;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.common.dto.item.ItemNewDto;
+import ru.practicum.shareit.common.dto.item.ItemDto;
 import ru.practicum.shareit.common.dto.request.RequestDto;
 import ru.practicum.shareit.common.dto.request.RequestFullDto;
 import ru.practicum.shareit.common.dto.user.UserDto;
@@ -36,7 +36,7 @@ public class RequestServiceTest {
 	RequestService servRequest;
 
 	static UserDto userDto;
-	static ItemNewDto itemDto;
+	static ItemDto itemDto;
 	static RequestDto requestDto;
 
 	private static final int FROM = 0;
@@ -46,7 +46,7 @@ public class RequestServiceTest {
 	@BeforeAll
 	static void setUp() {
 		userDto = UserDto.builder().name("userName").email("email@mail.com").build();
-		itemDto = ItemNewDto.builder().name("itemName").description("item DESCRIPTION").available(true).build();
+		itemDto = ItemDto.builder().name("itemName").description("item DESCRIPTION").available(true).build();
 		requestDto = RequestDto.builder().description("Request - Description").build();
 	}
 

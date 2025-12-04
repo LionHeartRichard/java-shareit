@@ -59,7 +59,7 @@ public class UserControllerTest {
 	}
 
 	@Test
-	void getUsers() throws Exception {
+	void findAllUsersTest() throws Exception {
 		when(userService.findAll()).thenReturn(List.of(ansCreate));
 
 		mvc.perform(get("/users").characterEncoding(StandardCharsets.UTF_8).accept(MediaType.APPLICATION_JSON))
@@ -70,7 +70,7 @@ public class UserControllerTest {
 	}
 
 	@Test
-	void getUserById() throws Exception {
+	void findUserByIdTest() throws Exception {
 		when(userService.findUserById(1L)).thenReturn(ansCreate);
 
 		mvc.perform(get("/users/1").characterEncoding(StandardCharsets.UTF_8).accept(MediaType.APPLICATION_JSON))
@@ -80,7 +80,7 @@ public class UserControllerTest {
 	}
 
 	@Test
-	void updateUser() throws Exception {
+	void updateUserTest() throws Exception {
 		when(userService.updateUser(1L, dtoUpdate)).thenReturn(ansUpdate);
 
 		mvc.perform(patch("/users/1").content(mapper.writeValueAsString(dtoUpdate))
@@ -92,7 +92,7 @@ public class UserControllerTest {
 	}
 
 	@Test
-	void deleteUserById() throws Exception {
+	void deleteUserByIdTest() throws Exception {
 		doNothing().when(userService).deleteUserById(1L);
 		mvc.perform(delete("/users/1")).andExpect(status().isNoContent());
 		verify(userService, times(1)).deleteUserById(1L);

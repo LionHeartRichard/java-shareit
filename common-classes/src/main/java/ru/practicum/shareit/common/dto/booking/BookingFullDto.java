@@ -3,7 +3,7 @@ package ru.practicum.shareit.common.dto.booking;
 import java.time.LocalDateTime;
 
 import ru.practicum.shareit.common.BookingStatus;
-import ru.practicum.shareit.common.dto.item.ItemDto;
+import ru.practicum.shareit.common.dto.item.ItemFullDto;
 import ru.practicum.shareit.common.dto.user.UserFullDto;
 
 import lombok.AccessLevel;
@@ -20,7 +20,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingFullDto {
 	Long id;
-	ItemDto item;
+	ItemFullDto item;
 	UserFullDto booker;
 	LocalDateTime start;
 	LocalDateTime end;

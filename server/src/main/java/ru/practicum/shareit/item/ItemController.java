@@ -19,14 +19,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.booking.Booking;
-import ru.practicum.shareit.comment.Comment;
-import ru.practicum.shareit.comment.CommentMapper;
 import ru.practicum.shareit.common.dto.comment.CommentTextDto;
 import ru.practicum.shareit.common.dto.comment.CommentDto;
 import ru.practicum.shareit.common.dto.item.ItemDto;
 import ru.practicum.shareit.common.dto.item.ItemFullDto;
-import ru.practicum.shareit.common.dto.item.ItemNewDto;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -41,17 +37,17 @@ public class ItemController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ItemDto createItem(@RequestHeader(HEADER) final Long userId, @RequestBody ItemNewDto dto) {
+	public ItemFullDto createItem(@RequestHeader(HEADER) final Long userId, @RequestBody ItemDto dto) {
 		log.info("<--SERVER-->  CREATE Item, dto: {}", dto.toString());
 		return service.createItem(userId, dto);
 	}
 
 	@PatchMapping(ITEM_ID)
 	@ResponseStatus(HttpStatus.OK)
-	public ItemDto updateItem(@RequestHeader(HEADER) final Long userId, @PathVariable final Long itemId,
+	public ItemFullDto updateItem(@RequestHeader(HEADER) final Long userId, @PathVariable final Long itemId,
 			@RequestBody ItemDto dto) {
 		log.info("<--SERVER-->  UPDATE Item, userId:{}, dto: {}", userId, dto.toString());
-		return service.updateItem(userId, dto);
+		return service.updateItem(userId, itemId, dto);
 	}
 
 	@GetMapping(ITEM_ID)
@@ -63,14 +59,14 @@ public class ItemController {
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<ItemDto> findItemsByOwner(@RequestHeader(HEADER) final Long userId) {
+	public List<ItemFullDto> findItemsByOwner(@RequestHeader(HEADER) final Long userId) {
 		log.info("<--SERVER-->  FIND ItemsByOwner, userId: {}", userId);
 		return service.findItemsByOwner(userId);
 	}
 
 	@GetMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
-	public List<ItemDto> searchAvailableItemsByText(@RequestHeader(HEADER) final Long userId,
+	public List<ItemFullDto> searchAvailableItemsByText(@RequestHeader(HEADER) final Long userId,
 			@RequestParam final String text) {
 		log.info("<--SERVER-->  SEARCH text: {}", text);
 		return service.searchAvailableItemsByText(userId, text);

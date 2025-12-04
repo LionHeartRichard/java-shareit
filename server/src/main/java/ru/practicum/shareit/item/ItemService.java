@@ -18,7 +18,6 @@ import ru.practicum.shareit.comment.CommentRepository;
 import ru.practicum.shareit.common.dto.comment.CommentDto;
 import ru.practicum.shareit.common.dto.item.ItemDto;
 import ru.practicum.shareit.common.dto.item.ItemFullDto;
-import ru.practicum.shareit.common.dto.item.ItemNewDto;
 import ru.practicum.shareit.common.exception.MyBadRequestException;
 import ru.practicum.shareit.common.exception.NotFoundException;
 import ru.practicum.shareit.request.Request;
@@ -38,7 +37,7 @@ public class ItemService {
 	RequestRepository requestRepo;
 
 	@Transactional
-	public ItemDto createItem(final Long userId, final ItemNewDto dto) {
+	public ItemFullDto createItem(final Long userId, final ItemDto dto) {
 		User user = repoUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
 		Item ans = repoItem.save(ItemMapper.toModel(dto).toBuilder().owner(user).build());
 
@@ -51,12 +50,12 @@ public class ItemService {
 	}
 
 	@Transactional
-	public ItemDto updateItem(final Long userId, final ItemDto dto) {
+	public ItemFullDto updateItem(final Long userId, final Long itemId, final ItemDto dto) {
 		if (!repoUser.hasId(userId)) {
 			throw new NotFoundException(User.NOT_FOUND);
 		}
 
-		Item item = repoItem.findById(dto.getId()).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
+		Item item = repoItem.findById(itemId).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
 		if (!item.isOwner(userId)) {
 			throw new MyBadRequestException(Item.NOT_OWNER);
 		}
@@ -97,14 +96,14 @@ public class ItemService {
 		return new Booking[] {null, null};
 	}
 
-	public List<ItemDto> findItemsByOwner(final Long userId) {
+	public List<ItemFullDto> findItemsByOwner(final Long userId) {
 		if (repoUser.hasId(userId)) {
 			return repoItem.findByOwnerIdOrderByIdAsc(userId).stream().map(ItemMapper::toDto).toList();
 		}
 		throw new NotFoundException(User.NOT_FOUND);
 	}
 
-	public List<ItemDto> searchAvailableItemsByText(final Long userId, final String text) {
+	public List<ItemFullDto> searchAvailableItemsByText(final Long userId, final String text) {
 		if (!repoUser.hasId(userId)) {
 			throw new NotFoundException(User.NOT_FOUND);
 		}

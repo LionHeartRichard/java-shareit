@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.common.dto.item.ItemDto;
+import ru.practicum.shareit.common.dto.item.ItemFullDto;
 import ru.practicum.shareit.common.dto.request.RequestDto;
 import ru.practicum.shareit.common.dto.request.RequestFullDto;
 
@@ -41,9 +41,10 @@ public class RequestControllerTest {
 
 	final RequestDto dto = RequestDto.builder().description("description").build();
 
-	final ItemDto itemDto = ItemDto.builder().id(1L).name("name").available(true).description("description").build();
+	final ItemFullDto itemDto = ItemFullDto.builder().id(1L).name("name").available(true).description("description")
+			.build();
 
-	final ItemDto itemDtoOther = ItemDto.builder().id(2L).name("nameOther").available(true)
+	final ItemFullDto itemDtoOther = ItemFullDto.builder().id(2L).name("nameOther").available(true)
 			.description("otherDescription").build();
 
 	final RequestFullDto ans = RequestFullDto.builder().id(1L).description("request description")
