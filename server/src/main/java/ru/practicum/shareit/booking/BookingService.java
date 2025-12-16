@@ -38,6 +38,12 @@ public class BookingService {
 		if (Long.compare(start, end) < 0) {
 			User user = repoUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
 			Item item = repoItem.findById(dto.getItemId()).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
+			if (item.isOwner(userId)) {
+				throw new MyBadRequestException(Item.IS_OWNER);
+			}
+			if (!item.getAvailable()) {
+				throw new MyBadRequestException(Item.NOT_AVAILABLE);
+			}
 			Booking booking = BookingMapper.toModel(user, item, dto);
 			return BookingMapper.toDtoSaveStatus(repoBooking.save(booking));
 		}
@@ -64,12 +70,15 @@ public class BookingService {
 		final Booking booking = repoBooking.findById(bookingId)
 				.orElseThrow(() -> new NotFoundException(Booking.NOT_FOUND));
 		if (repoUser.hasId(userId)) {
+			if (!booking.getItem().isOwner(userId)) {
+				throw new MyBadRequestException(Booking.NOT_OWNER);
+			}
 			if (booking.getStatus() != BookingStatus.WAITING) {
 				throw new MyBadRequestException(Booking.ERROR_STATUS);
 			}
 			BookingStatus status = approved ? BookingStatus.APPROVED : BookingStatus.REJECTED;
 			Booking ans = repoBooking.save(booking.toBuilder().status(status).build());
-			return BookingMapper.toDto(ans);
+			return BookingMapper.toDtoSaveStatus(ans);
 		}
 		throw new AccessException(User.NO_ACCESS);
 	}

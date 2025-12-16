@@ -60,10 +60,6 @@ public class Booking {
 	public static final String ERROR_TIME = "The booking start time cannot be later than the end time!";
 	public static final String NOT_COMPLETED = "Booking not completed";
 
-	public boolean isOwner(Long userId) {
-		return Long.compare(user.getId(), userId) == 0;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

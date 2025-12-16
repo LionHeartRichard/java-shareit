@@ -78,6 +78,7 @@ public class Item {
 
 	public static final String NOT_FOUND = "Item not found!";
 	public static final String NOT_OWNER = "User is not the owner of item!";
+	public static final String IS_OWNER = "User is owner of item!";
 	public static final String NOT_AVAILABLE = "Item is not available!";
 
 	public boolean isOwner(final Long userId) {

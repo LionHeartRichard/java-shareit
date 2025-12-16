@@ -9,6 +9,7 @@ import ru.practicum.shareit.common.dto.booking.BookingFullDto;
 import ru.practicum.shareit.common.dto.comment.CommentDto;
 import ru.practicum.shareit.common.dto.item.ItemDto;
 import ru.practicum.shareit.common.dto.item.ItemFullDto;
+import ru.practicum.shareit.user.User;
 
 public class ItemMapper {
 

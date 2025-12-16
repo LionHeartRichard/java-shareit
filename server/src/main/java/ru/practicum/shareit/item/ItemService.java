@@ -69,9 +69,9 @@ public class ItemService {
 		return ItemMapper.toDto(ans);
 	}
 
-	public ItemFullDto findItemById(final Long userId, final Long id) {
-		Item item = repoItem.findById(id).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
-		if (repoUser.hasId(userId)) {
+	public ItemFullDto findItemById(final Long userId, final Long itemId) {
+		Item item = repoItem.findById(itemId).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
+		if (!repoUser.hasId(userId)) {
 			throw new NotFoundException(User.NOT_FOUND);
 		}
 		return setFullDto(userId, item);

@@ -18,9 +18,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.common.dto.booking.BookingDto;
 import ru.practicum.shareit.common.dto.booking.BookingFullDto;
-import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.user.User;
-
 import ru.practicum.shareit.common.StateBooking;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -63,7 +60,7 @@ public class BookingController {
 
 	@PatchMapping(BOOKING_ID)
 	public BookingFullDto approvedByUserIdAndBookingId(@RequestHeader(HEADER) final Long userId,
-			@PathVariable final Long bookingId, @RequestParam Boolean approved) {
+			@PathVariable final Long bookingId, @RequestParam(name = "approved") Boolean approved) {
 		log.info("<--SERVER-->  APPROVED, userId: {}, bookingId: {}, approved: {}", userId, bookingId, approved);
 		return service.approvedByUserIdAndBookingId(userId, bookingId, approved);
 	}

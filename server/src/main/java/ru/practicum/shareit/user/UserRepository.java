@@ -14,10 +14,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	boolean hasEmail(@Param("email") String email);
 
 	@Query("SELECT COUNT(u) > 0 FROM User u WHERE u.email = :email AND u.id <> :id")
-	boolean emailIsUsed(@Param("id") Long userId, @Param("email") String email);
+	boolean emailIsUsed(@Param("id") Long id, @Param("email") String email);
 
 	@Query("SELECT COUNT(u) > 0 FROM User u WHERE u.id = :id")
-	boolean hasId(@Param("id") Long userId);
+	boolean hasId(@Param("id") Long id);
 
 	@Query("SELECT u FROM User u WHERE u.email = :email")
 	Optional<User> findByEmail(@Param("email") String email);
