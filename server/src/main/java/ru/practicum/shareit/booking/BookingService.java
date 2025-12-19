@@ -14,7 +14,6 @@ import ru.practicum.shareit.common.StateBooking;
 import ru.practicum.shareit.common.dto.booking.BookingDto;
 import ru.practicum.shareit.common.dto.booking.BookingFullDto;
 import ru.practicum.shareit.common.exception.AccessException;
-import ru.practicum.shareit.common.exception.ConflictException;
 import ru.practicum.shareit.common.exception.MyBadRequestException;
 import ru.practicum.shareit.common.exception.NotFoundException;
 import ru.practicum.shareit.item.Item;
@@ -47,7 +46,7 @@ public class BookingService {
 			Booking booking = BookingMapper.toModel(user, item, dto);
 			return BookingMapper.toDtoSaveStatus(repoBooking.save(booking));
 		}
-		throw new ConflictException(Booking.ERROR_TIME);
+		throw new MyBadRequestException(Booking.ERROR_TIME);
 	}
 
 	public BookingFullDto findByUserIdAndBookingId(Long userId, Long bookingId) {

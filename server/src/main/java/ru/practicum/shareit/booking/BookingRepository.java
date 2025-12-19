@@ -48,12 +48,12 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
         Pageable pageable);
 
     @Query("SELECT COUNT(b) > 0 FROM Booking b " +
-           "WHERE b.item.id = :itemId " +
-           "  AND b.user.id = :userId " +
-           "  AND b.status = 'APPROVED' " +
-           "  AND b.end <= :time")
-    boolean hasApprovedBooking(
-        @Param("userId") final Long userId,
-        @Param("itemId") final Long itemId,
-        @Param("time") final Long time);
+            "WHERE b.item.id = :itemId " +
+            "  AND b.user.id = :userId " +
+            "  AND b.status = 'APPROVED' " +
+            "  AND b.end < :time")
+     boolean hasApprovedBooking(
+         @Param("userId") final Long userId,
+         @Param("itemId") final Long itemId,
+         @Param("time") final Long time);
 }

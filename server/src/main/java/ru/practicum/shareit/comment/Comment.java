@@ -64,5 +64,5 @@ public class Comment {
 		return Objects.hash(id);
 	}
 
-	public static final String NO_COMMIT = "The user cannot leave a comment because he is not the owner";
+	public static final String NO_COMMIT = "<<--You haven’t used the item, so you can’t leave a comment!-->>";
 }

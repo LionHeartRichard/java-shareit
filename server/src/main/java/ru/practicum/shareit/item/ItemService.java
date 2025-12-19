@@ -115,22 +115,15 @@ public class ItemService {
 
 	@Transactional
 	public CommentDto addComment(final Long userId, final Long itemId, final String text) {
-		if (hasApprovedBooking(userId, itemId)) {
-			final Item item = repoItem.findById(itemId).get();
+		final Item item = repoItem.findById(itemId).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
+		final Long time = UtilMapper.getCurrentTime();
+		if (repoBooking.hasApprovedBooking(userId, itemId, time)) {
 			final User user = repoUser.findById(userId).get();
 			final Comment comment = CommentMapper.toModel(user, item, text);
 			final Comment ans = repoComment.save(comment);
 			return CommentMapper.toDto(ans);
 		}
-		throw new MyBadRequestException(Comment.NO_COMMIT);
-	}
-
-	public boolean hasApprovedBooking(final Long userId, final Long itemId) {
-		final Long time = UtilMapper.getCurrentTime();
-		if (repoBooking.hasApprovedBooking(userId, itemId, time)) {
-			return true;
-		}
-		return false;
+		throw new MyBadRequestException("---------------------------------------");// Comment.NO_COMMIT
 	}
 
 }

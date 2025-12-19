@@ -170,6 +170,6 @@ public class ItemControllerTest {
 
 		mvc.perform(get("/items/1").header(HEADER, USER_ID).characterEncoding(StandardCharsets.UTF_8)
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound())
-				.andExpect(jsonPath("$.message").value(Item.NOT_FOUND));
+				.andExpect(jsonPath("$.error").value(Item.NOT_FOUND));
 	}
 }

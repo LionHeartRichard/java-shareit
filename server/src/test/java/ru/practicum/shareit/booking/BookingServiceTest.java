@@ -165,7 +165,7 @@ public class BookingServiceTest {
 				.end(LocalDateTime.now().plusHours(1)).build();
 
 		assertThatThrownBy(() -> bookingService.createBooking(ansUserOther.getId(), dto))
-				.isInstanceOf(ConflictException.class);
+				.isInstanceOf(MyBadRequestException.class);
 	}
 
 	@Test

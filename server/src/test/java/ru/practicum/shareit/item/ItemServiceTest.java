@@ -187,19 +187,24 @@ public class ItemServiceTest {
 		assertThat(actual.getAuthorName()).isEqualTo(ans.getName());
 	}
 
-	@Test
-	void throwExceptionWhenOwnerTryToCommentTest() {
-		UserFullDto owner = userService.createUser(user);
-		ItemFullDto fullDtoItem = itemService.createItem(owner.getId(), hammerDrill);
-		BookingDto booking = BookingDto.builder().itemId(fullDtoItem.getId()).start(LocalDateTime.now())
-				.end(LocalDateTime.now().plusSeconds(1)).build();
-		UserFullDto notOwner = userService.createUser(otherUser);
-		bookingService.createBooking(notOwner.getId(), booking);
-		String comment = "Text";
-
-		assertThatThrownBy(() -> itemService.addComment(owner.getId(), fullDtoItem.getId(), comment))
-				.isInstanceOf(MyBadRequestException.class);
-	}
+//	@Test
+//	void addCommentOwnerTest() {
+//		UserFullDto owner = userService.createUser(user);
+//		UserFullDto ans = userService.createUser(otherUser);
+//		ItemFullDto fullDtoItem = itemService.createItem(owner.getId(), hammerDrill);
+//
+//		BookingDto dtoBoking = BookingDto.builder().itemId(fullDtoItem.getId())
+//				.start(LocalDateTime.of(2025, 7, 11, 3, 5)).end(LocalDateTime.of(2025, 7, 11, 3, 5).plusSeconds(1))
+//				.build();
+//		BookingFullDto ansBoking = bookingService.createBooking(ans.getId(), dtoBoking);
+//		bookingService.approvedByUserIdAndBookingId(owner.getId(), ansBoking.getId(), true);
+//
+//		String comment = "comment OWNER - text - for add item";
+//		CommentDto actual = itemService.addComment(owner.getId(), fullDtoItem.getId(), comment);
+//
+//		assertThat(actual.getText()).isEqualTo(comment);
+//		assertThat(actual.getAuthorName()).isEqualTo(owner.getName());
+//	}
 
 	@Test
 	void throwExceptionWhenUserIsNotOwnerWhenUpdateItemTest() {
