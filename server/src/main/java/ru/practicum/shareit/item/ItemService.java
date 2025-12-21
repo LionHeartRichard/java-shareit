@@ -38,14 +38,11 @@ public class ItemService {
 
 	@Transactional
 	public ItemFullDto createItem(final Long userId, final ItemDto dto) {
-		User user = repoUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
-		Item ans = repoItem.save(ItemMapper.toModel(dto).toBuilder().owner(user).build());
-
-		if (dto.hasRequestId()) {
-			Request request = requestRepo.findById(dto.getRequestId())
-					.orElseThrow(() -> new NotFoundException(Request.NOT_FOUND));
-			ans.setRequest(request);
-		}
+		User owner = repoUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
+		Request request = dto.hasRequestId()
+				? requestRepo.findById(dto.getRequestId()).orElseThrow(() -> new NotFoundException(Request.NOT_FOUND))
+				: null;
+		Item ans = repoItem.save(ItemMapper.toModel(dto, owner, request));
 		return ItemMapper.toDto(ans);
 	}
 
@@ -115,15 +112,15 @@ public class ItemService {
 
 	@Transactional
 	public CommentDto addComment(final Long userId, final Long itemId, final String text) {
-		final Item item = repoItem.findById(itemId).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));
 		final Long time = UtilMapper.getCurrentTime();
 		if (repoBooking.hasApprovedBooking(userId, itemId, time)) {
+			final Item item = repoItem.findById(itemId).get();
 			final User user = repoUser.findById(userId).get();
 			final Comment comment = CommentMapper.toModel(user, item, text);
 			final Comment ans = repoComment.save(comment);
 			return CommentMapper.toDto(ans);
 		}
-		throw new MyBadRequestException("---------------------------------------");// Comment.NO_COMMIT
+		throw new MyBadRequestException(Comment.NO_COMMIT);
 	}
 
 }

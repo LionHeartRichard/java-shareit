@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.UtilMapper;
 import ru.practicum.shareit.common.BookingStatus;
 import ru.practicum.shareit.common.StateBooking;
@@ -34,6 +35,7 @@ public class BookingService {
 	public BookingFullDto createBooking(final Long userId, final BookingDto dto) {
 		long start = UtilMapper.toLong(dto.getStart());
 		long end = UtilMapper.toLong(dto.getEnd());
+
 		if (Long.compare(start, end) < 0) {
 			User user = repoUser.findById(userId).orElseThrow(() -> new NotFoundException(User.NOT_FOUND));
 			Item item = repoItem.findById(dto.getItemId()).orElseThrow(() -> new NotFoundException(Item.NOT_FOUND));

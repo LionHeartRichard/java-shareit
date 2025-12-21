@@ -9,6 +9,7 @@ import ru.practicum.shareit.common.dto.booking.BookingFullDto;
 import ru.practicum.shareit.common.dto.comment.CommentDto;
 import ru.practicum.shareit.common.dto.item.ItemDto;
 import ru.practicum.shareit.common.dto.item.ItemFullDto;
+import ru.practicum.shareit.request.Request;
 import ru.practicum.shareit.user.User;
 
 public class ItemMapper {
@@ -17,8 +18,24 @@ public class ItemMapper {
 	}
 
 	public static Item toModel(final ItemDto dto) {
-		final Item ans = Item.builder().id(null).name(dto.getName()).available(dto.getAvailable())
-				.description(dto.getDescription()).owner(null).build();
+		final Item ans = Item.builder()
+				.id(null)
+				.name(dto.getName())
+				.available(dto.getAvailable())
+				.description(dto.getDescription())
+				.owner(null).build();
+		return ans;
+	}
+	
+	public static Item toModel(final ItemDto dto, final User owner, final Request request) {
+		final Item ans = Item.builder()
+				.id(null)
+				.name(dto.getName())
+				.owner(owner)
+				.request(request)
+				.available(dto.getAvailable())
+				.description(dto.getDescription())
+				.owner(null).build();
 		return ans;
 	}
 
@@ -48,7 +65,7 @@ public class ItemMapper {
 	}
 
 	public static ItemFullDto toDto(Item item) {
-		Long requestId = item.getRequest() == null ? null : item.getRequest().getId();
+		final Long requestId = item.getRequest() == null ? null : item.getRequest().getId();
 		ItemFullDto ans = ItemFullDto
 				.builder()
 				.id(item.getId())

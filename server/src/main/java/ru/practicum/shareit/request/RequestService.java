@@ -41,7 +41,7 @@ public class RequestService {
 		if (userRepo.hasId(userId)) {
 			return requestRepo.findAllByRequesterId(userId, Sort.by(Sort.Direction.DESC, "created")).stream().map(v -> {
 				RequestFullDto ans = RequestMapper.toDto(v);
-				setItems(ans);
+				ans.setItems(findItemsByRequester(userId));
 				return ans;
 			}).toList();
 		}
@@ -56,7 +56,7 @@ public class RequestService {
 			return requestRepo.findAll(PageRequest.of((from / size), size, Sort.by(Sort.Direction.DESC, "created")))
 					.stream().map(v -> {
 						RequestFullDto ans = RequestMapper.toDto(v);
-						setItems(ans);
+						ans.setItems(findItemsByRequester(userId));
 						return ans;
 					}).toList();
 		}
@@ -67,15 +67,14 @@ public class RequestService {
 		if (userRepo.hasId(userId)) {
 			Request request = requestRepo.findById(requestId)
 					.orElseThrow(() -> new NotFoundException(Request.NOT_FOUND));
-			return RequestMapper.toDto(request);
+			List<ItemFullDto> itemsDto = itemRepo.findByRequestId(requestId).stream().map(ItemMapper::toDto).toList();
+			return RequestMapper.toDto(request, itemsDto);
 		}
 		throw new NotFoundException(User.NOT_FOUND);
 	}
 
-	private void setItems(RequestFullDto dto) {
-		List<ItemFullDto> items = itemRepo.findByRequestIdOrderByRequestIdDesc(dto.getId()).stream()
-				.map(ItemMapper::toDto).toList();
-		dto.setItems(items);
+	private List<ItemFullDto> findItemsByRequester(final Long userId) {
+		return requestRepo.findByRequester(userId).stream().map(ItemMapper::toDto).toList();
 	}
 
 }

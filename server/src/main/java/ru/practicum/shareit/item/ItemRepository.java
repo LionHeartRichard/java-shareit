@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,5 +16,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	@Query("SELECT COUNT(i) > 0 FROM Item i WHERE i.id = :id AND i.owner.id = :userId")
 	boolean isOwner(@Param("id") final Long id, @Param("userId") final Long userId);
 
-	List<Item> findByRequestIdOrderByRequestIdDesc(Long id);
+	@Query("FROM Item i WHERE i.request.id = :requestId")
+	List<Item> findByRequestId(@Param("requestId") final Long requestId);
+
 }
