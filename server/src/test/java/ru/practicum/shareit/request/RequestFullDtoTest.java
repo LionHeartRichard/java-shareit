@@ -17,14 +17,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class RequestFullDtoTest {
-	private final JacksonTester<RequestFullDto> json;
+	
+	private final JacksonTester<RequestFullDto> jackson;
 
 	@Test
 	void testSerialize() throws Exception {
 		RequestFullDto requestDto = RequestFullDto.builder().id(1L).description("description")
 				.requesterName("requesterName").created(LocalDateTime.now()).items(new ArrayList<>()).build();
 
-		JsonContent<RequestFullDto> result = json.write(requestDto);
+		JsonContent<RequestFullDto> result = jackson.write(requestDto);
 
 		assertThat(result).hasJsonPath("$.id");
 		assertThat(result).hasJsonPath("$.description");
@@ -40,16 +41,16 @@ public class RequestFullDtoTest {
 
 	@Test
 	void testDeserialize() throws Exception {
-		String jsonString = "{ \"id\": 1, \"description\": \"description\", \"requesterName\": \"requesterName\", "
+		String json = "{ \"id\": 1, \"description\": \"description\", \"requesterName\": \"requesterName\", "
 				+ "\"created\": \"2022-02-27T20:35:00\", \"items\": [] }";
 
-		RequestFullDto requestDto = this.json.parse(jsonString).getObject();
+		RequestFullDto dto = this.jackson.parse(json).getObject();
 
-		assertThat(requestDto).isNotNull();
-		assertThat(requestDto.getId()).isEqualTo(1L);
-		assertThat(requestDto.getDescription()).isEqualTo("description");
-		assertThat(requestDto.getRequesterName()).isEqualTo("requesterName");
-		assertThat(requestDto.getCreated()).isEqualTo(LocalDateTime.parse("2022-02-27T20:35:00"));
-		assertThat(requestDto.getItems()).isEmpty();
+		assertThat(dto).isNotNull();
+		assertThat(dto.getId()).isEqualTo(1L);
+		assertThat(dto.getDescription()).isEqualTo("description");
+		assertThat(dto.getRequesterName()).isEqualTo("requesterName");
+		assertThat(dto.getCreated()).isEqualTo(LocalDateTime.parse("2022-02-27T20:35:00"));
+		assertThat(dto.getItems()).isEmpty();
 	}
 }

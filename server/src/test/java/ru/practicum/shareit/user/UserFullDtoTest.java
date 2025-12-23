@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserFullDtoTest {
 
-	private final JacksonTester<UserFullDto> json;
+	private final JacksonTester<UserFullDto> jackson;
 
 	@Test
 	void testSerialize() throws Exception {
@@ -24,7 +24,7 @@ public class UserFullDtoTest {
 		dto.setName("name");
 		dto.setEmail("email@email.ru");
 
-		JsonContent<UserFullDto> ans = json.write(dto);
+		JsonContent<UserFullDto> ans = jackson.write(dto);
 		assertThat(ans).hasJsonPath("$.id");
 		assertThat(ans).hasJsonPath("$.name");
 		assertThat(ans).hasJsonPath("$.email");
@@ -35,9 +35,9 @@ public class UserFullDtoTest {
 
 	@Test
 	void testDeserialize() throws Exception {
-		String jsonString = "{ \"id\": 1, \"name\": \"name\", \"email\": \"email@email.ru\" }";
+		String json = "{ \"id\": 1, \"name\": \"name\", \"email\": \"email@email.ru\" }";
 
-		UserFullDto dto = json.parse(jsonString).getObject();
+		UserFullDto dto = jackson.parse(json).getObject();
 
 		assertThat(dto).isNotNull();
 		assertThat(dto.getId()).isEqualTo(1L);
