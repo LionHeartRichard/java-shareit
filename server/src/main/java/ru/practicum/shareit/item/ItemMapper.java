@@ -35,7 +35,7 @@ public class ItemMapper {
 				.request(request)
 				.available(dto.getAvailable())
 				.description(dto.getDescription())
-				.owner(null).build();
+				.build();
 		return ans;
 	}
 
