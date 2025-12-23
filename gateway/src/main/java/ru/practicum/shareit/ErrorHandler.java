@@ -1,9 +1,5 @@
 package ru.practicum.shareit;
 
-//import java.io.ByteArrayOutputStream;
-//import java.io.PrintStream;
-//import java.nio.charset.StandardCharsets;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,11 +20,6 @@ public class ErrorHandler {
 	public ErrorResponse handleException(final Exception e) {
 		log.error("Error: ", e);
 		return new ErrorResponse(e.getMessage());
-
-//		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-//		e.printStackTrace(new PrintStream(out));
-//		return new ErrorResponse(out.toString(StandardCharsets.UTF_8));
-
 	}
 
 	@ExceptionHandler(NotFoundException.class)
