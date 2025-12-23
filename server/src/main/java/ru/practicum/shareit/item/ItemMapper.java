@@ -18,24 +18,14 @@ public class ItemMapper {
 	}
 
 	public static Item toModel(final ItemDto dto) {
-		final Item ans = Item.builder()
-				.id(null)
-				.name(dto.getName())
-				.available(dto.getAvailable())
-				.description(dto.getDescription())
-				.owner(null).build();
+		final Item ans = Item.builder().id(null).name(dto.getName()).available(dto.getAvailable())
+				.description(dto.getDescription()).owner(null).build();
 		return ans;
 	}
-	
+
 	public static Item toModel(final ItemDto dto, final User owner, final Request request) {
-		final Item ans = Item.builder()
-				.id(null)
-				.name(dto.getName())
-				.owner(owner)
-				.request(request)
-				.available(dto.getAvailable())
-				.description(dto.getDescription())
-				.build();
+		final Item ans = Item.builder().id(null).name(dto.getName()).owner(owner).request(request)
+				.available(dto.getAvailable()).description(dto.getDescription()).build();
 		return ans;
 	}
 
@@ -51,32 +41,17 @@ public class ItemMapper {
 		BookingFullDto lastBooking = BookingMapper.toDto(bookings[0]);
 		BookingFullDto nextBooking = BookingMapper.toDto(bookings[1]);
 		final Long requestId = item.getRequest() == null ? null : item.getRequest().getId();
-		ItemFullDto ans = ItemFullDto.builder()
-				.id(item.getId())
-				.name(item.getName())
-				.userId(item.getOwner().getId())
-				.available(item.getAvailable())
-				.description(item.getDescription())
-				.comments(comments)
-				.lastBooking(lastBooking)
-				.nextBooking(nextBooking)
-				.requestId(requestId).build();
+		ItemFullDto ans = ItemFullDto.builder().id(item.getId()).name(item.getName()).userId(item.getOwner().getId())
+				.available(item.getAvailable()).description(item.getDescription()).comments(comments)
+				.lastBooking(lastBooking).nextBooking(nextBooking).requestId(requestId).build();
 		return ans;
 	}
 
 	public static ItemFullDto toDto(Item item) {
 		final Long requestId = item.getRequest() == null ? null : item.getRequest().getId();
-		ItemFullDto ans = ItemFullDto
-				.builder()
-				.id(item.getId())
-				.name(item.getName())
-				.userId(item.getOwner().getId())
-				.available(item.getAvailable())
-				.description(item.getDescription())
-				.comments(new ArrayList<>())
-				.lastBooking(null)
-				.nextBooking(null)
-				.requestId(requestId).build();
+		ItemFullDto ans = ItemFullDto.builder().id(item.getId()).name(item.getName()).userId(item.getOwner().getId())
+				.available(item.getAvailable()).description(item.getDescription()).comments(new ArrayList<>())
+				.lastBooking(null).nextBooking(null).requestId(requestId).build();
 		return ans;
 	}
 }

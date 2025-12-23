@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request;
 
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import ru.practicum.shareit.common.dto.request.RequestValidDto;
-
 import ru.practicum.shareit.BaseClient;
 
 @Component

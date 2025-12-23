@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class RequestFullDtoTest {
-	
+
 	private final JacksonTester<RequestFullDto> jackson;
 
 	@Test
