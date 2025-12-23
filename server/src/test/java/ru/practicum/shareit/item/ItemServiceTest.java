@@ -7,7 +7,6 @@ import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.common.dto.booking.BookingDto;
 import ru.practicum.shareit.common.dto.booking.BookingFullDto;
 import ru.practicum.shareit.common.dto.comment.CommentDto;
-import ru.practicum.shareit.common.dto.comment.CommentTextDto;
 import ru.practicum.shareit.common.dto.item.ItemDto;
 import ru.practicum.shareit.common.dto.item.ItemFullDto;
 import ru.practicum.shareit.common.dto.request.RequestDto;
@@ -18,8 +17,6 @@ import ru.practicum.shareit.common.exception.MyBadRequestException;
 import ru.practicum.shareit.common.exception.NotFoundException;
 import ru.practicum.shareit.request.RequestService;
 import ru.practicum.shareit.user.UserService;
-
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

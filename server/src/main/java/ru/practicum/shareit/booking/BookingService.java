@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.UtilMapper;
 import ru.practicum.shareit.common.BookingStatus;
 import ru.practicum.shareit.common.StateBooking;
