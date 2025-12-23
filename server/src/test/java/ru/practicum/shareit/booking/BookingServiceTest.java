@@ -11,7 +11,6 @@ import ru.practicum.shareit.common.dto.item.ItemDto;
 import ru.practicum.shareit.common.dto.item.ItemFullDto;
 import ru.practicum.shareit.common.dto.user.UserDto;
 import ru.practicum.shareit.common.dto.user.UserFullDto;
-import ru.practicum.shareit.common.exception.ConflictException;
 import ru.practicum.shareit.common.exception.MyBadRequestException;
 import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.user.UserService;
@@ -115,23 +114,6 @@ public class BookingServiceTest {
 		assertThat(actual.getFirst().getStatus()).isEqualTo(BookingStatus.WAITING);
 	}
 
-//	@Test
-//	void findByUserIdAndStateOwnerTest() {
-//		// TODO
-//		BookingDto dto = BookingDto.builder().itemId(ansItem.getId()).start(LocalDateTime.now().plusHours(1))
-//				.end(LocalDateTime.now().plusHours(2)).build();
-//
-//		BookingFullDto expected = bookingService.createBooking(ansUserOther.getId(), dto);
-//		List<BookingFullDto> actual = bookingService.findByUserIdAndState(ansUser.getId(), StateBooking.ALL);
-//
-//		assertThat(actual.getFirst().getId()).isEqualTo(expected.getId());
-//		assertThat(actual.getFirst().getStart()).isEqualTo(expected.getStart());
-//		assertThat(actual.getFirst().getEnd()).isEqualTo(expected.getEnd());
-//		assertThat(actual.getFirst().getItem()).isEqualTo(expected.getItem());
-//		assertThat(actual.getFirst().getBooker()).isEqualTo(ansUserOther);
-//		assertThat(actual.getFirst().getStatus()).isEqualTo(BookingStatus.WAITING);
-//	}
-
 	@Test
 	void updateStatusBookingTest() {
 		BookingDto dto = BookingDto.builder().itemId(ansItem.getId()).start(LocalDateTime.now().plusHours(1))
@@ -183,9 +165,6 @@ public class BookingServiceTest {
 				.end(LocalDateTime.now().plusHours(2)).build();
 
 		BookingFullDto ans = bookingService.createBooking(ansUserOther.getId(), dto);
-
-//		BookingFullDto actual = bookingService.approvedByUserIdAndBookingId(ansUserOther.getId(), ans.getId(), true);
-//		assertThat(actual.getId()).isEqualTo(ans.getId());
 
 		assertThatThrownBy(() -> bookingService.approvedByUserIdAndBookingId(ansUserOther.getId(), ans.getId(), true))
 				.isInstanceOf(MyBadRequestException.class);
