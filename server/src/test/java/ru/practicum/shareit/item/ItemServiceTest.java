@@ -76,6 +76,20 @@ public class ItemServiceTest {
 	}
 
 	@Test
+	void createItemWhenRequestNullTest() {
+		UserFullDto ans = userService.createUser(user);
+		ItemDto carabiner = ItemDto.builder().name("carabiner").description("carabiner - for - Climbing")
+				.available(true).requestId(null).build();
+		ItemFullDto expected = itemService.createItem(ans.getId(), carabiner);
+		ItemFullDto actual = itemService.findItemById(ans.getId(), expected.getId());
+		assertThat(expected.getId()).isEqualTo(actual.getId());
+		assertThat(expected.getName()).isEqualTo(actual.getName());
+		assertThat(expected.getDescription()).isEqualTo(actual.getDescription());
+		assertThat(expected.getAvailable()).isEqualTo(actual.getAvailable());
+		assertThat(expected.getRequestId()).isEqualTo(actual.getRequestId());
+	}
+
+	@Test
 	void createItemWithRequestTest() {
 		UserFullDto ans = userService.createUser(user);
 		UserFullDto ansOther = userService.createUser(otherUser);
@@ -90,6 +104,14 @@ public class ItemServiceTest {
 		assertThat(expected.getDescription()).isEqualTo(actual.getDescription());
 		assertThat(expected.getAvailable()).isEqualTo(actual.getAvailable());
 		assertThat(expected.getRequestId()).isEqualTo(actual.getRequestId());
+	}
+
+	void throwExceptionCreateItemWithRequestNotFoundTest() {
+		UserFullDto ans = userService.createUser(user);
+		ItemDto carabiner = ItemDto.builder().name("carabiner").description("carabiner - for - Climbing")
+				.available(true).requestId(999L).build();
+
+		assertThatThrownBy(() -> itemService.createItem(ans.getId(), carabiner)).isInstanceOf(NotFoundException.class);
 	}
 
 	@Test
@@ -146,6 +168,20 @@ public class ItemServiceTest {
 	}
 
 	@Test
+	void searchAvailableItemsByTextTest() {
+		UserFullDto ans = userService.createUser(user);
+		ItemFullDto expected = itemService.createItem(ans.getId(), hammerDrill);
+		String text = hammerDrill.getDescription();
+		List<ItemFullDto> actual = itemService.searchAvailableItemsByText(ans.getId(), text);
+
+		assertThat(expected.getId()).isEqualTo(actual.get(0).getId());
+		assertThat(expected.getName()).isEqualTo(actual.get(0).getName());
+		assertThat(expected.getDescription()).isEqualTo(actual.get(0).getDescription());
+		assertThat(expected.getAvailable()).isEqualTo(actual.get(0).getAvailable());
+		assertThat(expected.getRequestId()).isNull();
+	}
+
+	@Test
 	void findItemsByOwnerTest() {
 		UserFullDto ans = userService.createUser(user);
 		ItemFullDto expected = itemService.createItem(ans.getId(), hammerDrill);
@@ -184,24 +220,22 @@ public class ItemServiceTest {
 		assertThat(actual.getAuthorName()).isEqualTo(ans.getName());
 	}
 
-//	@Test
-//	void addCommentOwnerTest() {
-//		UserFullDto owner = userService.createUser(user);
-//		UserFullDto ans = userService.createUser(otherUser);
-//		ItemFullDto fullDtoItem = itemService.createItem(owner.getId(), hammerDrill);
-//
-//		BookingDto dtoBoking = BookingDto.builder().itemId(fullDtoItem.getId())
-//				.start(LocalDateTime.of(2025, 7, 11, 3, 5)).end(LocalDateTime.of(2025, 7, 11, 3, 5).plusSeconds(1))
-//				.build();
-//		BookingFullDto ansBoking = bookingService.createBooking(ans.getId(), dtoBoking);
-//		bookingService.approvedByUserIdAndBookingId(owner.getId(), ansBoking.getId(), true);
-//
-//		String comment = "comment OWNER - text - for add item";
-//		CommentDto actual = itemService.addComment(owner.getId(), fullDtoItem.getId(), comment);
-//
-//		assertThat(actual.getText()).isEqualTo(comment);
-//		assertThat(actual.getAuthorName()).isEqualTo(owner.getName());
-//	}
+	@Test
+	void throwExceptionAddCommentOwnerTest() {
+		UserFullDto owner = userService.createUser(user);
+		UserFullDto ans = userService.createUser(otherUser);
+		ItemFullDto fullDtoItem = itemService.createItem(owner.getId(), hammerDrill);
+
+		BookingDto dtoBoking = BookingDto.builder().itemId(fullDtoItem.getId())
+				.start(LocalDateTime.of(2025, 7, 11, 3, 5)).end(LocalDateTime.of(2025, 7, 11, 3, 5).plusSeconds(1))
+				.build();
+		BookingFullDto ansBoking = bookingService.createBooking(ans.getId(), dtoBoking);
+		bookingService.approvedByUserIdAndBookingId(owner.getId(), ansBoking.getId(), true);
+
+		String comment = "comment OWNER - text - for add item";
+		assertThatThrownBy(() -> itemService.addComment(owner.getId(), fullDtoItem.getId(), comment))
+				.isInstanceOf(MyBadRequestException.class);
+	}
 
 	@Test
 	void throwExceptionWhenUserIsNotOwnerWhenUpdateItemTest() {
@@ -223,6 +257,40 @@ public class ItemServiceTest {
 	void throwExceptionWhenIdIsNullTest() {
 		assertThatThrownBy(() -> itemService.createItem(null, hammerDrill))
 				.isInstanceOf(InvalidDataAccessApiUsageException.class);
+	}
+
+	@Test
+	void findItemByIdWhenItemIdIsNullTest() {
+		UserFullDto owner = userService.createUser(user);
+
+		assertThatThrownBy(() -> itemService.findItemById(owner.getId(), null))
+				.isInstanceOf(InvalidDataAccessApiUsageException.class);
+	}
+
+	@Test
+	void addCommentWhenItemIdIsNullTest() {
+		UserFullDto owner = userService.createUser(user);
+
+		assertThatThrownBy(() -> itemService.addComment(owner.getId(), null, "comment"))
+				.isInstanceOf(MyBadRequestException.class);
+	}
+
+	@Test
+	void updateItemWhenItemIdIsNullTest() {
+		UserFullDto owner = userService.createUser(user);
+
+		assertThatThrownBy(() -> itemService.updateItem(owner.getId(), null, hammerDrill))
+				.isInstanceOf(InvalidDataAccessApiUsageException.class);
+	}
+
+	@Test
+	void searchAvailableItemsByTextWhenTextIsBlankedReturnEmptyList() {
+		UserFullDto ans = userService.createUser(user);
+		itemService.createItem(ans.getId(), hammerDrill);
+		String text = "";
+		List<ItemFullDto> actual = itemService.searchAvailableItemsByText(ans.getId(), text);
+
+		assertThat(List.of()).isEqualTo(actual);
 	}
 
 }
