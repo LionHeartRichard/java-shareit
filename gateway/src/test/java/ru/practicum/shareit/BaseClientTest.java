@@ -12,10 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.*;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+@ActiveProfiles("default")
 @ExtendWith(MockitoExtension.class)
 class BaseClientTest {
 

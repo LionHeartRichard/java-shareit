@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.practicum.shareit.common.exception.ConflictException;
 import ru.practicum.shareit.common.exception.MyBadRequestException;
@@ -11,6 +12,7 @@ import ru.practicum.shareit.common.exception.NotFoundException;
 import ru.practicum.shareit.common.exception.NotValidParamException;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+@ActiveProfiles("default")
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 class ErrorHandlerTest {
 
