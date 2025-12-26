@@ -27,7 +27,7 @@ class BookingControllerTest {
 	private final Long bookingId = 456L;
 
 	@Test
-	void getBooking_shouldReturnOk() throws Exception {
+	void getBookingShouldReturnOk() throws Exception {
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
 		when(bookingClient.getBooking(userId, bookingId)).thenReturn(response);
 
@@ -37,7 +37,7 @@ class BookingControllerTest {
 	}
 
 	@Test
-	void getBookings_withDefaultParams_shouldCallClient() throws Exception {
+	void getBookingsWithDefaultParamsShouldCallClient() throws Exception {
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
 		when(bookingClient.getBookings(userId, StateBooking.ALL, 0, 10)).thenReturn(response);
 
@@ -47,7 +47,7 @@ class BookingControllerTest {
 	}
 
 	@Test
-	void getBookings_withStateAndPagination_shouldPassParams() throws Exception {
+	void getBookingsWithStateAndPaginationShouldPassParams() throws Exception {
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
 		when(bookingClient.getBookings(userId, StateBooking.WAITING, 5, 20)).thenReturn(response);
 
@@ -58,7 +58,7 @@ class BookingControllerTest {
 	}
 
 	@Test
-	void findByOwnerAndState_defaultState_shouldCallClientWithALL() throws Exception {
+	void findByOwnerAndStateDefaultStateShouldCallClientWithALL() throws Exception {
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
 		when(bookingClient.findByOwnerAndState("/owner", userId, StateBooking.ALL)).thenReturn(response);
 
@@ -68,7 +68,7 @@ class BookingControllerTest {
 	}
 
 	@Test
-	void findByOwnerAndState_withStateParam_shouldPassState() throws Exception {
+	void findByOwnerAndStateWithStateParamShouldPassState() throws Exception {
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
 		when(bookingClient.findByOwnerAndState("/owner", userId, StateBooking.REJECTED)).thenReturn(response);
 

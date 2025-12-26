@@ -27,10 +27,8 @@ class RequestControllerTest {
 	private final Long userId = 123L;
 	private final Long requestId = 456L;
 
-	// --- TEST POST /requests (createRequest) ---
-
 	@Test
-	void createRequest_shouldReturnCreated() throws Exception {
+	void createRequestShouldReturnCreated() throws Exception {
 		RequestValidDto dto = new RequestValidDto();
 		dto.setDescription("Need item for repair");
 
@@ -43,10 +41,8 @@ class RequestControllerTest {
 		verify(requestClient).createRequest(userId, dto);
 	}
 
-	// --- TEST GET /requests (getAllRequestsById) ---
-
 	@Test
-	void getAllRequestsById_shouldReturnOk() throws Exception {
+	void getAllRequestsByIdShouldReturnOk() throws Exception {
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
 		when(requestClient.getAllRequestsById(userId)).thenReturn(response);
 
@@ -55,10 +51,8 @@ class RequestControllerTest {
 		verify(requestClient).getAllRequestsById(userId);
 	}
 
-	// --- TEST GET /requests/all (getRequests) ---
-
 	@Test
-	void getRequests_withDefaultParams_shouldCallClient() throws Exception {
+	void getRequestsWithDefaultParamsShouldCallClient() throws Exception {
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
 		when(requestClient.getRequests(userId, 0, 50)).thenReturn(response);
 
@@ -68,7 +62,7 @@ class RequestControllerTest {
 	}
 
 	@Test
-	void getRequests_withCustomParams_shouldPassValues() throws Exception {
+	void getRequestsWithCustomParamsShouldPassValues() throws Exception {
 		Integer from = 10;
 		Integer size = 20;
 
@@ -82,7 +76,7 @@ class RequestControllerTest {
 	}
 
 	@Test
-	void getRequestById_shouldReturnOk() throws Exception {
+	void getRequestByIdShouldReturnOk() throws Exception {
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
 		when(requestClient.getRequestById(userId, requestId)).thenReturn(response);
 

@@ -14,8 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@org.junit.jupiter.api.extension.ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class)
 class BaseClientTest {
 
 	@Mock
@@ -28,10 +29,8 @@ class BaseClientTest {
 		baseClient = new BaseClient(restTemplate);
 	}
 
-	// --- TESTS FOR GET ---
-
 	@Test
-	void get_withoutUserId_shouldCallRestWithNoHeader() {
+	void getWithoutUserIdShouldCallRestWithNoHeader() {
 		ResponseEntity<Object> mockResponse = new ResponseEntity<>(HttpStatus.OK);
 		when(restTemplate.exchange(eq("/path"), eq(HttpMethod.GET), any(HttpEntity.class), eq(Object.class)))
 				.thenReturn(mockResponse);
@@ -47,10 +46,8 @@ class BaseClientTest {
 		}), eq(Object.class));
 	}
 
-	// --- TESTS FOR POST ---
-
 	@Test
-	void post_withBody_shouldSendJsonBodyAndHeaders() {
+	void postWithBodyShouldSendJsonBodyAndHeaders() {
 		Map<String, String> body = Map.of("key", "value");
 		ResponseEntity<Object> mockResponse = new ResponseEntity<>(HttpStatus.CREATED);
 		when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Object.class)))
@@ -65,10 +62,8 @@ class BaseClientTest {
 		}), eq(Object.class));
 	}
 
-	// --- TESTS FOR PUT ---
-
 	@Test
-	void put_withUserIdAndBody_shouldIncludeHeaderAndBody() {
+	void putWithUserIdAndBodyShouldIncludeHeaderAndBody() {
 		String body = "updated data";
 		ResponseEntity<Object> mockResponse = new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		when(restTemplate.exchange(eq("/path"), eq(HttpMethod.PUT), any(HttpEntity.class), eq(Object.class)))
@@ -82,10 +77,8 @@ class BaseClientTest {
 		}), eq(Object.class));
 	}
 
-	// --- TESTS FOR PATCH ---
-
 	@Test
-	void patch_withUserIdAndBody_shouldWork() {
+	void patchWithUserIdAndBodyShouldWork() {
 		Map<String, Object> body = new HashMap<>();
 		body.put("status", "approved");
 		ResponseEntity<Object> mockResponse = new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -100,10 +93,8 @@ class BaseClientTest {
 		}), eq(Object.class));
 	}
 
-	// --- TESTS FOR DELETE ---
-
 	@Test
-	void delete_withUserId_shouldIncludeHeader() {
+	void deleteWithUserIdShouldIncludeHeader() {
 		ResponseEntity<Object> mockResponse = new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		when(restTemplate.exchange(eq("/path"), eq(HttpMethod.DELETE), any(HttpEntity.class), eq(Object.class)))
 				.thenReturn(mockResponse);
@@ -119,7 +110,7 @@ class BaseClientTest {
 	// --- TEST FOR ERROR HANDLING ---
 
 	@Test
-	void makeAndSendRequest_whenHttpStatusCodeException_shouldReturnErrorResponse() {
+	void makeAndSendRequestWhenHttpStatusCodeExceptionShouldReturnErrorResponse() {
 		HttpStatusCodeException mockException = mock(HttpStatusCodeException.class);
 		when(mockException.getStatusCode()).thenReturn(HttpStatus.BAD_REQUEST);
 		when(mockException.getResponseBodyAsByteArray()).thenReturn("Error body".getBytes());

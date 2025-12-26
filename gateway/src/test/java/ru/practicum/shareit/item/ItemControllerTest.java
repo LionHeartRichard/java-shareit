@@ -29,10 +29,8 @@ class ItemControllerTest {
 	private final Long userId = 123L;
 	private final Long itemId = 456L;
 
-	// --- TEST POST /items (createItem) ---
-
 	@Test
-	void createItem_shouldReturnCreated() throws Exception {
+	void createItemShouldReturnCreated() throws Exception {
 		ItemValidDto dto = new ItemValidDto();
 		dto.setName("Test Item");
 		dto.setDescription("Description");
@@ -48,10 +46,8 @@ class ItemControllerTest {
 		verify(itemClient).createItem(userId, dto);
 	}
 
-	// --- TEST PATCH /items/{itemId} (updateItem) ---
-
 	@Test
-	void updateItem_shouldReturnOk() throws Exception {
+	void updateItemShouldReturnOk() throws Exception {
 		ItemUpValidDto dto = new ItemUpValidDto();
 		dto.setName("Updated Item");
 
@@ -64,10 +60,8 @@ class ItemControllerTest {
 		verify(itemClient).updateItem(itemId, userId, dto);
 	}
 
-	// --- TEST GET /items/{itemId} (findItemById) ---
-
 	@Test
-	void findItemById_shouldReturnOk() throws Exception {
+	void findItemByIdShouldReturnOk() throws Exception {
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
 		when(itemClient.findById(itemId, userId)).thenReturn(response);
 
@@ -76,10 +70,8 @@ class ItemControllerTest {
 		verify(itemClient).findById(itemId, userId);
 	}
 
-	// --- TEST GET /items (findItemsByOwner) ---
-
 	@Test
-	void findItemsByOwner_shouldReturnOk() throws Exception {
+	void findItemsByOwnerShouldReturnOk() throws Exception {
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
 		when(itemClient.findByOwner(userId)).thenReturn(response);
 
@@ -88,10 +80,8 @@ class ItemControllerTest {
 		verify(itemClient).findByOwner(userId);
 	}
 
-	// --- TEST GET /items/search (searchAvailableItemsByText) ---
-
 	@Test
-	void searchAvailableItemsByText_shouldReturnOk() throws Exception {
+	void searchAvailableItemsByTextShouldReturnOk() throws Exception {
 		String text = "laptop";
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
 		when(itemClient.searchByText("/search", userId, text)).thenReturn(response);
@@ -102,10 +92,8 @@ class ItemControllerTest {
 		verify(itemClient).searchByText("/search", userId, text);
 	}
 
-	// --- TEST POST /items/{itemId}/comment (addComment) ---
-
 	@Test
-	void addComment_shouldReturnOk() throws Exception {
+	void addCommentShouldReturnOk() throws Exception {
 		CommentValidDto dto = new CommentValidDto();
 		dto.setText("Great item!");
 

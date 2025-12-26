@@ -27,10 +27,8 @@ class UserControllerTest {
 
 	private final Long userId = 123L;
 
-	// --- TEST POST /users (createUser) ---
-
 	@Test
-	void createUser_shouldReturnCreated() throws Exception {
+	void createUserShouldReturnCreated() throws Exception {
 		UserValidDto dto = new UserValidDto();
 		dto.setName("Test User");
 		dto.setEmail("test@example.com");
@@ -44,10 +42,8 @@ class UserControllerTest {
 		verify(userClient).createUser(dto);
 	}
 
-	// --- TEST PATCH /users/{userId} (updateUserPatch) ---
-
 	@Test
-	void updateUserPatch_shouldReturnOk() throws Exception {
+	void updateUserPatchShouldReturnOk() throws Exception {
 		UserUpValidDto dto = new UserUpValidDto();
 		dto.setName("Updated User");
 
@@ -61,10 +57,8 @@ class UserControllerTest {
 		verify(userClient).updateUser(userId, dto);
 	}
 
-	// --- TEST PUT /users/{userId} (updateUserPut) ---
-
 	@Test
-	void updateUserPut_shouldReturnOk() throws Exception {
+	void updateUserPutShouldReturnOk() throws Exception {
 		UserUpValidDto dto = new UserUpValidDto();
 		dto.setName("Replaced User");
 
@@ -78,10 +72,8 @@ class UserControllerTest {
 		verify(userClient).updateUser(userId, dto);
 	}
 
-	// --- TEST GET /users/{userId} (findUserById) ---
-
 	@Test
-	void findUserById_shouldReturnOk() throws Exception {
+	void findUserByIdShouldReturnOk() throws Exception {
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
 		when(userClient.getUser(userId)).thenReturn(response);
 
@@ -89,20 +81,16 @@ class UserControllerTest {
 		verify(userClient).getUser(userId);
 	}
 
-	// --- TEST DELETE /users/{userId} (deleteUserById) ---
-
 	@Test
-	void deleteUserById_shouldReturnNoContent() throws Exception {
+	void deleteUserByIdShouldReturnNoContent() throws Exception {
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		when(userClient.deleteUser(userId)).thenReturn(response);
 		mockMvc.perform(delete("/users/123")).andExpect(status().isNoContent());
 		verify(userClient).deleteUser(userId);
 	}
 
-	// --- TEST GET /users (getAllUsers) ---
-
 	@Test
-	void getAllUsers_shouldReturnOk() throws Exception {
+	void getAllUsersShouldReturnOk() throws Exception {
 		ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
 		when(userClient.getAllUsers()).thenReturn(response);
 		mockMvc.perform(get("/users")).andExpect(status().isOk());
