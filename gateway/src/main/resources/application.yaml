@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: default
+
+server:
+  port: 8080
+
+shareit-server:
+  url: http://localhost:9090
+
+logging:
+  level:
+    org:
+      springframework: ERROR
+      hibernate: ERROR
+    ru:
+      practicum:
+        shareit: ERROR

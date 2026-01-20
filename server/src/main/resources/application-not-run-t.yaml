@@ -1,0 +1,59 @@
+server:
+  port: 9090  # Порт, на котором будет запущен сервер приложения
+
+spring.main.banner-mode: off
+spring:
+
+  h2:
+    console:
+      enabled: true  # Включает веб‑консоль H2 для визуального доступа к БД
+      path: /h2-console  # URL‑путь к консоли (например, http://localhost:9090/h2-console)
+
+  datasource:
+    url: jdbc:h2:file:./db/shareite;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE  # URL подключения к H2
+      # - jdbc:h2:file — тип БД (файловая)
+      # - ./db/shareite — путь к файлу БД (создастся в папке db проекта)
+      # - DB_CLOSE_DELAY=-1 — БД не закрывается при закрытии соединения (важно для тестов)
+    username: sa  # Стандартный пользователь H2
+    password: p_h2-Db  # Пароль пользователя
+    driver-class-name: org.h2.Driver  # JDBC‑драйвер для H2
+
+  sql:
+    init:
+      mode: never  # always
+      # schema-locations: classpath:schema.sql
+      platform: h2  # Платформа БД для скриптов (H2)
+      encoding: UTF-8  # Кодировка SQL‑файлов
+      separator: ";"  # Разделитель SQL‑команд в скрипте
+      # continue-on-error: false  # Останавливать выполнение при первой ошибке (не продолжать)
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect  # Диалект Hibernate для H2
+      # Обеспечивает корректную генерацию SQL под синтаксис H2
+    show-sql: true  # Выводит SQL‑запросы в консоль (полезно для отладки тестов)
+    properties:
+      hibernate:
+        use_get_generated_keys: false
+        format_sql: true  # Форматирует SQL‑запросы для читаемости в логах
+        use_sql_comments: true  # Добавляет комментарии к SQL (например, имя метода репозитория)
+        # globally_quoted_identifiers: true  # Экранирует все идентификаторы в кавычки ("user"."name")
+          # Защищает от проблем с ключевыми словами SQL
+        # globally_quoted_identifiers_skip_column_definitions: false  # Экранирование и для DDL (CREATE TABLE)
+
+    hibernate:
+      ddl-auto: create-drop  # Стратегия генерации схемы БД
+        # create-drop:
+        #   - CREATE: создаёт схему при старте приложения
+        #   - DROP: удаляет схему при остановке приложения
+        # Гарантирует чистоту окружения для каждого теста
+      dialect: org.hibernate.dialect.H2Dialect  # Дублирует database-platform (на всякий случай)
+
+logging:
+  level:
+    org:
+      springframework: ERROR
+    ru:
+      practicum:
+        shareit: ERROR
+    org.hibernate: ERROR
+    org.springframework.jdbc: ERROR

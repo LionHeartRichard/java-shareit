@@ -1,0 +1,32 @@
+<configuration>
+    <!-- Аппендер для файла -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>app.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Аппендер для консоли -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Логгер для вашего пакета -->
+    <logger name="ru.practicum.shareit" level="TRACE"/>
+
+
+    <!-- Корневой логгер: пишет и в файл, и в консоль -->
+    <root level="ERROR">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
+
